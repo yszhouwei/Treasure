@@ -1,6 +1,6 @@
 # Treasure 项目开发文档
 
-> GitHub仓库地址: [https://github.com/jiawenwu228-ship-it/TreasureX.git](https://github.com/jiawenwu228-ship-it/TreasureX.git)
+> GitHub仓库地址: [https://github.com/yszhouwei/Treasure.git](https://github.com/yszhouwei/Treasure.git)
 
 ## 1. 项目概述
 
@@ -110,8 +110,8 @@ treasure/
 ### 4.2 项目获取
 从GitHub克隆项目仓库：
 ```bash
-git clone https://github.com/jiawenwu228-ship-it/TreasureX.git
-cd TreasureX
+git clone https://github.com/yszhouwei/Treasure.git
+cd Treasure
 ```
 
 ### 4.3 安装步骤

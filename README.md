@@ -1,5 +1,7 @@
 # Treasure 项目
 
+> GitHub仓库地址: [https://github.com/yszhouwei/Treasure.git](https://github.com/yszhouwei/Treasure.git)
+
 Treasure 是一个包含H5客户端和PC管理后台的现代化Web应用程序。
 
 ## 项目概述
@@ -32,6 +34,10 @@ treasure/
 ## 开发环境搭建
 
 1. 克隆项目
+   ```bash
+   git clone https://github.com/yszhouwei/Treasure.git
+   cd Treasure
+   ```
 2. 安装依赖
 3. 启动开发服务器
 
