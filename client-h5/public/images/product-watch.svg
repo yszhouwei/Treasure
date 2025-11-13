@@ -1,0 +1,69 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="watchGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2c2416;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#3d3024;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a3a2a;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="watchFace" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#f5f5dc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e8e8d0;stop-opacity:1" />
+    </radialGradient>
+    <linearGradient id="metalGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#C0C0C0;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#A8A8A8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C0C0C0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="400" height="400" fill="url(#watchGradient)"/>
+  
+  <!-- Chain -->
+  <g opacity="0.8">
+    <path d="M200,50 Q180,80 200,100" stroke="url(#metalGradient)" stroke-width="4" fill="none"/>
+    <circle cx="200" cy="50" r="8" fill="url(#metalGradient)"/>
+  </g>
+  
+  <!-- Watch case -->
+  <circle cx="200" cy="200" r="90" fill="url(#metalGradient)"/>
+  <circle cx="200" cy="200" r="85" fill="#2c2416"/>
+  
+  <!-- Watch face -->
+  <circle cx="200" cy="200" r="75" fill="url(#watchFace)"/>
+  
+  <!-- Hour markers -->
+  <g stroke="#2c2416" stroke-width="2">
+    <line x1="200" y1="135" x2="200" y2="145"/>
+    <line x1="260" y1="200" x2="250" y2="200"/>
+    <line x1="200" y1="265" x2="200" y2="255"/>
+    <line x1="140" y1="200" x2="150" y2="200"/>
+  </g>
+  
+  <!-- Numbers -->
+  <text x="200" y="155" text-anchor="middle" fill="#2c2416" font-size="16" font-family="serif" font-weight="bold">XII</text>
+  <text x="245" y="207" text-anchor="middle" fill="#2c2416" font-size="16" font-family="serif" font-weight="bold">III</text>
+  <text x="200" y="258" text-anchor="middle" fill="#2c2416" font-size="16" font-family="serif" font-weight="bold">VI</text>
+  <text x="158" y="207" text-anchor="middle" fill="#2c2416" font-size="16" font-family="serif" font-weight="bold">IX</text>
+  
+  <!-- Hour hand -->
+  <rect x="197" y="170" width="6" height="30" fill="#2c2416" rx="3" transform="rotate(45 200 200)"/>
+  
+  <!-- Minute hand -->
+  <rect x="198" y="150" width="4" height="50" fill="#2c2416" rx="2" transform="rotate(120 200 200)"/>
+  
+  <!-- Second hand -->
+  <rect x="199" y="145" width="2" height="55" fill="#ff4d4f" rx="1" transform="rotate(180 200 200)"/>
+  
+  <!-- Center pin -->
+  <circle cx="200" cy="200" r="6" fill="#D4A574"/>
+  <circle cx="200" cy="200" r="3" fill="#2c2416"/>
+  
+  <!-- Watch crown -->
+  <rect x="270" y="195" width="15" height="10" fill="url(#metalGradient)" rx="2"/>
+  <rect x="280" y="197" width="8" height="6" fill="#A8A8A8" rx="1"/>
+  
+  <!-- Decorative engravings -->
+  <text x="200" y="230" text-anchor="middle" fill="#8c8c8c" font-size="8" font-family="serif" font-style="italic">Antique</text>
+</svg>
+

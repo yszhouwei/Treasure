@@ -1,0 +1,68 @@
+{
+  "common": {
+    "language": "中文",
+    "search": "搜索",
+    "more": "查看更多",
+    "refresh": "换一批",
+    "join": "参团",
+    "participate": "立即参与",
+    "openGroup": "去开团",
+    "loading": "加载中...",
+    "noData": "暂无数据"
+  },
+  "header": {
+    "logo": "TreasureX",
+    "search": "搜索",
+    "user": "用户中心"
+  },
+  "nav": {
+    "home": "首页",
+    "discover": "发现",
+    "treasure": "我的寻宝",
+    "group": "我的团购",
+    "profile": "我的"
+  },
+  "banner": {
+    "limitedTime": "限时",
+    "title": "发现传奇宝藏",
+    "subtitle": "立即参与，赢取千万佳品好宝藏",
+    "action": "立即夺宝"
+  },
+  "promo": {
+    "title": "新人专享团购福利",
+    "description": "限时优惠，发起团购立减20元!",
+    "action": "去开团"
+  },
+  "groupType": {
+    "group10": "10人团",
+    "group20": "20人团",
+    "group50": "50人团",
+    "group100": "100人团",
+    "rules": "点击查看团购规则"
+  },
+  "section": {
+    "hotGroup": "热门团购",
+    "aiRecommend": "AI推荐"
+  },
+  "product": {
+    "participants": "已有 {{count}} 人参团",
+    "statusTight": "名额紧张",
+    "statusAvailable": "名额充足",
+    "price": "¥{{price}}",
+    "viewed": "您浏览{{name}}"
+  },
+  "products": {
+    "antiqueWatch": "古董怀表",
+    "rareStamps": "珍稀邮票",
+    "vintageCamera": "复古胶片相机",
+    "mechanicalKeyboard": "机械游戏键盘"
+  },
+  "tags": {
+    "group10": "10人团",
+    "group20": "20人团",
+    "hotRecommend": "热门推荐",
+    "aiSelected": "AI精选"
+  }
+}
+
+

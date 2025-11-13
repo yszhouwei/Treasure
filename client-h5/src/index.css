@@ -1,0 +1,136 @@
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  --primary-color: #D4A574;
+  --primary-dark: #B8860B;
+  --success-color: #52c41a;
+  --danger-color: #ff4d4f;
+  --info-color: #1890ff;
+  --warning-color: #faad14;
+  --text-primary: #262626;
+  --text-secondary: #595959;
+  --text-tertiary: #8c8c8c;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --border-color: #d9d9d9;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  font-weight: 500;
+  color: #1890ff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #40a9ff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 600;
+}
+
+button {
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus,
+button:focus-visible {
+  outline: none;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+input, textarea {
+  font-family: inherit;
+  border: none;
+  outline: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* 添加图标字体 */
+@font-face {
+  font-family: 'iconfont';
+  src: url('//at.alicdn.com/t/font_2888888_8v5j8f8x5y8.eot?t=1637582400');
+  src: url('//at.alicdn.com/t/font_2888888_8v5j8f8x5y8.eot?t=1637582400#iefix') format('embedded-opentype'),
+       url('//at.alicdn.com/t/font_2888888_8v5j8f8x5y8.woff2?t=1637582400') format('woff2'),
+       url('//at.alicdn.com/t/font_2888888_8v5j8f8x5y8.woff?t=1637582400') format('woff'),
+       url('//at.alicdn.com/t/font_2888888_8v5j8f8x5y8.ttf?t=1637582400') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 默认图标样式 */
+.search-icon:before { content: "🔍"; }
+.notification-icon:before { content: "🔔"; }
+.user-icon:before { content: "👤"; }
+.home-icon:before { content: "🏠"; }
+.team-icon:before { content: "👥"; }
+.shop-icon:before { content: "🛒"; }
+.profile-icon:before { content: "👨"; }
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #bfbfbf;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+}

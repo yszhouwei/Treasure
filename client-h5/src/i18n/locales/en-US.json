@@ -1,0 +1,68 @@
+{
+  "common": {
+    "language": "English",
+    "search": "Search",
+    "more": "View More",
+    "refresh": "Refresh",
+    "join": "Join",
+    "participate": "Participate Now",
+    "openGroup": "Start Group",
+    "loading": "Loading...",
+    "noData": "No Data"
+  },
+  "header": {
+    "logo": "TreasureX",
+    "search": "Search",
+    "user": "User Center"
+  },
+  "nav": {
+    "home": "Home",
+    "discover": "Discover",
+    "treasure": "My Treasure",
+    "group": "My Group",
+    "profile": "Profile"
+  },
+  "banner": {
+    "limitedTime": "Limited",
+    "title": "Discover Legendary Treasure",
+    "subtitle": "Join now and win amazing treasures",
+    "action": "Get Treasure"
+  },
+  "promo": {
+    "title": "Exclusive Group Buying Benefits",
+    "description": "Limited time offer, save $20 on group buying!",
+    "action": "Start Group"
+  },
+  "groupType": {
+    "group10": "10-Person",
+    "group20": "20-Person",
+    "group50": "50-Person",
+    "group100": "100-Person",
+    "rules": "View Group Buying Rules"
+  },
+  "section": {
+    "hotGroup": "Hot Deals",
+    "aiRecommend": "AI Picks"
+  },
+  "product": {
+    "participants": "{{count}} participants",
+    "statusTight": "Limited Spots",
+    "statusAvailable": "Available",
+    "price": "${{price}}",
+    "viewed": "You viewed {{name}}"
+  },
+  "products": {
+    "antiqueWatch": "Antique Watch",
+    "rareStamps": "Rare Stamps",
+    "vintageCamera": "Vintage Camera",
+    "mechanicalKeyboard": "Mechanical Keyboard"
+  },
+  "tags": {
+    "group10": "10-Person",
+    "group20": "20-Person",
+    "hotRecommend": "Hot",
+    "aiSelected": "AI Picks"
+  }
+}
+
+
