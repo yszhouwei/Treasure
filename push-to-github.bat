@@ -12,7 +12,7 @@ echo.
 
 echo [2] 创建提交
 echo ----------------------------------------
-git commit -m "feat: 导航的5个页面基本完成了首页前端的开发布局。。。"
+git commit -m "feat: 新增搜索，注册登录页面。。"
 echo.
 
 echo [3] 推送到 GitHub

@@ -22,6 +22,72 @@
     "group": "我的团购",
     "profile": "我的"
   },
+  "searchOverlay": {
+    "title": "搜索宝藏灵感",
+    "placeholder": "搜索宝藏、团购或攻略",
+    "history": "最近搜索",
+    "clear": "清空",
+    "popular": "热门推荐",
+    "trendTitle": "大家都在搜",
+    "historyItems": [
+      "京都定制团购",
+      "瑞士古董腕表",
+      "新手必看攻略"
+    ],
+    "hotWords": [
+      "限量团购",
+      "全球好物榜",
+      "手作艺术",
+      "黑珍珠"
+    ],
+    "trendItems": [
+      {
+        "title": "海外仓特卖·限时 48 小时",
+        "desc": "精选 12 个热门国家的折扣宝藏"
+      },
+      {
+        "title": "VIP 会员礼遇升级",
+        "desc": "钻石会员专属积分回馈计划"
+      },
+      {
+        "title": "11 月匠人主题季",
+        "desc": "木艺、银器、玻璃手作一次看"
+      }
+    ]
+  },
+  "auth": {
+    "tabs": {
+      "login": "登录",
+      "register": "注册"
+    },
+    "loginTitle": "欢迎回来",
+    "loginSubtitle": "使用宝藏账号即可同步进度与收益",
+    "registerTitle": "加入 TreasureX",
+    "registerSubtitle": "注册即可获取新人专属福利礼包",
+    "email": "邮箱",
+    "password": "密码",
+    "confirmPassword": "确认密码",
+    "forgotPassword": "忘记密码？",
+    "ctaLogin": "立即登录",
+    "ctaRegister": "创建账户",
+    "switchToRegister": "没有账户？立即注册",
+    "switchToLogin": "已有账户？立即登录",
+    "agreement": "注册即表示同意《用户协议》和《隐私政策》",
+    "features": [
+      {
+        "title": "解锁专属福利",
+        "desc": "参与会员宝箱、尊享积分任务"
+      },
+      {
+        "title": "追踪全球团购",
+        "desc": "实时掌握限量团购的发起与进度"
+      },
+      {
+        "title": "私享寻宝指南",
+        "desc": "AI 每日推送个性化收藏建议"
+      }
+    ]
+  },
   "banner": {
     "limitedTime": "限时",
     "title": "发现传奇宝藏",

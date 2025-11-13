@@ -22,6 +22,72 @@
     "group": "My Group",
     "profile": "Profile"
   },
+  "searchOverlay": {
+    "title": "Search for treasure inspiration",
+    "placeholder": "Search treasures, group buys, or guides",
+    "history": "Recent searches",
+    "clear": "Clear",
+    "popular": "Popular picks",
+    "trendTitle": "Trending now",
+    "historyItems": [
+      "Kyoto custom group buy",
+      "Swiss vintage watches",
+      "Starter treasure guide"
+    ],
+    "hotWords": [
+      "Limited group deals",
+      "Global favourites",
+      "Handcrafted art",
+      "Black Pearl"
+    ],
+    "trendItems": [
+      {
+        "title": "Overseas warehouse flash deal · 48h",
+        "desc": "Curated treasures from 12 hot destinations"
+      },
+      {
+        "title": "VIP benefits upgrade",
+        "desc": "Diamond members enjoy boosted point returns"
+      },
+      {
+        "title": "November artisan focus",
+        "desc": "Woodcraft, silverwork, glass art in spotlight"
+      }
+    ]
+  },
+  "auth": {
+    "tabs": {
+      "login": "Log In",
+      "register": "Sign Up"
+    },
+    "loginTitle": "Welcome back",
+    "loginSubtitle": "Sync your progress, rewards, and memberships",
+    "registerTitle": "Join TreasureX",
+    "registerSubtitle": "Sign up to unlock a newcomer welcome kit",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "forgotPassword": "Forgot password?",
+    "ctaLogin": "Log in now",
+    "ctaRegister": "Create account",
+    "switchToRegister": "New here? Create an account",
+    "switchToLogin": "Already a member? Log in",
+    "agreement": "By signing up you agree to the Terms and Privacy Policy",
+    "features": [
+      {
+        "title": "Unlock exclusive perks",
+        "desc": "Access member chests and premium tasks"
+      },
+      {
+        "title": "Track global group buys",
+        "desc": "Stay ahead of limited-time campaigns"
+      },
+      {
+        "title": "Personal treasure feed",
+        "desc": "Daily AI recommendations tailored for you"
+      }
+    ]
+  },
   "banner": {
     "limitedTime": "Limited",
     "title": "Discover Legendary Treasure",
