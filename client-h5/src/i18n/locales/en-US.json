@@ -62,6 +62,374 @@
     "group20": "20-Person",
     "hotRecommend": "Hot",
     "aiSelected": "AI Picks"
+  },
+  "discover": {
+    "hero": {
+      "title": "Discover Global Treasure Inspirations",
+      "subtitle": "Curated insights, guides, and events to help you spot amazing finds faster",
+      "searchPlaceholder": "Search treasures, guides, or events"
+    },
+    "tags": [
+      "Global Picks",
+      "Antiques",
+      "Tech & Gadgets",
+      "Art & Craft",
+      "Limited Offers",
+      "Travel Hunt"
+    ],
+    "sections": {
+      "trending": "Trending Discoveries",
+      "trendingSubtitle": "Stay ahead with this week's spotlight finds",
+      "insights": "Inspiration Playlists",
+      "insightsSubtitle": "Build your personalised discovery roadmap",
+      "stories": "Explorer Stories",
+      "storiesSubtitle": "Hear real experiences from treasure seekers worldwide"
+    },
+    "trending": [
+      {
+        "title": "Silk Road Antique Fair",
+        "category": "Antiques",
+        "desc": "Limited showcase of Tang dynasty gold pieces with certified appraisal",
+        "heat": "Heat 98%",
+        "time": "2 days left"
+      },
+      {
+        "title": "Nordic Design Spotlight Week",
+        "category": "Global Picks",
+        "desc": "Twelve designers join forces to present limited edition home pieces",
+        "heat": "Heat 92%",
+        "time": "Only 20 sets"
+      },
+      {
+        "title": "Kyoto Silver Artisan Workshop",
+        "category": "Art & Craft",
+        "desc": "Learn traditional silver crafting inside a century-old studio",
+        "heat": "Heat 89%",
+        "time": "5 seats remaining"
+      }
+    ],
+    "insights": [
+      {
+        "title": "Starter Checklist for Treasure Hunters",
+        "desc": "Everything you need to know about gear, safety rules, and planning",
+        "items": [
+          "Gear preparation guide",
+          "Risk assessment template",
+          "Community groups to follow"
+        ]
+      },
+      {
+        "title": "Global Rare Collectible Radar",
+        "desc": "Weekly updates on 30+ country fairs and online auctions",
+        "items": [
+          "Offline fair calendar",
+          "Online auction highlights",
+          "Limited release alerts"
+        ]
+      }
+    ],
+    "stories": [
+      {
+        "author": "Lena · Shanghai",
+        "title": "A Limited Glass Treasure from Venice",
+        "summary": "With a local guide I entered a Murano workshop and found a one-of-a-kind glass chest."
+      },
+      {
+        "author": "Marco · Barcelona",
+        "title": "An Ancient Coin Hidden in the Old Port",
+        "summary": "Stumbled upon a private exhibition and authenticated an 18th-century maritime coin with a historian."
+      }
+    ]
+  },
+  "treasure": {
+    "hero": {
+      "title": "Welcome back, Treasure Master",
+      "subtitle": "We matched 3 new treasure leads tailored for you today",
+      "badge": "VIP Pioneer Member",
+      "balanceLabel": "Account Balance",
+      "balanceValue": "$ 12,680.00",
+      "recharge": "Top Up"
+    },
+    "progress": {
+      "label": "Level Progress",
+      "percent": "62%",
+      "desc": "Complete 2 more missions to unlock Gold Hunter tier"
+    },
+    "sections": {
+      "stats": "Asset Snapshot",
+      "statsSubtitle": "Track your returns, points, and team performance",
+      "missions": "Growth Missions",
+      "missionsSubtitle": "Complete missions to unlock extra rewards",
+      "orders": "Recent Treasure Orders",
+      "ordersSubtitle": "Stay on top of your latest deals"
+    },
+    "stats": [
+      {
+        "label": "Total Earnings",
+        "value": "$ 46,320",
+        "trend": "+12% this week"
+      },
+      {
+        "label": "Available Points",
+        "value": "8,640",
+        "trend": "Redeemable for 5 perks"
+      },
+      {
+        "label": "Team Members",
+        "value": "128",
+        "trend": "+12 new this week"
+      }
+    ],
+    "missions": [
+      {
+        "title": "Complete the Golden Chest group buy",
+        "desc": "Invite 5 friends to join and unlock bonus draws",
+        "progress": 70,
+        "reward": "+500 points"
+      },
+      {
+        "title": "Share this week's treasure insights",
+        "desc": "Post your highlights to the community and recommend 3 treasures",
+        "progress": 40,
+        "reward": "Exclusive badge"
+      }
+    ],
+    "orders": [
+      {
+        "id": "#TBX23901",
+        "title": "Nordic Limited Glass Chest",
+        "status": "Awaiting Shipment",
+        "amount": "$ 8,880",
+        "time": "2025-11-10 14:32"
+      },
+      {
+        "id": "#TBX23876",
+        "title": "Kyoto Silver Artisan Tour",
+        "status": "Completed",
+        "amount": "$ 3,560",
+        "time": "2025-11-08 19:05"
+      }
+    ],
+    "actions": {
+      "view": "View Detail"
+    },
+    "orderStatus": {
+      "completed": "Completed"
+    }
+  },
+  "group": {
+    "hero": {
+      "title": "My Group Buying Control Center",
+      "subtitle": "Track team performance in real time and orchestrate every campaign with ease",
+      "tag": "Operation Board",
+      "leader": "Leader",
+      "leaderName": "Crystal · Lead",
+      "schedule": "Today’s Agenda",
+      "scheduleValue": "4 campaigns running",
+      "region": "Market Coverage",
+      "regionValue": "China · Southeast Asia"
+    },
+    "progress": {
+      "label": "Weekly Engagement",
+      "percent": "72%",
+      "desc": "Reach the target to unlock Diamond tier benefits"
+    },
+    "sections": {
+      "metrics": "Key Metrics",
+      "metricsSubtitle": "Monitor team momentum and conversion",
+      "upcoming": "Upcoming Campaigns",
+      "upcomingSubtitle": "Plan ahead and invite the right members",
+      "active": "Live Campaigns",
+      "activeSubtitle": "Track progress of every active group"
+    },
+    "metrics": [
+      {
+        "label": "Total Members",
+        "value": "356",
+        "change": "+18 this month"
+      },
+      {
+        "label": "Active Campaigns",
+        "value": "26",
+        "change": "+4 this week"
+      },
+      {
+        "label": "Gross Sales",
+        "value": "$ 198,600",
+        "change": "+15% YoY"
+      }
+    ],
+    "upcoming": [
+      {
+        "id": "#GRP2401",
+        "title": "Black Pearl Overseas Hunt",
+        "status": "Pending schedule",
+        "participants": "Target 50 · Confirmed 32",
+        "remaining": "3 days remaining"
+      },
+      {
+        "id": "#GRP2398",
+        "title": "Handmade Pottery Experience",
+        "status": "Pending schedule",
+        "participants": "Target 30 · Confirmed 18",
+        "remaining": "2 days remaining"
+      }
+    ],
+    "active": [
+      {
+        "id": "#GRP2389",
+        "title": "Kyoto Kimono Custom Tour",
+        "status": "In progress",
+        "progress": 68,
+        "participants": "Joined 68 / 100",
+        "remaining": "Ends in 1 day"
+      },
+      {
+        "id": "#GRP2387",
+        "title": "Swiss Watchmaking Workshop",
+        "status": "In progress",
+        "progress": 42,
+        "participants": "Joined 21 / 50",
+        "remaining": "Ends in 3 days"
+      }
+    ],
+    "actions": {
+      "create": "Create Campaign",
+      "invite": "Invite Members",
+      "arrange": "Schedule",
+      "manage": "Manage"
+    }
+  },
+  "profile": {
+    "hero": {
+      "greeting": "Welcome back",
+      "name": "Charlotte",
+      "subtitle": "We prepared 2 tailored perks for you today",
+      "badge": "Diamond Seeker",
+      "level": "Lv.6",
+      "progressLabel": "Growth Points",
+      "progressValue": "4,280 / 5,000",
+      "progressPercent": "86%",
+      "progressHint": "Only 720 points away from Star Seeker tier",
+      "stats": [
+        {
+          "label": "Account Assets",
+          "value": "$ 58,920",
+          "change": "+1,280 this week"
+        },
+        {
+          "label": "Available Points",
+          "value": "12,450",
+          "change": "+320 today"
+        },
+        {
+          "label": "Coupons",
+          "value": "8 active",
+          "change": "3 about to expire"
+        }
+      ]
+    },
+    "actions": [
+      {
+        "id": "recharge",
+        "icon": "💰",
+        "label": "Quick Top Up",
+        "desc": "Balance arrives instantly"
+      },
+      {
+        "id": "withdraw",
+        "icon": "🏧",
+        "label": "Withdraw",
+        "desc": "Transfer to your account"
+      },
+      {
+        "id": "invite",
+        "icon": "🤝",
+        "label": "Invite Friends",
+        "desc": "Earn rewards when they join"
+      },
+      {
+        "id": "profile",
+        "icon": "🧾",
+        "label": "Profile Settings",
+        "desc": "Update avatar and bio"
+      }
+    ],
+    "sections": {
+      "recent": {
+        "title": "Recent Activity",
+        "subtitle": "Stay on top of your latest updates",
+        "layout": "list",
+        "items": [
+          {
+            "id": "timeline-1",
+            "title": "Completed \"Kyoto Kimono Tour\" order",
+            "desc": "Order #TBX2389 has been confirmed",
+            "meta": "Today 10:28",
+            "status": "Rewarded +120 points"
+          },
+          {
+            "id": "timeline-2",
+            "title": "New group-buy interest",
+            "desc": "3 friends are keen on the \"Swiss Watch Workshop\"",
+            "meta": "Yesterday 21:16",
+            "status": "Reach out while interest is high"
+          }
+        ]
+      },
+      "services": {
+        "title": "Quick Tools",
+        "subtitle": "Manage your account and preferences",
+        "layout": "grid",
+        "items": [
+          {
+            "id": "security",
+            "icon": "shield",
+            "title": "Account Security",
+            "desc": "Two-factor verified"
+          },
+          {
+            "id": "address",
+            "icon": "location",
+            "title": "Address Book",
+            "desc": "3 saved addresses"
+          },
+          {
+            "id": "messages",
+            "icon": "bell",
+            "title": "Message Center",
+            "desc": "5 unread notifications"
+          },
+          {
+            "id": "settings",
+            "icon": "settings",
+            "title": "App Settings",
+            "desc": "Preferences & language"
+          }
+        ]
+      },
+      "support": {
+        "title": "Support & Help",
+        "subtitle": "Here whenever you need us",
+        "layout": "card",
+        "items": [
+          {
+            "id": "cs",
+            "icon": "👩‍💼",
+            "title": "Dedicated Concierge",
+            "desc": "Live 9:00 - 22:00 daily",
+            "cta": "Chat now"
+          },
+          {
+            "id": "faq",
+            "icon": "📘",
+            "title": "Help Center",
+            "desc": "Guides and FAQs",
+            "cta": "View docs"
+          }
+        ]
+      }
+    }
   }
 }
 

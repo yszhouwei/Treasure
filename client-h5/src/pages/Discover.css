@@ -1,0 +1,338 @@
+.discover-container {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.discover-content {
+  padding-top: 56px;
+  padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+}
+
+.discover-hero {
+  margin: 16px 16px 20px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.2), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.18), transparent 45%),
+    linear-gradient(135deg, #3d2a1a 0%, #7b5b37 45%, #9d7d53 100%);
+  box-shadow: 0 18px 40px rgba(61, 42, 26, 0.25);
+}
+
+.discover-hero-overlay {
+  position: relative;
+  z-index: 1;
+  padding: 40px 24px 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.discover-hero-title {
+  font-size: 24px;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.35);
+  margin: 0;
+}
+
+.discover-hero-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0;
+  max-width: 200px;
+  line-height: 1.5;
+}
+
+.discover-search {
+  width: 100%;
+  max-width: 320px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 32px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  gap: 6px;
+}
+
+.discover-search-icon {
+  font-size: 16px;
+  color: #f8f8f8;
+  margin-left: 4px;
+}
+
+.discover-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+.discover-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.discover-search-btn {
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: #8b6f47;
+  padding: 6px 14px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.discover-search-btn:active {
+  transform: scale(0.97);
+}
+
+.discover-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.discover-tag {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.discover-tag:hover {
+  background: rgba(255, 255, 255, 0.26);
+  transform: translateY(-1px);
+}
+
+.discover-section {
+  margin: 0 16px 24px;
+}
+
+.discover-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.discover-section-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #262626;
+  margin: 0;
+}
+
+.discover-section-subtitle {
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.discover-trending-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.discover-trending-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #f0f0f0;
+}
+
+.discover-trending-card h3 {
+  font-size: 16px;
+  color: #262626;
+  margin: 0;
+}
+
+.discover-trending-card p {
+  font-size: 13px;
+  color: #595959;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.discover-trending-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.discover-trending-tag {
+  font-size: 11px;
+  font-weight: 600;
+  color: #8b6f47;
+  background: rgba(139, 111, 71, 0.12);
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.discover-trending-heat {
+  font-size: 11px;
+  color: #ff4d4f;
+  font-weight: 600;
+}
+
+.discover-trending-card footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.discover-trending-card footer button {
+  border: none;
+  background: transparent;
+  color: #1890ff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.discover-insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.discover-insight-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 16px 30px rgba(24, 39, 75, 0.08);
+  border: 1px solid rgba(72, 118, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.discover-insight-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.discover-insight-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #5b8def 0%, #86b1ff 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 8px 16px rgba(91, 141, 239, 0.35);
+}
+
+.discover-insight-card h3 {
+  font-size: 15px;
+  margin: 0;
+  color: #1f2d3d;
+}
+
+.discover-insight-card p {
+  font-size: 12px;
+  color: #596c80;
+  margin: 4px 0 0;
+}
+
+.discover-insight-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.discover-insight-card li {
+  font-size: 12px;
+  color: #3d4d63;
+  padding: 6px 10px;
+  border-radius: 12px;
+  background: rgba(91, 141, 239, 0.08);
+}
+
+.discover-link-btn {
+  align-self: flex-start;
+  border: none;
+  background: transparent;
+  color: #276bff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.discover-stories {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.discover-story-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.discover-story-card h3 {
+  margin: 4px 0 0;
+  font-size: 15px;
+  color: #262626;
+}
+
+.discover-story-card p {
+  font-size: 12px;
+  color: #595959;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.discover-story-author {
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+@media (min-width: 600px) {
+  .discover-trending-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .discover-insights-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .discover-insight-card {
+    flex: 1;
+    min-width: calc(50% - 8px);
+  }
+}

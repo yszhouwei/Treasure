@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
-import BottomNav from '../components/BottomNav';
 import './Home.css';
 
 const Home: React.FC = () => {
@@ -198,8 +197,6 @@ const Home: React.FC = () => {
           </div>
         </section>
       </div>
-
-      <BottomNav />
     </div>
   );
 };

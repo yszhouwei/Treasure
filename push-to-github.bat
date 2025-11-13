@@ -12,7 +12,7 @@ echo.
 
 echo [2] 创建提交
 echo ----------------------------------------
-git commit -m "feat: 完成H5客户端基础架构搭建 - 包含React+Vite+TypeScript+TailwindCSS配置 - 实现基础组件(Button, Input) - 创建MainLayout主布局 - 完成Home主页"
+git commit -m "feat: 导航的5个页面基本完成了首页前端的开发布局。。。"
 echo.
 
 echo [3] 推送到 GitHub

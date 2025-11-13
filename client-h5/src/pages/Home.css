@@ -5,7 +5,7 @@
 
 .home-content {
   padding-top: 56px;
-  padding-bottom: 60px;
+  padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
   min-height: 100vh;
 }
 
