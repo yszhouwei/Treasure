@@ -38,8 +38,7 @@ const JoinGroupPage: React.FC<JoinGroupPageProps> = ({ product, onBack, onConfir
             <path d="M19 12H5M12 19l-7-7 7-7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>
-        <h1>{t('joinGroup.title')}</h1>
-        <div style={{ width: 40 }} />
+        <h1 className="join-group-title">{t('joinGroup.title')}</h1>
       </div>
 
       <div className="join-group-content">
