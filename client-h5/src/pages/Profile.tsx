@@ -2,7 +2,17 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
 import { useAuth } from '../context/AuthContext';
-import DetailSheet from '../components/DetailSheet';
+import RechargePage from './profile/RechargePage';
+import WithdrawPage from './profile/WithdrawPage';
+import InvitePage from './profile/InvitePage';
+import ProfileEditPage from './profile/ProfileEditPage';
+import SecurityPage from './profile/SecurityPage';
+import AddressPage from './profile/AddressPage';
+import MessagesPage from './profile/MessagesPage';
+import SettingsPage from './profile/SettingsPage';
+import CustomerServicePage from './profile/CustomerServicePage';
+import HelpCenterPage from './profile/HelpCenterPage';
+import TimelineDetailPage from './profile/TimelineDetailPage';
 import './Profile.css';
 
 type ProfileHero = {
@@ -55,10 +65,18 @@ type ProfileDataset = {
   sections: ProfileSections;
 };
 
-type SheetState = {
-  type: 'action' | 'timeline' | 'support';
-  item: ProfileAction | ProfileSectionItem;
-};
+type PageState =
+  | { type: 'recharge' }
+  | { type: 'withdraw' }
+  | { type: 'invite' }
+  | { type: 'profileEdit' }
+  | { type: 'security' }
+  | { type: 'address' }
+  | { type: 'messages' }
+  | { type: 'settings' }
+  | { type: 'customerService' }
+  | { type: 'helpCenter' }
+  | { type: 'timelineDetail'; payload: ProfileSectionItem };
 
 const renderIcon = (icon?: string) => {
   if (!icon) {
@@ -139,7 +157,7 @@ const Profile: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(Boolean(isAuthenticated));
   const [profileData, setProfileData] = useState<ProfileDataset | null>(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [activeSheet, setActiveSheet] = useState<SheetState | null>(null);
+  const [activePage, setActivePage] = useState<PageState | null>(null);
   const refreshTimerRef = useRef<number>();
 
   const cloneSections = useCallback((sections: ProfileSections): ProfileSections => {
@@ -209,69 +227,82 @@ const Profile: React.FC = () => {
     }, 520);
   };
 
-  const openSheet = (state: SheetState) => {
-    setActiveSheet(state);
+  const handleActionClick = (actionId: string) => {
+    switch (actionId) {
+      case 'recharge':
+        setActivePage({ type: 'recharge' });
+        break;
+      case 'withdraw':
+        setActivePage({ type: 'withdraw' });
+        break;
+      case 'invite':
+        setActivePage({ type: 'invite' });
+        break;
+      case 'profile':
+        setActivePage({ type: 'profileEdit' });
+        break;
+      default:
+        break;
+    }
   };
 
-  const closeSheet = () => {
-    setActiveSheet(null);
+  const handleItemClick = (itemId: string, item?: ProfileSectionItem) => {
+    switch (itemId) {
+      case 'security':
+        setActivePage({ type: 'security' });
+        break;
+      case 'address':
+        setActivePage({ type: 'address' });
+        break;
+      case 'messages':
+        setActivePage({ type: 'messages' });
+        break;
+      case 'settings':
+        setActivePage({ type: 'settings' });
+        break;
+      case 'cs':
+        setActivePage({ type: 'customerService' });
+        break;
+      case 'faq':
+        setActivePage({ type: 'helpCenter' });
+        break;
+      default:
+        if (item && itemId.startsWith('timeline')) {
+          setActivePage({ type: 'timelineDetail', payload: item });
+        }
+        break;
+    }
   };
 
-  const sheetTitle = useMemo(() => {
-    if (!activeSheet) return '';
-    switch (activeSheet.type) {
-      case 'action':
-        return t('profile.sheet.actionTitle', { label: (activeSheet.item as ProfileAction).label });
-      case 'timeline':
-        return t('profile.sheet.timelineTitle');
-      case 'support':
-        return t('profile.sheet.supportTitle');
-      default:
-        return '';
+  // Page navigation
+  if (activePage) {
+    const onBack = () => setActivePage(null);
+    
+    switch (activePage.type) {
+      case 'recharge':
+        return <RechargePage onBack={onBack} />;
+      case 'withdraw':
+        return <WithdrawPage onBack={onBack} />;
+      case 'invite':
+        return <InvitePage onBack={onBack} />;
+      case 'profileEdit':
+        return <ProfileEditPage onBack={onBack} user={user} />;
+      case 'security':
+        return <SecurityPage onBack={onBack} />;
+      case 'address':
+        return <AddressPage onBack={onBack} />;
+      case 'messages':
+        return <MessagesPage onBack={onBack} />;
+      case 'settings':
+        return <SettingsPage onBack={onBack} />;
+      case 'customerService':
+        return <CustomerServicePage onBack={onBack} />;
+      case 'helpCenter':
+        return <HelpCenterPage onBack={onBack} />;
+      case 'timelineDetail':
+        return <TimelineDetailPage onBack={onBack} item={activePage.payload} />;
     }
-  }, [activeSheet, t]);
-
-  const sheetCta = useMemo(() => {
-    if (!activeSheet) return '';
-    switch (activeSheet.type) {
-      case 'action':
-        return t('profile.sheet.cta.action');
-      case 'timeline':
-        return t('profile.sheet.cta.timeline');
-      case 'support':
-        return t('profile.sheet.cta.support');
-      default:
-        return '';
-    }
-  }, [activeSheet, t]);
-
-  const sheetContent = useMemo(() => {
-    if (!activeSheet) return null;
-
-    if (activeSheet.type === 'action') {
-      const action = activeSheet.item as ProfileAction;
-      return (
-        <>
-          <h4>{action.label}</h4>
-          <p>{action.desc}</p>
-          <span className="detail-sheet-meta">{t('profile.sheet.hint.action')}</span>
-        </>
-      );
-    }
-
-    const item = activeSheet.item as ProfileSectionItem;
-    const hintKey = `profile.sheet.hint.${activeSheet.type}` as const;
-
-    return (
-      <>
-        <h4>{item.title}</h4>
-        <p>{item.desc}</p>
-        {item.meta && <span className="detail-sheet-meta">{item.meta}</span>}
-        {item.status && <span className="detail-sheet-status">{item.status}</span>}
-        <span className="detail-sheet-meta">{t(hintKey)}</span>
-      </>
-    );
-  }, [activeSheet, t]);
+  }
 
   return (
     <div className="profile-container">
@@ -298,16 +329,19 @@ const Profile: React.FC = () => {
           <>
             <section className="profile-hero">
               <div className="profile-hero-overlay">
-                <div className="profile-hero-header">
-                  <div className="profile-avatar">{profileData.hero.name?.[0] || 'U'}</div>
-                  <div className="profile-hero-info">
-                    <span className="profile-hero-greeting">{profileData.hero.greeting}</span>
-                    <h1>{profileData.hero.name}</h1>
-                    {profileData.hero.email && <span className="profile-hero-email">{profileData.hero.email}</span>}
-                    <p>{profileData.hero.subtitle}</p>
+                <div className="profile-hero-top">
+                  <div className="profile-hero-header">
+                    <div className="profile-avatar">{profileData.hero.name?.[0] || 'U'}</div>
+                    <div className="profile-hero-info">
+                      <span className="profile-hero-greeting">{profileData.hero.greeting}</span>
+                      <h1>{profileData.hero.name}</h1>
+                      {profileData.hero.email && <span className="profile-hero-email">{profileData.hero.email}</span>}
+                    </div>
                   </div>
                   <span className="profile-hero-badge">{profileData.hero.badge}</span>
                 </div>
+
+                <p className="profile-hero-subtitle">{profileData.hero.subtitle}</p>
 
                 <div className="profile-hero-toolbar">
                   <button
@@ -354,7 +388,7 @@ const Profile: React.FC = () => {
                   <button
                     key={action.id}
                     className="profile-action-card"
-                    onClick={() => openSheet({ type: 'action', item: action })}
+                    onClick={() => handleActionClick(action.id)}
                   >
                     <span className="profile-action-icon" aria-hidden>
                       {action.icon}
@@ -376,7 +410,7 @@ const Profile: React.FC = () => {
                 {section.layout === 'grid' && (
                   <div className="profile-grid">
                     {section.items.map((item) => (
-                      <div key={item.id} className="profile-grid-item" onClick={() => openSheet({ type: 'support', item })}>
+                      <div key={item.id} className="profile-grid-item" onClick={() => handleItemClick(item.id, item)}>
                         <div className={`profile-grid-icon ${item.icon ? `icon-${item.icon}` : ''}`}>
                           {renderIcon(item.icon)}
                         </div>
@@ -392,7 +426,7 @@ const Profile: React.FC = () => {
                 {section.layout === 'list' && (
                   <div className="profile-timeline">
                     {section.items.map((item, idx) => (
-                      <div key={item.id} className="profile-timeline-item" onClick={() => openSheet({ type: 'timeline', item })}>
+                      <div key={item.id} className="profile-timeline-item" onClick={() => handleItemClick(item.id, item)}>
                         <div className="profile-timeline-marker" data-index={idx + 1} />
                         <div className="profile-timeline-content">
                           <div className="profile-timeline-head">
@@ -419,7 +453,7 @@ const Profile: React.FC = () => {
                           </div>
                         </div>
                         {item.cta && (
-                          <button className="profile-support-cta" onClick={() => openSheet({ type: 'support', item })}>
+                          <button className="profile-support-cta" onClick={() => handleItemClick(item.id, item)}>
                             {item.cta}
                           </button>
                         )}
@@ -432,18 +466,6 @@ const Profile: React.FC = () => {
           </>
         )}
       </div>
-
-      {activeSheet && (
-        <DetailSheet
-          open={Boolean(activeSheet)}
-          title={sheetTitle}
-          onClose={closeSheet}
-          ctaLabel={sheetCta || undefined}
-          closeLabel={t('profile.sheet.close')}
-        >
-          {sheetContent}
-        </DetailSheet>
-      )}
     </div>
   );
 };

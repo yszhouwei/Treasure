@@ -382,8 +382,7 @@ const Home: React.FC = () => {
                   className="product-image"
                   style={{
                     backgroundImage: `url(/images/${product.id === 1 ? 'product-watch' : 'product-stamps'}.svg)`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
+                    backgroundColor: product.id === 1 ? '#2c1810' : '#1a5757'
                   }}
                 >
                   <span className="product-tag" style={{ backgroundColor: product.tagColor }}>
@@ -402,16 +401,16 @@ const Home: React.FC = () => {
                   </div>
                   <div className="product-footer">
                     <span className="product-price">¥{product.price.toFixed(2)}</span>
-                    <button
-                      className="join-btn"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setActivePage({ type: 'hotProduct', payload: product });
-                      }}
-                    >
-                      {t('common.join')}
-                    </button>
                   </div>
+                  <button
+                    className="join-btn"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setActivePage({ type: 'hotProduct', payload: product });
+                    }}
+                  >
+                    {t('common.join')}
+                  </button>
                 </div>
               </div>
             ))}
@@ -438,8 +437,7 @@ const Home: React.FC = () => {
                   className="ai-product-image"
                   style={{
                     backgroundImage: `url(/images/${product.id === 1 ? 'product-camera' : 'product-keyboard'}.svg)`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
+                    backgroundColor: product.id === 1 ? '#2c2c2c' : '#1a1a1a'
                   }}
                 >
                   <span className="ai-product-tag" style={{ backgroundColor: product.tagColor }}>
@@ -450,7 +448,6 @@ const Home: React.FC = () => {
                   <h3 className="ai-product-name">{product.name}</h3>
                   {product.description && (
                     <div className="ai-product-desc">
-                      <span className="info-icon">ⓘ</span>
                       <span>{product.description}</span>
                     </div>
                   )}
