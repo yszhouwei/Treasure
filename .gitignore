@@ -139,6 +139,28 @@ build/
 .env.production.local
 
 # Vite
- vite.config.ts.timestamp-*
- vite.config.mjs.timestamp-*
- vite.config.mts.timestamp-*
+vite.config.ts.timestamp-*
+vite.config.mjs.timestamp-*
+vite.config.mts.timestamp-*
+
+# 临时文件和说明文档（保留正式文档）
+*完成说明.md
+*完成.txt
+*完成通知.txt
+*说明.txt
+*说明.md
+安装依赖*.bat
+一键*.bat
+诊断*.bat
+启动*.bat
+修复*.bat
+*.临时.*
+
+# 保留重要的项目文档和脚本
+!README.md
+!DEVELOPMENT_GUIDE.md
+!PUSH_SCRIPT_GUIDE.md
+!GitHub配置说明.md
+!setup-github.bat
+!push-to-github.bat
+!start-h5.bat

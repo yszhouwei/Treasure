@@ -74,7 +74,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onChange }) => {
   return (
     <div className="bottom-nav-wrapper">
       <nav className="bottom-nav">
-        {navItems.map(item => (
+        {navItems.map((item) => (
           <button
             key={item.id}
             className={`nav-item ${activeTab === item.id ? 'active' : ''} ${!item.available ? 'disabled' : ''}`}

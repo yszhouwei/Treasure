@@ -8,7 +8,8 @@
     "participate": "Participate Now",
     "openGroup": "Start Group",
     "loading": "Loading...",
-    "noData": "No Data"
+    "noData": "No Data",
+    "required": "Required"
   },
   "header": {
     "logo": "TreasureX",
@@ -67,12 +68,21 @@
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm password",
+    "name": "Name",
     "forgotPassword": "Forgot password?",
     "ctaLogin": "Log in now",
     "ctaRegister": "Create account",
     "switchToRegister": "New here? Create an account",
     "switchToLogin": "Already a member? Log in",
     "agreement": "By signing up you agree to the Terms and Privacy Policy",
+    "passwordMismatch": "Passwords do not match",
+    "successLogin": "Logged in successfully",
+    "successRegister": "Account created",
+    "loggedInTitle": "Welcome back, {name}",
+    "loggedInSubtitle": "You're already signed in",
+    "loggedInHint": "Head to the Profile tab anytime to manage preferences and security",
+    "manageAccount": "Go to Profile",
+    "logout": "Log out",
     "features": [
       {
         "title": "Unlock exclusive perks",
@@ -205,7 +215,39 @@
         "title": "An Ancient Coin Hidden in the Old Port",
         "summary": "Stumbled upon a private exhibition and authenticated an 18th-century maritime coin with a historian."
       }
-    ]
+    ],
+    "sheet": {
+      "trending": {
+        "title": "Trending: {title}",
+        "meta": "Follow updates to secure your spot before the campaign closes.",
+        "cta": "Subscribe to alerts"
+      },
+      "insight": {
+        "title": "Insight: {title}",
+        "meta": "Save this checklist to your library for easy reference.",
+        "cta": "Save to library"
+      },
+      "story": {
+        "title": "Story: {title}",
+        "meta": "Have a story to share? Join the community and tell us.",
+        "cta": "Visit community"
+      },
+      "tag": {
+        "title": "Tag: #{tag}",
+        "desc": "Curated picks for #{tag} are ready for you to explore.",
+        "meta": "Follow this tag to stay updated.",
+        "cta": "Follow tag"
+      },
+      "search": {
+        "title": "Search: {query}",
+        "query": "Query: {query}",
+        "default": "Top treasures",
+        "empty": "No matches yet. Try another keyword.",
+        "meta": "Recommended based on current popularity.",
+        "cta": "Save search"
+      },
+      "close": "Close"
+    }
   },
   "treasure": {
     "hero": {
@@ -281,6 +323,36 @@
     },
     "orderStatus": {
       "completed": "Completed"
+    },
+    "sheet": {
+      "balance": {
+        "title": "Account balance",
+        "desc": "Available balance {amount}. Withdrawals settle on T+1 business day.",
+        "meta": "Linked bank: CMB ····1234",
+        "status": "Latest top-up: 2025-11-09 19:30",
+        "cta": "View transactions"
+      },
+      "stat": {
+        "title": "{label} insight",
+        "desc": "{label} is currently {value}.",
+        "meta": "See weekly reports for full analytics",
+        "cta": "Open analytics"
+      },
+      "mission": {
+        "title": "Mission progress",
+        "progress": "Current progress: {progress}%",
+        "reward": "Reward: {reward}",
+        "cta": "Go to missions"
+      },
+      "order": {
+        "title": "Order detail",
+        "status": "Status: {status}",
+        "amount": "Amount: {amount}",
+        "time": "Placed at: {time}",
+        "id": "Order ID: {id}",
+        "cta": "View order"
+      },
+      "close": "Close"
     }
   },
   "group": {
@@ -364,9 +436,50 @@
       "invite": "Invite Members",
       "arrange": "Schedule",
       "manage": "Manage"
+    },
+    "sheet": {
+      "hero": {
+        "title": "Team snapshot",
+        "desc": "Keep leader, schedule, and coverage at a glance for quick coordination.",
+        "schedule": "Today’s schedule: {schedule}",
+        "region": "Coverage: {region}",
+        "cta": "Open team console"
+      },
+      "progress": {
+        "title": "Weekly engagement",
+        "subtitle": "Track goal completion and incentives in one place",
+        "desc": "Engagement is {percent}. Hit the goal to unlock Diamond perks.",
+        "hint": "Review the active member leaderboard to encourage top contributors.",
+        "button": "View engagement",
+        "cta": "Open engagement"
+      },
+      "metric": {
+        "title": "{label}",
+        "desc": "Current value is {value}.",
+        "meta": "See detailed analytics in the team report",
+        "cta": "View report"
+      },
+      "upcoming": {
+        "title": "Upcoming campaign",
+        "desc": "Secure resources and invite potential members ahead of launch.",
+        "cta": "Schedule now"
+      },
+      "active": {
+        "title": "Live campaign",
+        "desc": "Monitor conversion and keep the team aligned for better results.",
+        "progress": "Progress: {progress}%",
+        "cta": "Open dashboard"
+      },
+      "close": "Close"
     }
   },
   "profile": {
+    "emptyTitle": "Sign in to unlock your treasure hub",
+    "emptySubtitle": "Sync assets, points, and group buys while enjoying member-only perks",
+    "emptyAction": "Sign in",
+    "refresh": "Refresh data",
+    "refreshing": "Refreshing…",
+    "logout": "Log out",
     "hero": {
       "greeting": "Welcome back",
       "name": "Charlotte",
@@ -495,7 +608,242 @@
           }
         ]
       }
+    },
+    "sheet": {
+      "actionTitle": "Action: {{label}}",
+      "timelineTitle": "Activity detail",
+      "supportTitle": "Support & help",
+      "cta": {
+        "action": "Do it now",
+        "timeline": "View detail",
+        "support": "Contact support"
+      },
+      "hint": {
+        "action": "Follow the instructions to complete this task. Updates will appear in Recent Activity.",
+        "timeline": "Review the full record and follow up promptly so important leads aren't missed.",
+        "support": "Need extra help? Reach out to your concierge or browse the help center."
+      },
+      "close": "Close"
     }
+  },
+  "home": {
+    "sheet": {
+      "close": "Close",
+      "banner": {
+        "title": "Limited-time campaign",
+        "desc": "Join the global group-buy blitz and bookmark this banner for instant updates.",
+        "meta": "Ends in 48 hours",
+        "cta": "Set reminder"
+      },
+      "promo": {
+        "title": "New user bonus",
+        "meta": "Complete your first group buy to unlock extra coupons.",
+        "cta": "View perks"
+      },
+      "groupType": {
+        "title": "{name}",
+        "desc": "{name} is designed for fast team building with smart member recommendations.",
+        "meta": "Review group-buy rules and rewards",
+        "cta": "View rules"
+      },
+      "hotProduct": {
+        "title": "{name}",
+        "descWatch": "Curated 1960s Swiss vintage watch with certification and 1-year care service.",
+        "descStamps": "Complete 1940-1950 rare stamp set with archival case.",
+        "price": "Group price: ¥{price}",
+        "participants": "Participants: {count}",
+        "status": "Status: {status}",
+        "cta": "Join the group"
+      },
+      "aiProduct": {
+        "title": "{name}",
+        "descKeyboard": "AI suggests a premium mechanical keyboard with hot-swap support and RGB.",
+        "descFallback": "Tailored recommendation based on your browsing.",
+        "price": "Reference price: ¥{price}",
+        "status": "Availability: {status}",
+        "cta": "Add to wishlist"
+      }
+    }
+  },
+  "productDetail": {
+    "title": "Product Details",
+    "groupPrice": "Group Price",
+    "participants": "{count} joined",
+    "progress": "Group Progress",
+    "progressHint": "{remaining} more needed",
+    "tabs": {
+      "detail": "Details",
+      "rules": "Rules",
+      "comments": "Reviews"
+    },
+    "specifications": "Specifications",
+    "brand": "Brand",
+    "condition": "Condition",
+    "brandNew": "Brand New",
+    "warranty": "Warranty",
+    "warranty1Year": "1-Year Official Warranty",
+    "description": "Description",
+    "defaultDescription": "A carefully selected premium item, perfect for collection or personal use.",
+    "highlights": "Highlights",
+    "highlight1": "100% Authentic, Money-back Guarantee",
+    "highlight2": "7-Day Return Policy",
+    "highlight3": "Free SF Express, Ships in 72hrs",
+    "groupRules": "Group Buy Rules",
+    "rule1Title": "Group Formation",
+    "rule1Desc": "Auto-ships within 24hrs once minimum group size is reached.",
+    "rule2Title": "Failed Groups",
+    "rule2Desc": "Full refund if group expires without reaching minimum size.",
+    "rule3Title": "Discount Policy",
+    "rule3Desc": "Group price is final, cannot be combined with other offers.",
+    "noComments": "No reviews yet, be the first!",
+    "joinGroup": "Join Group"
+  },
+  "groupTypeDetail": {
+    "subtitle": "{type} for faster groups and better deals",
+    "rulesTitle": "Group Buy Rules",
+    "rule1Title": "Time Limit",
+    "rule1Desc": "{type} must form within 24 hours, or auto-refund",
+    "rule2Title": "Group Size",
+    "rule2Desc": "{type} requires minimum participants to succeed",
+    "rule3Title": "Successful Group",
+    "rule3Desc": "Ships within 72hrs after group forms, free SF Express",
+    "rule4Title": "Discount Tier",
+    "rule4Desc": "Larger groups get bigger discounts, up to 50% off",
+    "advantagesTitle": "Advantages",
+    "advantage1Title": "Affordable Pricing",
+    "advantage1Desc": "Bulk purchasing power means better prices for everyone",
+    "advantage2Title": "Quality Assured",
+    "advantage2Desc": "All items rigorously vetted, money-back guarantee",
+    "advantage3Title": "Fast Shipping",
+    "advantage3Desc": "Ships immediately after group forms, 72hr delivery",
+    "faqTitle": "FAQ",
+    "faq1Question": "What if the group fails?",
+    "faq1Answer": "Auto-refund to your original payment method, usually 3-5 business days.",
+    "faq2Question": "Can I invite friends?",
+    "faq2Answer": "Absolutely! Share the link and enjoy group discounts together.",
+    "faq3Question": "Are returns supported?",
+    "faq3Answer": "Yes, 7-day return policy. Item must be unused and in original condition.",
+    "startGroup": "Start a Group"
+  },
+  "campaign": {
+    "limitedTime": "Limited Time",
+    "newUser": "New User",
+    "detailsTitle": "Campaign Details",
+    "defaultDescription": "Curated quality products at unbeatable group prices!",
+    "bannerDescription": "24-hour flash sale! All group buy items up to 50% off, plus extra coupons!",
+    "promoDescription": "New user exclusive! ¥50 off first order, plus free welcome gift!",
+    "highlight1Title": "Flash Deal",
+    "highlight1Desc": "Special discount for orders within 24 hours",
+    "highlight2Title": "Super Savings",
+    "highlight2Desc": "All items up to 50% off",
+    "highlight3Title": "Group Discount",
+    "highlight3Desc": "Invite friends to save even more",
+    "rulesTitle": "How to Participate",
+    "step1Title": "Browse Items",
+    "step1Desc": "Find your favorite group buy products",
+    "step2Title": "Start or Join",
+    "step2Desc": "Create a new group or join an existing one",
+    "step3Title": "Wait for Group",
+    "step3Desc": "Auto-ships when group is complete",
+    "recommendedTitle": "Recommended Items",
+    "hot": "Hot",
+    "view": "View",
+    "noticeTitle": "Terms & Conditions",
+    "notice1": "Limited quantities available, while supplies last",
+    "notice2": "Full refund if group fails, risk-free participation",
+    "notice3": "TreasureX reserves the right of final interpretation",
+    "joinNow": "Join Now",
+    "startGroup": "Start Group"
+  },
+  "joinGroup": {
+    "title": "Confirm Participation",
+    "groupBuying": "Group Buying",
+    "progressText": "{total} more needed ({current} joined)",
+    "productInfo": "Product Info",
+    "shippingAddress": "Shipping Address",
+    "addNewAddress": "Add New Address",
+    "priceBreakdown": "Price Breakdown",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "freeShipping": "Free",
+    "youSave": "You Save",
+    "rulesNotice": "Group will ship within 24hrs if successful. Auto-refund if not.",
+    "total": "Total",
+    "save": "Save",
+    "confirmJoin": "Confirm & Join"
+  },
+  "createGroup": {
+    "title": "Start a Group",
+    "groupSize": "Group of {size}",
+    "typeDescription": "Invite friends to join and save more",
+    "selectProduct": "Select Product",
+    "duration": "Duration",
+    "durationHint": "Recommended: 24-48 hours",
+    "settings": "Group Settings",
+    "publicGroup": "Public Group",
+    "publicGroupDesc": "Others can search and join your group",
+    "leaderRewards": "Leader Rewards",
+    "extraDiscount": "Extra Discount",
+    "extraDiscountDesc": "5% cashback when group succeeds",
+    "bonusPoints": "Bonus Points",
+    "bonusPointsDesc": "200 points redeemable for coupons",
+    "prioritySupport": "Priority Support",
+    "prioritySupportDesc": "Exclusive customer service channel",
+    "rules": "Group Rules",
+    "rule1": "Leader pays first, ships together after group forms",
+    "rule2": "Auto-refund if group expires, 3-5 business days",
+    "rule3": "Leader gets extra points and coupon rewards",
+    "rule4": "No individual refunds after success, only full group",
+    "depositRequired": "Deposit Required",
+    "confirmCreate": "Create Group"
+  },
+  "payment": {
+    "title": "Checkout",
+    "paymentAmount": "Payment Amount",
+    "securePayment": "🔒 Secure Payment",
+    "orderInfo": "Order Info",
+    "product": "Product",
+    "quantity": "Quantity",
+    "groupType": "Group Type",
+    "paymentMethod": "Payment Method",
+    "wechatPay": "WeChat Pay",
+    "alipay": "Alipay",
+    "balance": "Balance",
+    "availableBalance": "Available",
+    "couponAvailable": "Coupons available",
+    "selectCoupon": "Select Coupon",
+    "paymentNotice": "Payment Notice",
+    "notice1": "Order enters group phase after payment",
+    "notice2": "Auto-refund if group fails, no worries",
+    "notice3": "Contact support: 400-123-4567",
+    "agreeToTerms": "I agree to the",
+    "terms": "Payment Agreement",
+    "payNow": "Pay Now",
+    "processing": "Processing...",
+    "processingPayment": "Processing your payment...",
+    "pleaseAgreeTerms": "Please agree to payment terms first"
+  },
+  "orderSuccess": {
+    "title": "Payment Successful",
+    "subtitle": "Order submitted, waiting for group",
+    "orderNumber": "Order No.",
+    "product": "Product",
+    "amount": "Amount Paid",
+    "groupProgress": "Group Progress",
+    "members": "people",
+    "stillNeed": "{count} more needed",
+    "groupComplete": "Group Complete!",
+    "estimatedTime": "Est. Ship Time",
+    "inviteTitle": "Invite Friends",
+    "inviteDesc": "Share to complete group faster",
+    "shareWithFriends": "Share with Friends",
+    "tips": "Tips",
+    "tip1": "Ships within 72hrs after group succeeds",
+    "tip2": "Check progress in 'My Groups'",
+    "tip3": "Contact support if you have any questions",
+    "viewOrder": "View Order",
+    "backHome": "Back Home",
+    "shareMessage": "Join my group buy!"
   }
 }
 

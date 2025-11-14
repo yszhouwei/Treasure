@@ -615,3 +615,106 @@
   }
 }
 
+.icon-btn.user-btn.logged-in {
+  background: rgba(61, 131, 97, 0.08);
+}
+
+.user-avatar-initial {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.auth-message {
+  margin: 0 8px 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.auth-message.error {
+  background: rgba(255, 85, 85, 0.1);
+  color: #d4380d;
+  border: 1px solid rgba(255, 85, 85, 0.2);
+}
+
+.auth-account-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-account-header {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 0 8px;
+}
+
+.auth-account-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  color: #fff;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.auth-account-meta h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #1f2d3d;
+}
+
+.auth-account-meta p {
+  margin: 4px 0;
+  font-size: 13px;
+  color: #7a8a87;
+}
+
+.auth-account-meta span {
+  font-size: 12px;
+  color: #9aa5a1;
+}
+
+.auth-account-actions {
+  display: flex;
+  gap: 12px;
+  padding: 0 8px;
+}
+
+.auth-account-btn {
+  flex: 1;
+  border: 1px solid #ecf2ef;
+  background: #ffffff;
+  color: #3d8361;
+  border-radius: 14px;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-account-btn.primary {
+  background: linear-gradient(135deg, #3d8361, #74b49b);
+  color: #fff;
+  border: none;
+  box-shadow: 0 12px 28px rgba(61, 131, 97, 0.24);
+}
+
+.auth-account-hint {
+  margin: 0 8px;
+  font-size: 12px;
+  color: #8c8c8c;
+}
+

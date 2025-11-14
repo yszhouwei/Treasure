@@ -1,3 +1,8 @@
+/* 
+ * Profile 页面优化版 - 增强视觉层次感
+ * 将此文件重命名为 Profile.css 使用
+ */
+
 .profile-container {
   min-height: 100vh;
   background: #f5f5f5;
@@ -9,27 +14,28 @@
   padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px; /* 增加间距 */
 }
 
+/* ========== 优化 Hero 区域 ========== */
 .profile-hero {
-  margin: 16px 16px 8px;
-  border-radius: 24px;
+  margin: 16px 16px 12px; /* 增加底部间距 */
+  border-radius: 28px; /* 增大圆角 */
   position: relative;
   overflow: hidden;
   background: linear-gradient(135deg, #2e4d38, #3d8361, #74b49b);
   box-shadow: 
-    0 4px 12px rgba(46, 77, 56, 0.15),
-    0 12px 32px rgba(46, 77, 56, 0.25),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 4px 16px rgba(46, 77, 56, 0.20),
+    0 16px 48px rgba(46, 77, 56, 0.30),
+    inset 0 2px 0 rgba(255, 255, 255, 0.15); /* 增强阴影和内发光 */
 }
 
 .profile-hero::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.18), transparent 55%),
-    radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.12), transparent 60%);
+  background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.20), transparent 55%),
+    radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.15), transparent 60%);
   opacity: 0.9;
 }
 
@@ -39,7 +45,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding: 32px 20px 28px;
+  padding: 32px 24px; /* 增加左右内边距 */
   color: #fff;
 }
 
@@ -51,20 +57,20 @@
 }
 
 .profile-avatar {
-  width: 64px;
+  width: 64px; /* 增大头像 */
   height: 64px;
-  border-radius: 20px;
+  border-radius: 20px; /* 增大圆角 */
   background: rgba(255, 255, 255, 0.22);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: 26px; /* 增大字号 */
   font-weight: 700;
   letter-spacing: 0.4px;
   box-shadow: 
     inset 0 0 16px rgba(255, 255, 255, 0.3),
-    0 8px 20px rgba(0, 0, 0, 0.15);
-  border: 2px solid rgba(255, 255, 255, 0.4);
+    0 8px 20px rgba(0, 0, 0, 0.15); /* 添加外阴影 */
+  border: 2px solid rgba(255, 255, 255, 0.4); /* 增加边框 */
 }
 
 .profile-hero-info {
@@ -76,60 +82,65 @@
 
 .profile-hero-info h1 {
   margin: 0;
-  font-size: 20px;
+  font-size: 22px; /* 增大字号 */
   letter-spacing: 0.6px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* 添加文字阴影 */
 }
 
 .profile-hero-info p {
   margin: 0;
   font-size: 13px;
   line-height: 1.45;
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .profile-hero-greeting {
   font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.15em; /* 增加字间距 */
   color: rgba(255, 255, 255, 0.75);
+  font-weight: 600; /* 添加字重 */
 }
 
 .profile-hero-badge {
-  padding: 6px 12px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.22);
+  padding: 8px 16px; /* 增大内边距 */
+  border-radius: 20px; /* 增大圆角 */
+  background: rgba(255, 255, 255, 0.25); /* 增加透明度 */
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700; /* 增加字重 */
   white-space: nowrap;
-  border: 1px solid rgba(255, 255, 255, 0.38);
+  border: 2px solid rgba(255, 255, 255, 0.45); /* 增强边框 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10); /* 添加阴影 */
 }
 
+/* ========== 优化进度条区域 ========== */
 .profile-hero-progress {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  background: rgba(24, 60, 46, 0.40);
-  border-radius: 20px;
-  padding: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.25);
+  gap: 12px; /* 增加间距 */
+  background: rgba(24, 60, 46, 0.40); /* 增加透明度 */
+  border-radius: 20px; /* 增大圆角 */
+  padding: 20px; /* 增大内边距 */
+  border: 2px solid rgba(255, 255, 255, 0.25); /* 增强边框 */
   box-shadow: 
     0 8px 24px rgba(0, 0, 0, 0.15),
-    inset 0 2px 0 rgba(255, 255, 255, 0.12);
+    inset 0 2px 0 rgba(255, 255, 255, 0.12); /* 添加内发光 */
 }
 
 .profile-progress-header {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.82);
+  font-size: 13px; /* 增大字号 */
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 600; /* 添加字重 */
 }
 
 .profile-progress-bar {
-  height: 10px;
+  height: 10px; /* 增加高度 */
   background: rgba(255, 255, 255, 0.15);
   border-radius: 999px;
   overflow: hidden;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15); /* 添加内阴影 */
 }
 
 .profile-progress-inner {
@@ -138,11 +149,12 @@
   border-radius: 999px;
   box-shadow: 
     0 0 16px rgba(251, 191, 36, 0.6),
-    0 4px 12px rgba(245, 158, 11, 0.5);
+    0 4px 12px rgba(245, 158, 11, 0.5); /* 增强发光效果 */
   position: relative;
   overflow: hidden;
 }
 
+/* 添加动画光泽效果 */
 .profile-progress-inner::after {
   content: '';
   position: absolute;
@@ -156,10 +168,10 @@
     rgba(255, 255, 255, 0.5),
     transparent
   );
-  animation: progress-shimmer 2.5s infinite;
+  animation: shimmer 2.5s infinite;
 }
 
-@keyframes progress-shimmer {
+@keyframes shimmer {
   to { left: 100%; }
 }
 
@@ -172,74 +184,159 @@
 }
 
 .profile-level-tag {
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.24);
+  padding: 4px 12px; /* 增大内边距 */
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.28); /* 增加透明度 */
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700; /* 增加字重 */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10); /* 添加阴影 */
 }
 
+/* ========== 优化统计卡片 ========== */
 .profile-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
+  gap: 16px; /* 增加间距 */
 }
 
 .profile-stat-card {
-  background: rgba(255, 255, 255, 0.14);
-  border-radius: 16px;
-  padding: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.18); /* 增加透明度 */
+  border-radius: 18px; /* 增大圆角 */
+  padding: 18px; /* 增大内边距 */
+  border: 2px solid rgba(255, 255, 255, 0.35); /* 增强边框 */
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  backdrop-filter: blur(8px);
+  gap: 8px; /* 增加间距 */
+  backdrop-filter: blur(12px);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.10),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2); /* 添加内发光 */
 }
 
 .profile-stat-label {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.80);
+  font-weight: 600; /* 添加字重 */
+  text-transform: uppercase; /* 大写 */
+  letter-spacing: 0.05em; /* 字间距 */
 }
 
 .profile-stat-value {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 22px; /* 增大字号 */
+  font-weight: 800; /* 增加字重 */
   letter-spacing: 0.4px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* 添加阴影 */
 }
 
 .profile-stat-change {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.82);
+  font-size: 12px; /* 增大字号 */
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 700; /* 增加字重 */
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.15); /* 添加背景 */
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.25); /* 添加边框 */
 }
 
+.profile-stat-change::before {
+  content: '↑';
+  font-size: 14px;
+}
+
+/* ========== 优化操作按钮 ========== */
+.profile-hero-toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding-top: 20px; /* 增加顶部间距 */
+  border-top: 2px solid rgba(255, 255, 255, 0.15); /* 增强分隔线 */
+  margin-top: 8px;
+}
+
+.profile-refresh-btn,
+.profile-logout-btn {
+  border: none;
+  border-radius: 14px; /* 增大圆角 */
+  padding: 12px 20px; /* 增大内边距 */
+  font-size: 13px; /* 增大字号 */
+  font-weight: 700; /* 增加字重 */
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  flex: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12); /* 添加阴影 */
+}
+
+.profile-refresh-btn {
+  background: rgba(255, 255, 255, 0.22); /* 增加透明度 */
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.4); /* 增强边框 */
+}
+
+.profile-refresh-btn:hover {
+  background: rgba(255, 255, 255, 0.30);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+.profile-refresh-btn.loading {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.profile-logout-btn {
+  background: rgba(255, 255, 255, 0.10);
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.20); /* 增强边框 */
+}
+
+.profile-logout-btn:hover {
+  background: rgba(255, 77, 77, 0.15);
+  border-color: rgba(255, 77, 77, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 77, 77, 0.20);
+}
+
+/* ========== 优化快捷操作 ========== */
 .profile-actions {
   margin: 0 16px;
+  background: #ffffff;
+  border-radius: 24px; /* 增大圆角 */
+  padding: 28px 20px; /* 增大内边距 */
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    0 12px 32px rgba(0, 0, 0, 0.08); /* 增强阴影 */
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .profile-action-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 16px; /* 增加间距 */
 }
 
 .profile-action-card {
-  border: 2px solid transparent;
-  background: #f8f8f8;
-  border-radius: 20px;
-  padding: 24px 18px;
+  border: 2px solid transparent; /* 增加边框 */
+  background: #f8f8f8; /* 添加背景色 */
+  border-radius: 20px; /* 增大圆角 */
+  padding: 24px 18px; /* 增大内边距 */
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 12px; /* 增加间距 */
   box-shadow: 
     0 4px 12px rgba(0, 0, 0, 0.04),
-    0 12px 28px rgba(0, 0, 0, 0.06);
+    0 12px 28px rgba(0, 0, 0, 0.06); /* 增强阴影 */
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
 
+/* 添加顶部装饰线 */
 .profile-action-card::before {
   content: '';
   position: absolute;
@@ -250,7 +347,6 @@
   background: linear-gradient(90deg, #D4A574, #F9E39B);
   opacity: 0;
   transition: opacity 0.3s;
-  z-index: 0;
 }
 
 .profile-action-card:hover {
@@ -267,19 +363,17 @@
 }
 
 .profile-action-icon {
-  width: 52px;
+  width: 52px; /* 增大尺寸 */
   height: 52px;
-  border-radius: 16px;
+  border-radius: 16px; /* 增大圆角 */
   background: linear-gradient(135deg, rgba(212, 165, 116, 0.15), rgba(249, 227, 155, 0.15));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
-  border: 2px solid rgba(212, 165, 116, 0.30);
-  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.25);
+  font-size: 26px; /* 增大字号 */
+  border: 2px solid rgba(212, 165, 116, 0.30); /* 添加边框 */
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.25); /* 添加阴影 */
   transition: all 0.3s;
-  position: relative;
-  z-index: 1;
 }
 
 .profile-action-card:hover .profile-action-icon {
@@ -288,41 +382,40 @@
 }
 
 .profile-action-label {
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 16px; /* 增大字号 */
+  font-weight: 700; /* 增加字重 */
   color: #262626;
-  position: relative;
-  z-index: 1;
 }
 
 .profile-action-desc {
   font-size: 12px;
   color: #8c8c8c;
-  position: relative;
-  z-index: 1;
+  line-height: 1.5;
 }
 
+/* ========== 优化 Section 区域 ========== */
 .profile-section {
-  margin: 0 16px 20px;
+  margin: 0 16px 20px; /* 增加底部间距 */
   background: #ffffff;
-  border-radius: 24px;
-  padding: 28px 24px;
+  border-radius: 24px; /* 增大圆角 */
+  padding: 28px 24px; /* 增大内边距 */
   box-shadow: 
     0 2px 8px rgba(0, 0, 0, 0.04),
-    0 12px 32px rgba(0, 0, 0, 0.08);
+    0 12px 32px rgba(0, 0, 0, 0.08); /* 增强阴影 */
   border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .profile-section-header {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #f0f0f0;
+  gap: 6px; /* 增加间距 */
+  margin-bottom: 20px; /* 增加底部间距 */
+  padding-bottom: 16px; /* 添加底部内边距 */
+  border-bottom: 2px solid #f0f0f0; /* 添加分隔线 */
   position: relative;
 }
 
+/* 添加装饰线 */
 .profile-section-header::after {
   content: '';
   position: absolute;
@@ -335,16 +428,17 @@
 
 .profile-section-header h2 {
   margin: 0;
-  font-size: 19px;
+  font-size: 19px; /* 增大字号 */
   color: #262626;
-  font-weight: 700;
+  font-weight: 700; /* 增加字重 */
 }
 
 .profile-section-header span {
-  font-size: 12px;
+  font-size: 13px; /* 增大字号 */
   color: #8c8c8c;
 }
 
+/* 继续使用原有的其他样式... */
 .profile-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -354,17 +448,25 @@
 .profile-grid-item {
   display: flex;
   gap: 12px;
-  padding: 12px;
-  border-radius: 14px;
+  padding: 14px;
+  border-radius: 16px;
   background: linear-gradient(135deg, #f8fafc, #f2f7f4);
   border: 1px solid #ecf1ef;
   align-items: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.profile-grid-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border-color: rgba(212, 165, 116, 0.3);
 }
 
 .profile-grid-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
   background: rgba(45, 114, 89, 0.12);
   display: flex;
   align-items: center;
@@ -412,6 +514,12 @@
   gap: 12px;
   position: relative;
   padding-left: 28px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.profile-timeline-item:hover {
+  transform: translateX(4px);
 }
 
 .profile-timeline-item::before {
@@ -448,6 +556,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1;
 }
 
 .profile-timeline-head {
@@ -495,6 +604,13 @@
   border-radius: 16px;
   background: linear-gradient(135deg, #fdfcfa, #faf5ee);
   border: 1px solid #f1e5d3;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.profile-support-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
 .profile-support-left {
@@ -547,57 +663,23 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-.profile-hero-toolbar {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 12px;
-}
-
-.profile-refresh-btn,
-.profile-logout-btn {
-  border: none;
-  border-radius: 12px;
-  padding: 8px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.profile-refresh-btn {
-  background: rgba(255, 255, 255, 0.24);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-.profile-refresh-btn.loading {
-  opacity: 0.7;
-  cursor: progress;
-}
-
-.profile-logout-btn {
-  background: rgba(0, 0, 0, 0.18);
-  color: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-}
-
 .profile-empty-card {
   margin: 80px 16px;
-  padding: 28px 24px;
+  padding: 32px 28px;
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 24px;
   border: 1px solid #ecf1ef;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
   text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   align-items: center;
 }
 
 .profile-empty-icon {
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
   background: rgba(61, 131, 97, 0.1);
   display: flex;
@@ -607,19 +689,19 @@
 }
 
 .profile-empty-icon svg {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
 }
 
 .profile-empty-card h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 22px;
   color: #1f2d3d;
 }
 
 .profile-empty-card p {
   margin: 0;
-  font-size: 13px;
+  font-size: 14px;
   color: #7a8a87;
 }
 
@@ -627,9 +709,9 @@
   border: none;
   background: linear-gradient(135deg, #3d8361, #74b49b);
   color: #fff;
-  border-radius: 14px;
-  padding: 10px 20px;
-  font-size: 14px;
+  border-radius: 16px;
+  padding: 12px 24px;
+  font-size: 15px;
   font-weight: 600;
   cursor: pointer;
   box-shadow: 0 14px 32px rgba(61, 131, 97, 0.24);
@@ -672,132 +754,16 @@
 .skeleton-shimmer {
   background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 37%, #f2f2f2 63%);
   background-size: 400% 100%;
-  animation: shimmer 1.2s infinite;
+  animation: shimmer-skeleton 1.2s infinite;
 }
 
-@keyframes shimmer {
+@keyframes shimmer-skeleton {
   0% {
     background-position: 100% 0;
   }
   100% {
     background-position: -100% 0;
   }
-}
-
-.profile-grid-item {
-  cursor: pointer;
-}
-
-.profile-timeline-item {
-  cursor: pointer;
-}
-
-.profile-sheet-overlay {
-  position: fixed;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-  z-index: 1400;
-}
-
-.profile-sheet-overlay.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.profile-sheet-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(15, 23, 16, 0.35);
-  backdrop-filter: blur(4px);
-}
-
-.profile-sheet {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: #ffffff;
-  border-radius: 20px 20px 0 0;
-  padding: 20px;
-  box-shadow: 0 -18px 38px rgba(0, 0, 0, 0.18);
-  transform: translateY(16%);
-  transition: transform 0.25s ease;
-}
-
-.profile-sheet-overlay.open .profile-sheet {
-  transform: translateY(0);
-}
-
-.profile-sheet-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.profile-sheet-header h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #1f2d3d;
-}
-
-.profile-sheet-close {
-  border: none;
-  background: rgba(0, 0, 0, 0.05);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-
-.profile-sheet-close svg {
-  width: 16px;
-  height: 16px;
-  stroke-width: 2;
-}
-
-.profile-sheet-body {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  color: #4d5a56;
-  font-size: 13px;
-}
-
-.profile-sheet-body h4 {
-  margin: 0;
-  font-size: 16px;
-  color: #1f2d3d;
-}
-
-.profile-sheet-meta {
-  font-size: 12px;
-  color: #8c8c8c;
-}
-
-.profile-sheet-status {
-  font-size: 12px;
-  color: #3d8361;
-  font-weight: 600;
-}
-
-.profile-sheet-cta {
-  margin-top: 18px;
-  width: 100%;
-  border: none;
-  background: linear-gradient(135deg, #d4a574, #c7905a);
-  color: #fff;
-  border-radius: 16px;
-  padding: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 16px 32px rgba(212, 165, 116, 0.26);
 }
 
 @media (max-width: 360px) {
@@ -809,3 +775,4 @@
     grid-template-columns: 1fr;
   }
 }
+

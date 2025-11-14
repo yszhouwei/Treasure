@@ -1,0 +1,476 @@
+.order-success-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f5f5f5;
+  z-index: 3000;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 内容区域 */
+.success-content {
+  padding: 60px 16px 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* 成功图标 */
+.success-icon-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+}
+
+.success-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #52c41a, #73d13d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(82, 196, 26, 0.3);
+  animation: success-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.success-icon svg {
+  width: 60px;
+  height: 60px;
+  stroke: #fff;
+  stroke-width: 3;
+  animation: checkmark-draw 0.8s ease 0.2s both;
+}
+
+@keyframes success-pop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes checkmark-draw {
+  0% {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* 粒子效果 */
+.success-particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #52c41a;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  animation: particle-burst 1.2s ease-out calc(var(--i) * 0.1s);
+}
+
+@keyframes particle-burst {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+      calc(-50% + var(--i) * 15px * cos(var(--i) * 45deg)), 
+      calc(-50% + var(--i) * 15px * sin(var(--i) * 45deg))
+    ) scale(0);
+    opacity: 0;
+  }
+}
+
+/* 标题 */
+.success-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+  text-align: center;
+}
+
+.success-subtitle {
+  font-size: 15px;
+  color: #8c8c8c;
+  margin: 0;
+  text-align: center;
+}
+
+/* 订单卡片 */
+.order-success-card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  animation: slide-up 0.6s ease 0.2s both;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-label {
+  font-size: 14px;
+  color: #8c8c8c;
+}
+
+.order-number {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: monospace;
+}
+
+.order-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #e8e8e8, transparent);
+  margin: 16px 0;
+}
+
+.order-details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-label {
+  font-size: 14px;
+  color: #595959;
+}
+
+.detail-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.detail-value.amount {
+  font-size: 20px;
+  color: #ff6b6b;
+}
+
+/* 团购进度卡片 */
+.group-progress-card {
+  width: 100%;
+  max-width: 400px;
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.1), rgba(249, 227, 155, 0.1));
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  animation: slide-up 0.6s ease 0.4s both;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.progress-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.progress-members {
+  font-size: 14px;
+  font-weight: 700;
+  color: #D4A574;
+}
+
+.progress-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #D4A574, #F9E39B);
+  border-radius: 6px;
+  transition: width 1s ease;
+  box-shadow: 0 0 12px rgba(212, 165, 116, 0.6);
+  animation: progress-fill 1.5s ease;
+}
+
+@keyframes progress-fill {
+  from { width: 0 !important; }
+}
+
+.progress-percentage {
+  font-size: 14px;
+  font-weight: 700;
+  color: #D4A574;
+  min-width: 45px;
+  text-align: right;
+}
+
+.progress-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.progress-status svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.progress-status.waiting {
+  background: rgba(250, 140, 22, 0.1);
+  color: #fa8c16;
+}
+
+.progress-status.waiting svg {
+  stroke: #fa8c16;
+}
+
+.progress-status.success {
+  background: rgba(82, 196, 26, 0.1);
+  color: #52c41a;
+}
+
+.progress-status.success svg {
+  stroke: #52c41a;
+}
+
+.estimated-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #595959;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+}
+
+.time-icon {
+  font-size: 16px;
+}
+
+/* 邀请卡片 */
+.invite-card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  animation: slide-up 0.6s ease 0.6s both;
+}
+
+.invite-header {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.invite-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(212, 165, 116, 0.15), rgba(249, 227, 155, 0.15));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.invite-text {
+  flex: 1;
+}
+
+.invite-text h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 4px 0;
+}
+
+.invite-text p {
+  font-size: 13px;
+  color: #8c8c8c;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.invite-btn {
+  width: 100%;
+  height: 48px;
+  border: none;
+  background: linear-gradient(135deg, #D4A574, #F9E39B);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(212, 165, 116, 0.3);
+}
+
+.invite-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.invite-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+}
+
+/* 提示卡片 */
+.tips-card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  animation: slide-up 0.6s ease 0.8s both;
+}
+
+.tips-card h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 12px 0;
+}
+
+.tips-card ul {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tips-card li {
+  font-size: 13px;
+  color: #595959;
+  line-height: 1.6;
+}
+
+/* 底部按钮 */
+.success-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  z-index: 100;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.view-order-btn,
+.back-home-btn {
+  flex: 1;
+  height: 52px;
+  border-radius: 26px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.view-order-btn {
+  background: linear-gradient(135deg, #D4A574, #F9E39B);
+  border: none;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(212, 165, 116, 0.3);
+}
+
+.view-order-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 165, 116, 0.4);
+}
+
+.back-home-btn {
+  background: #fff;
+  border: 2px solid #e8e8e8;
+  color: #595959;
+}
+
+.back-home-btn:hover {
+  border-color: #D4A574;
+  color: #D4A574;
+}
+

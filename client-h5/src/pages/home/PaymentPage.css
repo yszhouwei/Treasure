@@ -1,0 +1,466 @@
+.payment-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f5f5f5;
+  z-index: 3000;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 头部 */
+.payment-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.payment-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* 内容区域 */
+.payment-content {
+  padding: 16px 16px 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 支付金额卡片 */
+.payment-amount-card {
+  position: relative;
+  background: 
+    linear-gradient(135deg, rgba(212, 165, 116, 0.98), rgba(249, 227, 155, 0.98)),
+    radial-gradient(circle at 10% 15%, rgba(255, 255, 255, 0.2) 0%, transparent 35%),
+    radial-gradient(circle at 90% 85%, rgba(212, 165, 116, 0.3) 0%, transparent 40%),
+    linear-gradient(135deg, #C9984A 0%, #E6C068 100%);
+  background-size: cover, 500px 500px, 400px 400px, cover;
+  border-radius: 20px;
+  padding: 32px 24px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(212, 165, 116, 0.3);
+  overflow: hidden;
+}
+
+/* 装饰网格 */
+.payment-amount-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.4;
+}
+
+/* 动态光晕 */
+.payment-amount-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  animation: pulse-glow 4s ease-in-out infinite;
+  filter: blur(30px);
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.3;
+  }
+  50% { 
+    transform: translate(-50%, -50%) scale(1.3);
+    opacity: 0.6;
+  }
+}
+
+.amount-label {
+  position: relative;
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 8px;
+  z-index: 1;
+}
+
+.amount-value {
+  position: relative;
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.amount-note {
+  position: relative;
+  font-size: 12px;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  z-index: 1;
+}
+
+.amount-note::before {
+  content: '🔒';
+}
+
+/* 订单信息卡片 */
+.order-info-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.order-info-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #e8e8e8;
+}
+
+.order-info-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.order-no {
+  font-size: 12px;
+  color: #8c8c8c;
+  font-family: monospace;
+}
+
+.order-info-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-label {
+  font-size: 14px;
+  color: #8c8c8c;
+}
+
+.info-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* 支付方式卡片 */
+.payment-methods-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.payment-methods-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+}
+
+.payment-methods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-method-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #fafafa;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.payment-method-item.selected {
+  background: rgba(212, 165, 116, 0.08);
+  border-color: #D4A574;
+}
+
+.method-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.method-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.method-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.method-info h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.balance-amount {
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.method-radio {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d9d9d9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.payment-method-item.selected .method-radio {
+  border-color: #D4A574;
+}
+
+.radio-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #D4A574;
+}
+
+/* 优惠卡片 */
+.discount-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.discount-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #595959;
+}
+
+.discount-header svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+  color: #ff6b6b;
+}
+
+.select-coupon-btn {
+  padding: 6px 16px;
+  background: rgba(212, 165, 116, 0.1);
+  border: 1px solid #D4A574;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #D4A574;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.select-coupon-btn:hover {
+  background: rgba(212, 165, 116, 0.15);
+}
+
+/* 支付说明 */
+.payment-notice {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.payment-notice h4 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 12px 0;
+}
+
+.payment-notice ul {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.payment-notice li {
+  font-size: 13px;
+  color: #595959;
+  line-height: 1.6;
+}
+
+/* 底部支付栏 */
+.payment-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+  padding: 16px;
+  z-index: 100;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #595959;
+  cursor: pointer;
+  user-select: none;
+}
+
+.terms-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.terms-checkbox a {
+  color: #D4A574;
+  text-decoration: none;
+}
+
+.pay-now-btn {
+  width: 100%;
+  height: 52px;
+  border: none;
+  background: linear-gradient(135deg, #D4A574, #F9E39B);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 26px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 16px rgba(212, 165, 116, 0.4);
+}
+
+.pay-now-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 165, 116, 0.5);
+}
+
+.pay-now-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.pay-now-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 支付处理中遮罩 */
+.payment-loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4000;
+  backdrop-filter: blur(4px);
+}
+
+.payment-loading-content {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f0f0f0;
+  border-top-color: #D4A574;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.payment-loading-content p {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+

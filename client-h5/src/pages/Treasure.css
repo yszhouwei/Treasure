@@ -183,6 +183,13 @@
   padding: 16px;
   box-shadow: 0 10px 22px rgba(0, 0, 0, 0.06);
   border: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.treasure-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.08);
 }
 
 .treasure-stat-icon {
@@ -316,6 +323,13 @@
   display: flex;
   justify-content: space-between;
   gap: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.treasure-order-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.08);
 }
 
 .treasure-order-card h3 {
