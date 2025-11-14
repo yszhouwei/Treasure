@@ -16,54 +16,50 @@
     </linearGradient>
   </defs>
   
-  <!-- Background -->
-  <rect width="400" height="400" fill="url(#watchGradient)"/>
-  
-  <!-- Chain -->
+  <!-- Chain (scaled up 1.8x) -->
   <g opacity="0.8">
-    <path d="M200,50 Q180,80 200,100" stroke="url(#metalGradient)" stroke-width="4" fill="none"/>
-    <circle cx="200" cy="50" r="8" fill="url(#metalGradient)"/>
+    <path d="M200,20 Q160,60 200,90" stroke="url(#metalGradient)" stroke-width="6" fill="none"/>
+    <circle cx="200" cy="20" r="12" fill="url(#metalGradient)"/>
   </g>
   
-  <!-- Watch case -->
-  <circle cx="200" cy="200" r="90" fill="url(#metalGradient)"/>
-  <circle cx="200" cy="200" r="85" fill="#2c2416"/>
+  <!-- Watch case (scaled up 1.8x from r=90 to r=160) -->
+  <circle cx="200" cy="230" r="160" fill="url(#metalGradient)"/>
+  <circle cx="200" cy="230" r="150" fill="#3a2f20"/>
   
   <!-- Watch face -->
-  <circle cx="200" cy="200" r="75" fill="url(#watchFace)"/>
+  <circle cx="200" cy="230" r="130" fill="url(#watchFace)"/>
   
-  <!-- Hour markers -->
-  <g stroke="#2c2416" stroke-width="2">
-    <line x1="200" y1="135" x2="200" y2="145"/>
-    <line x1="260" y1="200" x2="250" y2="200"/>
-    <line x1="200" y1="265" x2="200" y2="255"/>
-    <line x1="140" y1="200" x2="150" y2="200"/>
+  <!-- Hour markers (scaled) -->
+  <g stroke="#2c2416" stroke-width="3">
+    <line x1="200" y1="115" x2="200" y2="135"/>
+    <line x1="315" y1="230" x2="295" y2="230"/>
+    <line x1="200" y1="345" x2="200" y2="325"/>
+    <line x1="85" y1="230" x2="105" y2="230"/>
   </g>
   
-  <!-- Numbers -->
-  <text x="200" y="155" text-anchor="middle" fill="#2c2416" font-size="16" font-family="serif" font-weight="bold">XII</text>
-  <text x="245" y="207" text-anchor="middle" fill="#2c2416" font-size="16" font-family="serif" font-weight="bold">III</text>
-  <text x="200" y="258" text-anchor="middle" fill="#2c2416" font-size="16" font-family="serif" font-weight="bold">VI</text>
-  <text x="158" y="207" text-anchor="middle" fill="#2c2416" font-size="16" font-family="serif" font-weight="bold">IX</text>
+  <!-- Numbers (scaled) -->
+  <text x="200" y="155" text-anchor="middle" fill="#2c2416" font-size="24" font-family="serif" font-weight="bold">XII</text>
+  <text x="275" y="240" text-anchor="middle" fill="#2c2416" font-size="24" font-family="serif" font-weight="bold">III</text>
+  <text x="200" y="320" text-anchor="middle" fill="#2c2416" font-size="24" font-family="serif" font-weight="bold">VI</text>
+  <text x="130" y="240" text-anchor="middle" fill="#2c2416" font-size="24" font-family="serif" font-weight="bold">IX</text>
   
-  <!-- Hour hand -->
-  <rect x="197" y="170" width="6" height="30" fill="#2c2416" rx="3" transform="rotate(45 200 200)"/>
+  <!-- Hour hand (scaled) -->
+  <rect x="194" y="180" width="12" height="50" fill="#2c2416" rx="6" transform="rotate(45 200 230)"/>
   
-  <!-- Minute hand -->
-  <rect x="198" y="150" width="4" height="50" fill="#2c2416" rx="2" transform="rotate(120 200 200)"/>
+  <!-- Minute hand (scaled) -->
+  <rect x="196" y="150" width="8" height="80" fill="#2c2416" rx="4" transform="rotate(120 200 230)"/>
   
-  <!-- Second hand -->
-  <rect x="199" y="145" width="2" height="55" fill="#ff4d4f" rx="1" transform="rotate(180 200 200)"/>
+  <!-- Second hand (scaled) -->
+  <rect x="198" y="140" width="4" height="90" fill="#ff4d4f" rx="2" transform="rotate(180 200 230)"/>
   
-  <!-- Center pin -->
-  <circle cx="200" cy="200" r="6" fill="#D4A574"/>
-  <circle cx="200" cy="200" r="3" fill="#2c2416"/>
+  <!-- Center pin (scaled) -->
+  <circle cx="200" cy="230" r="10" fill="#D4A574"/>
+  <circle cx="200" cy="230" r="6" fill="#2c2416"/>
   
-  <!-- Watch crown -->
-  <rect x="270" y="195" width="15" height="10" fill="url(#metalGradient)" rx="2"/>
-  <rect x="280" y="197" width="8" height="6" fill="#A8A8A8" rx="1"/>
+  <!-- Watch crown (scaled) -->
+  <rect x="345" y="220" width="24" height="18" fill="url(#metalGradient)" rx="3"/>
+  <rect x="360" y="224" width="12" height="10" fill="#A8A8A8" rx="2"/>
   
-  <!-- Decorative engravings -->
-  <text x="200" y="230" text-anchor="middle" fill="#8c8c8c" font-size="8" font-family="serif" font-style="italic">Antique</text>
+  <!-- Decorative engravings (scaled) -->
+  <text x="200" y="280" text-anchor="middle" fill="#8c8c8c" font-size="14" font-family="serif" font-style="italic">Antique</text>
 </svg>
-

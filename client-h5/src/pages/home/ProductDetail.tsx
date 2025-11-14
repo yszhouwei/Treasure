@@ -17,9 +17,10 @@ interface ProductDetailProps {
   };
   onBack: () => void;
   onJoin?: () => void;
+  loading?: boolean;
 }
 
-const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack, onJoin }) => {
+const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack, onJoin, loading = false }) => {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'detail' | 'rules' | 'comments'>('detail');
 
@@ -51,9 +52,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ product, onBack, onJoin }
           style={{ 
             backgroundImage: product.images?.[0] 
               ? `url(${product.images[0]})` 
-              : `url(/images/product-${product.id === 1 ? 'watch' : product.id === 2 ? 'stamps' : product.id === 3 ? 'camera' : 'keyboard'}.svg)`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
+              : `url(/images/product-${product.id === 1 ? 'watch' : product.id === 2 ? 'stamps' : product.id === 3 ? 'camera' : 'keyboard'}.svg)`
           }}
         >
           <span className="product-tag-badge">{product.tag}</span>

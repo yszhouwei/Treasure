@@ -1,0 +1,449 @@
+.recharge-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding-bottom: 90px;
+}
+
+/* 头部 */
+.recharge-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.recharge-header .back-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: #f0f2f5;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.recharge-header .back-btn:hover {
+  background: #e4e6eb;
+}
+
+.recharge-header .back-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: #1a1a1a;
+  stroke-width: 2.5;
+}
+
+.recharge-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+/* 内容区域 */
+.recharge-content {
+  padding: 16px;
+}
+
+.recharge-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.recharge-card h2 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0 0 16px;
+  color: #1a1a1a;
+}
+
+/* 当前余额 */
+.balance-card {
+  background: linear-gradient(135deg, #ffc837 0%, #ff8008 100%);
+  color: white;
+}
+
+.balance-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.balance-label {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.balance-value {
+  font-size: 28px;
+  font-weight: 700;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 充值金额选择 */
+.amount-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.amount-btn {
+  padding: 20px 16px;
+  background: #f8f9ff;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.amount-btn:hover {
+  background: #f0f2ff;
+  transform: translateY(-2px);
+}
+
+.amount-btn.active {
+  background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
+  border-color: #ffc837;
+}
+
+.amount-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.amount-btn.active .amount-value {
+  color: #ff8008;
+}
+
+/* 自定义金额 */
+.custom-amount {
+  padding-top: 20px;
+  border-top: 2px solid #f0f2f5;
+}
+
+.custom-amount label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.custom-amount-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #f8f9ff;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  transition: all 0.3s;
+}
+
+.custom-amount-input-wrapper:focus-within {
+  border-color: #ffc837;
+  background: white;
+}
+
+.currency-symbol {
+  font-size: 20px;
+  font-weight: 700;
+  color: #666;
+  margin-right: 8px;
+}
+
+.custom-amount-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  outline: none;
+}
+
+.custom-amount-input::placeholder {
+  color: #999;
+  font-weight: 400;
+}
+
+.amount-hint {
+  font-size: 13px;
+  color: #999;
+  margin: 10px 0 0;
+}
+
+/* 支付方式 */
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.payment-method {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: #f8f9ff;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.payment-method:hover {
+  background: #f0f2ff;
+}
+
+.payment-method.active {
+  background: linear-gradient(135deg, #f0fff4 0%, #d9f7e3 100%);
+  border-color: #52c41a;
+}
+
+.payment-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-icon.wechat {
+  background: linear-gradient(135deg, #07c160 0%, #00d96d 100%);
+}
+
+.payment-icon.alipay {
+  background: linear-gradient(135deg, #1677ff 0%, #40a9ff 100%);
+}
+
+.payment-icon.bank {
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+}
+
+.payment-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: white;
+  stroke-width: 2;
+}
+
+.payment-info {
+  flex: 1;
+}
+
+.payment-info h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #1a1a1a;
+}
+
+.payment-info p {
+  font-size: 13px;
+  color: #999;
+  margin: 0;
+}
+
+.payment-radio {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #e0e0e0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.payment-method.active .payment-radio {
+  border-color: #52c41a;
+  background: #52c41a;
+}
+
+.payment-radio svg {
+  width: 14px;
+  height: 14px;
+  stroke: white;
+  stroke-width: 3;
+}
+
+/* 充值说明 */
+.info-card {
+  background: linear-gradient(135deg, #f0f2ff 0%, #e8ebff 100%);
+  border: 2px solid #c7d2fe;
+}
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.info-icon {
+  flex-shrink: 0;
+  font-size: 20px;
+}
+
+.info-item p {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #4338ca;
+  margin: 2px 0 0;
+}
+
+/* 协议 */
+.agreement {
+  padding: 0 16px 16px;
+}
+
+.agreement-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.agreement-checkbox input {
+  display: none;
+}
+
+.checkbox-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  transition: all 0.3s;
+}
+
+.agreement-checkbox input:checked + .checkbox-icon {
+  background: linear-gradient(135deg, #ffc837 0%, #ff8008 100%);
+  border-color: #ffc837;
+}
+
+.checkbox-icon svg {
+  width: 12px;
+  height: 12px;
+  stroke: white;
+  stroke-width: 3;
+}
+
+.agreement-text {
+  font-size: 13px;
+  color: #666;
+}
+
+.agreement-text a {
+  color: #ffc837;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.agreement-text a:hover {
+  text-decoration: underline;
+}
+
+/* 底部操作栏 */
+.recharge-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 16px 20px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 100;
+}
+
+.footer-info {
+  flex: 1;
+}
+
+.footer-label {
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 4px;
+}
+
+.footer-amount {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffc837;
+}
+
+.recharge-submit-btn {
+  flex-shrink: 0;
+  padding: 14px 40px;
+  background: linear-gradient(135deg, #ffc837 0%, #ff8008 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(255, 200, 55, 0.3);
+}
+
+.recharge-submit-btn:not(.disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 200, 55, 0.4);
+}
+
+.recharge-submit-btn.disabled {
+  background: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 响应式 */
+@media (max-width: 480px) {
+  .amount-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .footer-amount {
+    font-size: 24px;
+  }
+
+  .recharge-submit-btn {
+    padding: 14px 32px;
+  }
+}
+

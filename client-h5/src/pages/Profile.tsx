@@ -139,7 +139,7 @@ const ProfileSkeleton: React.FC = () => (
 
 const Profile: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { isAuthenticated, user, openAuth, logout } = useAuth();
+  const { isAuthenticated, user, openAuth, logout, refreshUser } = useAuth();
 
   const heroTranslation = useMemo(
     () => t('profile.hero', { returnObjects: true }) as ProfileHero,
@@ -174,18 +174,45 @@ const Profile: React.FC = () => {
   }, []);
 
   const buildProfileDataset = useCallback((): ProfileDataset => {
+    // 使用真实用户数据更新统计信息
+    const stats = heroTranslation.stats?.map((stat) => {
+      if (stat.label === '账户资产' || stat.label === 'Account Assets') {
+        return {
+          ...stat,
+          value: user?.balance !== undefined ? `¥${user.balance.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : stat.value
+        };
+      }
+      if (stat.label === '可用积分' || stat.label === 'Available Points') {
+        return {
+          ...stat,
+          value: user?.points !== undefined ? user.points.toLocaleString('zh-CN') : stat.value
+        };
+      }
+      return { ...stat };
+    }) || [];
+
+    // 计算等级进度（基于level，假设每级需要1000积分）
+    const currentLevel = user?.level || 1;
+    const levelProgress = currentLevel * 1000; // 假设每级1000积分
+    const nextLevelProgress = (currentLevel + 1) * 1000;
+    const currentPoints = user?.points || 0;
+    const progressPercent = Math.min(99, Math.floor((currentPoints % 1000) / 10)); // 当前等级的进度百分比
+
     const hero: ProfileHero = {
       ...heroTranslation,
       name: user?.name || heroTranslation.name,
       email: user?.email,
-      stats: heroTranslation.stats?.map((stat) => ({ ...stat })) || []
+      level: user?.level !== undefined ? `Lv.${user.level}` : heroTranslation.level,
+      progressValue: `${currentPoints.toLocaleString('zh-CN')} / ${nextLevelProgress.toLocaleString('zh-CN')}`,
+      progressPercent: `${progressPercent}%`,
+      stats
     };
 
     const actions = actionsTranslation.map((action) => ({ ...action }));
     const sections = cloneSections(sectionsTranslation);
 
     return { hero, actions, sections };
-  }, [heroTranslation, actionsTranslation, sectionsTranslation, user?.name, user?.email, cloneSections]);
+  }, [heroTranslation, actionsTranslation, sectionsTranslation, user, cloneSections]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -209,22 +236,24 @@ const Profile: React.FC = () => {
     }
   }, []);
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     if (!isAuthenticated) {
       openAuth('login');
       return;
     }
     setRefreshing(true);
-    if (refreshTimerRef.current) {
-      window.clearTimeout(refreshTimerRef.current);
-    }
-    refreshTimerRef.current = window.setTimeout(() => {
+    try {
+      // 刷新用户数据
+      await refreshUser();
+      // 重新构建数据（useEffect会自动触发）
+    } catch (error) {
+      console.error('刷新用户数据失败:', error);
+      // 即使失败也更新UI，使用当前数据
       const updated = buildProfileDataset();
-      // Simulate slight progress change for visual feedback
-      updated.hero.progressPercent = `${Math.min(99, Number.parseInt(updated.hero.progressPercent, 10) + 1) || 86}%`;
       setProfileData(updated);
+    } finally {
       setRefreshing(false);
-    }, 520);
+    }
   };
 
   const handleActionClick = (actionId: string) => {

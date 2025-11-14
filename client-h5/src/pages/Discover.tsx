@@ -1,7 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
-import DetailSheet from '../components/DetailSheet';
+import TrendingDetail from './discover/TrendingDetail';
+import InsightDetail from './discover/InsightDetail';
+import StoryDetail from './discover/StoryDetail';
+import TagListPage from './discover/TagListPage';
+import SearchPage from './discover/SearchPage';
 import './Discover.css';
 
 type TrendingItem = {
@@ -24,12 +28,13 @@ type StoryItem = {
   summary: string;
 };
 
-type SheetState =
+type PageState =
   | { type: 'trending'; payload: TrendingItem; index: number }
   | { type: 'insight'; payload: InsightItem; index: number }
   | { type: 'story'; payload: StoryItem; index: number }
   | { type: 'tag'; payload: string }
-  | { type: 'search'; query: string; results: TrendingItem[]; suggestions: string[] };
+  | { type: 'search'; query?: string }
+  | null;
 
 const Discover: React.FC = () => {
   const { t } = useTranslation();
@@ -40,163 +45,64 @@ const Discover: React.FC = () => {
   const stories = t('discover.stories', { returnObjects: true }) as StoryItem[];
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeSheet, setActiveSheet] = useState<SheetState | null>(null);
+  const [activePage, setActivePage] = useState<PageState>(null);
 
-  const sheetTitle = useMemo(() => {
-    if (!activeSheet) return '';
+  // 处理子页面之间的导航
+  const handleSubPageItemClick = (item: any, type: 'trending' | 'insight' | 'story') => {
+    const index = type === 'trending' 
+      ? trending.findIndex(t => t.title === item.title)
+      : type === 'insight'
+      ? insights.findIndex(i => i.title === item.title)
+      : stories.findIndex(s => s.title === item.title);
 
-    switch (activeSheet.type) {
-      case 'trending':
-        return t('discover.sheet.trending.title', { title: activeSheet.payload.title });
-      case 'insight':
-        return t('discover.sheet.insight.title', { title: activeSheet.payload.title });
-      case 'story':
-        return t('discover.sheet.story.title', { title: activeSheet.payload.title });
-      case 'tag':
-        return t('discover.sheet.tag.title', { tag: activeSheet.payload });
-      case 'search':
-        return t('discover.sheet.search.title', { query: activeSheet.query });
-      default:
-        return '';
-    }
-  }, [activeSheet, t]);
-
-  const sheetCta = useMemo(() => {
-    if (!activeSheet) return '';
-
-    switch (activeSheet.type) {
-      case 'trending':
-        return t('discover.sheet.trending.cta');
-      case 'insight':
-        return t('discover.sheet.insight.cta');
-      case 'story':
-        return t('discover.sheet.story.cta');
-      case 'tag':
-        return t('discover.sheet.tag.cta');
-      case 'search':
-        return t('discover.sheet.search.cta');
-      default:
-        return '';
-    }
-  }, [activeSheet, t]);
-
-  const sheetContent = useMemo(() => {
-    if (!activeSheet) return null;
-
-    switch (activeSheet.type) {
-      case 'trending': {
-        const item = activeSheet.payload;
-        return (
-          <>
-            <h4>{item.title}</h4>
-            <p>{item.desc}</p>
-            <span className="detail-sheet-status">{`${item.category} · ${item.heat}`}</span>
-            <span className="detail-sheet-meta">{item.time}</span>
-            <span className="detail-sheet-meta">{t('discover.sheet.trending.meta')}</span>
-          </>
-        );
-      }
-      case 'insight': {
-        const item = activeSheet.payload;
-        return (
-          <>
-            <h4>{item.title}</h4>
-            <p>{item.desc}</p>
-            <ul className="detail-sheet-list">
-              {item.items.map((listItem) => (
-                <li key={listItem}>{listItem}</li>
-              ))}
-            </ul>
-            <span className="detail-sheet-meta">{t('discover.sheet.insight.meta')}</span>
-          </>
-        );
-      }
-      case 'story': {
-        const item = activeSheet.payload;
-        return (
-          <>
-            <h4>{item.title}</h4>
-            <span className="detail-sheet-status">{item.author}</span>
-            <p>{item.summary}</p>
-            <span className="detail-sheet-meta">{t('discover.sheet.story.meta')}</span>
-          </>
-        );
-      }
-      case 'tag': {
-        const tag = activeSheet.payload;
-        return (
-          <>
-            <h4>#{tag}</h4>
-            <p>{t('discover.sheet.tag.desc', { tag })}</p>
-            <span className="detail-sheet-meta">{t('discover.sheet.tag.meta')}</span>
-          </>
-        );
-      }
-      case 'search': {
-        const { query, results, suggestions } = activeSheet;
-        return (
-          <>
-            <h4>{t('discover.sheet.search.query', { query })}</h4>
-            {results.length ? (
-              <ul className="detail-sheet-list">
-                {results.map((item) => (
-                  <li key={item.title}>{item.title}</li>
-                ))}
-              </ul>
-            ) : (
-              <span className="detail-sheet-meta">{t('discover.sheet.search.empty')}</span>
-            )}
-            {suggestions.length > 0 && (
-              <div className="detail-sheet-chip-group">
-                {suggestions.map((suggestion) => (
-                  <button
-                    key={suggestion}
-                    className="detail-sheet-chip"
-                    onClick={() => setActiveSheet({ type: 'tag', payload: suggestion })}
-                  >
-                    #{suggestion}
-                  </button>
-                ))}
-              </div>
-            )}
-            <span className="detail-sheet-meta">{t('discover.sheet.search.meta')}</span>
-          </>
-        );
-      }
-      default:
-        return null;
-    }
-  }, [activeSheet, t]);
-
-  const sheetRoute = useMemo(() => {
-    if (!activeSheet) return undefined;
-
-    switch (activeSheet.type) {
-      case 'trending':
-        return `/discover/trending/${activeSheet.index}`;
-      case 'insight':
-        return `/discover/insight/${activeSheet.index}`;
-      case 'story':
-        return `/discover/story/${activeSheet.index}`;
-      case 'tag':
-        return `/discover/tag/${encodeURIComponent(activeSheet.payload)}`;
-      case 'search':
-        return `/discover/search/${encodeURIComponent(activeSheet.query)}`;
-      default:
-        return undefined;
-    }
-  }, [activeSheet]);
-
-  const openSearchSheet = (query: string) => {
-    const normalized = query.trim();
-    const finalQuery = normalized || t('discover.sheet.search.default');
-    const lower = finalQuery.toLowerCase();
-    const resultTrending = trending.filter((item) => item.title.toLowerCase().includes(lower) || item.category.toLowerCase().includes(lower)).slice(0, 3);
-    const suggestionTags = tags.filter((tag) => tag.toLowerCase().includes(lower)).slice(0, 4);
-    setActiveSheet({ type: 'search', query: finalQuery, results: resultTrending, suggestions: suggestionTags });
+    setActivePage({ type, payload: item, index });
   };
 
-  const closeSheet = () => setActiveSheet(null);
+  // 渲染子页面
+  if (activePage) {
+    switch (activePage.type) {
+      case 'trending':
+        return (
+          <TrendingDetail
+            trending={activePage.payload}
+            onBack={() => setActivePage(null)}
+            onSubscribe={() => alert(t('discover.sheet.trending.cta'))}
+          />
+        );
+      case 'insight':
+        return (
+          <InsightDetail
+            insight={activePage.payload}
+            onBack={() => setActivePage(null)}
+            onSave={() => alert(t('discover.sheet.insight.cta'))}
+          />
+        );
+      case 'story':
+        return (
+          <StoryDetail
+            story={activePage.payload}
+            onBack={() => setActivePage(null)}
+            onComment={() => alert(t('discover.sheet.story.cta'))}
+          />
+        );
+      case 'tag':
+        return (
+          <TagListPage
+            tag={activePage.payload}
+            onBack={() => setActivePage(null)}
+            onItemClick={handleSubPageItemClick}
+          />
+        );
+      case 'search':
+        return (
+          <SearchPage
+            initialQuery={activePage.query}
+            onBack={() => setActivePage(null)}
+            onItemClick={handleSubPageItemClick}
+          />
+        );
+    }
+  }
 
   return (
     <div className="discover-container">
@@ -216,17 +122,17 @@ const Discover: React.FC = () => {
                 onChange={(event) => setSearchQuery(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
-                    openSearchSheet(searchQuery);
+                    setActivePage({ type: 'search', query: searchQuery });
                   }
                 }}
               />
-              <button className="discover-search-btn" onClick={() => openSearchSheet(searchQuery)}>
+              <button className="discover-search-btn" onClick={() => setActivePage({ type: 'search', query: searchQuery })}>
                 {t('common.search')}
               </button>
             </div>
             <div className="discover-tags">
               {tags.map((tag) => (
-                <button key={tag} className="discover-tag" onClick={() => setActiveSheet({ type: 'tag', payload: tag })}>
+                <button key={tag} className="discover-tag" onClick={() => setActivePage({ type: 'tag', payload: tag })}>
                   #{tag}
                 </button>
               ))}
@@ -244,7 +150,7 @@ const Discover: React.FC = () => {
               <article
                 key={item.title}
                 className="discover-trending-card"
-                onClick={() => setActiveSheet({ type: 'trending', payload: item, index })}
+                onClick={() => setActivePage({ type: 'trending', payload: item, index })}
               >
                 <div className="discover-trending-header">
                   <span className="discover-trending-tag">{item.category}</span>
@@ -257,7 +163,7 @@ const Discover: React.FC = () => {
                   <button
                     onClick={(event) => {
                       event.stopPropagation();
-                      setActiveSheet({ type: 'trending', payload: item, index });
+                      setActivePage({ type: 'trending', payload: item, index });
                     }}
                   >
                     {t('common.more')}
@@ -278,7 +184,7 @@ const Discover: React.FC = () => {
               <article
                 key={insight.title}
                 className="discover-insight-card"
-                onClick={() => setActiveSheet({ type: 'insight', payload: insight, index })}
+                onClick={() => setActivePage({ type: 'insight', payload: insight, index })}
               >
                 <div className="discover-insight-header">
                   <div className="discover-insight-icon">💡</div>
@@ -296,7 +202,7 @@ const Discover: React.FC = () => {
                   className="discover-link-btn"
                   onClick={(event) => {
                     event.stopPropagation();
-                    setActiveSheet({ type: 'insight', payload: insight, index });
+                    setActivePage({ type: 'insight', payload: insight, index });
                   }}
                 >
                   {t('common.more')}
@@ -316,7 +222,7 @@ const Discover: React.FC = () => {
               <article
                 key={story.title}
                 className="discover-story-card"
-                onClick={() => setActiveSheet({ type: 'story', payload: story, index })}
+                onClick={() => setActivePage({ type: 'story', payload: story, index })}
               >
                 <header>
                   <span className="discover-story-author">{story.author}</span>
@@ -327,7 +233,7 @@ const Discover: React.FC = () => {
                   className="discover-link-btn"
                   onClick={(event) => {
                     event.stopPropagation();
-                    setActiveSheet({ type: 'story', payload: story, index });
+                    setActivePage({ type: 'story', payload: story, index });
                   }}
                 >
                   {t('common.more')}
@@ -337,19 +243,6 @@ const Discover: React.FC = () => {
           </div>
         </section>
       </div>
-
-      {activeSheet && (
-        <DetailSheet
-          open={Boolean(activeSheet)}
-          title={sheetTitle}
-          onClose={closeSheet}
-          ctaLabel={sheetCta || undefined}
-          closeLabel={t('discover.sheet.close')}
-          to={sheetRoute}
-        >
-          {sheetContent}
-        </DetailSheet>
-      )}
     </div>
   );
 };

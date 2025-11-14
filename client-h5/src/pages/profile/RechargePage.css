@@ -1,0 +1,339 @@
+.recharge-page-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+}
+
+.recharge-page-content {
+  padding-top: 56px;
+  padding-bottom: 80px;
+  padding-left: 16px;
+  padding-right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Balance Card */
+.recharge-balance-card {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 24px 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-top: 10px;
+}
+
+.recharge-balance-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.recharge-balance-value {
+  font-size: 40px;
+  font-weight: 700;
+  color: #fff;
+  margin: 8px 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.recharge-balance-hint {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 8px;
+}
+
+/* Section */
+.recharge-amount-section,
+.recharge-payment-section,
+.recharge-summary-section {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.recharge-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+}
+
+/* Quick Amounts */
+.recharge-quick-amounts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.recharge-amount-btn {
+  background: #f5f5f5;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.recharge-amount-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.recharge-amount-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.recharge-amount-symbol {
+  font-size: 12px;
+  color: #999;
+  font-weight: 500;
+}
+
+.recharge-amount-btn.active .recharge-amount-symbol,
+.recharge-amount-btn.active .recharge-amount-number {
+  color: #fff;
+}
+
+.recharge-amount-number {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* Custom Amount */
+.recharge-custom-amount {
+  margin-top: 20px;
+}
+
+.recharge-custom-label {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.recharge-custom-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.recharge-input-prefix {
+  position: absolute;
+  left: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #666;
+}
+
+.recharge-custom-input {
+  width: 100%;
+  padding: 14px 16px 14px 36px;
+  font-size: 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.recharge-custom-input:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+.recharge-custom-input::placeholder {
+  color: #bbb;
+}
+
+/* Payment Methods */
+.recharge-payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recharge-payment-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #f5f5f5;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.recharge-payment-btn:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.recharge-payment-btn.active {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+}
+
+.recharge-payment-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.recharge-payment-name {
+  flex-grow: 1;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-align: left;
+}
+
+.recharge-payment-check {
+  font-size: 18px;
+  color: #667eea;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.recharge-payment-btn.active .recharge-payment-check {
+  opacity: 1;
+}
+
+/* Summary Section */
+.recharge-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.recharge-summary-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.recharge-summary-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.recharge-summary-bonus {
+  font-size: 16px;
+  font-weight: 600;
+  color: #4caf50;
+}
+
+.recharge-summary-divider {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 8px 0;
+}
+
+.recharge-summary-total .recharge-summary-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.recharge-summary-total .recharge-summary-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+/* Submit Button */
+.recharge-submit-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+  letter-spacing: 0.5px;
+}
+
+.recharge-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.recharge-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.recharge-submit-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Tips */
+.recharge-tips {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.recharge-tips-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 10px;
+  letter-spacing: 0.3px;
+}
+
+.recharge-tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recharge-tips-list li {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+  padding-left: 16px;
+  position: relative;
+}
+
+.recharge-tips-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .recharge-page-content {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+

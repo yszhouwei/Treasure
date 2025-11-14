@@ -1,7 +1,13 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
-import DetailSheet from '../components/DetailSheet';
+import GroupOverview from './group/GroupOverview';
+import MetricDetail from './group/MetricDetail';
+import UpcomingDetail from './group/UpcomingDetail';
+import ActiveDetail from './group/ActiveDetail';
+import EngagementPage from './group/EngagementPage';
+import { TeamsService, type TeamOverview } from '../services/teams.service';
+import { useAuth } from '../context/AuthContext';
 import metricsBg from '../assets/illustrations/group-metrics-bg.svg';
 import './Group.css';
 
@@ -20,142 +26,122 @@ type GroupItem = {
   remaining: string;
 };
 
-type SheetState =
-  | { type: 'hero' }
-  | { type: 'progress' }
-  | { type: 'metric'; payload: TeamMetric; index: number }
+type PageState =
+  | { type: 'overview' }
+  | { type: 'engagement' }
+  | { type: 'metric'; payload: TeamMetric }
   | { type: 'upcoming'; payload: GroupItem }
   | { type: 'active'; payload: GroupItem };
 
 const Group: React.FC = () => {
   const { t } = useTranslation();
+  const { isAuthenticated } = useAuth();
 
-  const metrics = t('group.metrics', { returnObjects: true }) as TeamMetric[];
-  const upcoming = t('group.upcoming', { returnObjects: true }) as GroupItem[];
-  const active = t('group.active', { returnObjects: true }) as GroupItem[];
+  const [activePage, setActivePage] = useState<PageState | null>(null);
+  const [teamOverview, setTeamOverview] = useState<TeamOverview | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const [activeSheet, setActiveSheet] = useState<SheetState | null>(null);
-
-  const sheetTitle = useMemo(() => {
-    if (!activeSheet) return '';
-
-    switch (activeSheet.type) {
-      case 'hero':
-        return t('group.sheet.hero.title');
-      case 'progress':
-        return t('group.sheet.progress.title');
-      case 'metric':
-        return t('group.sheet.metric.title', { label: activeSheet.payload.label });
-      case 'upcoming':
-        return t('group.sheet.upcoming.title');
-      case 'active':
-        return t('group.sheet.active.title');
-      default:
-        return '';
-    }
-  }, [activeSheet, t]);
-
-  const sheetCta = useMemo(() => {
-    if (!activeSheet) return '';
-
-    switch (activeSheet.type) {
-      case 'hero':
-        return t('group.sheet.hero.cta');
-      case 'progress':
-        return t('group.sheet.progress.cta');
-      case 'metric':
-        return t('group.sheet.metric.cta');
-      case 'upcoming':
-        return t('group.sheet.upcoming.cta');
-      case 'active':
-        return t('group.sheet.active.cta');
-      default:
-        return '';
-    }
-  }, [activeSheet, t]);
-
-  const sheetContent = useMemo(() => {
-    if (!activeSheet) return null;
-
-    switch (activeSheet.type) {
-      case 'hero':
-        return (
-          <>
-            <h4>{t('group.hero.leader')}</h4>
-            <p>{t('group.sheet.hero.desc')}</p>
-            <span className="detail-sheet-meta">{t('group.sheet.hero.schedule', { schedule: t('group.hero.scheduleValue') })}</span>
-            <span className="detail-sheet-status">{t('group.sheet.hero.region', { region: t('group.hero.regionValue') })}</span>
-          </>
-        );
-      case 'progress':
-        return (
-          <>
-            <h4>{t('group.progress.label')}</h4>
-            <p>{t('group.sheet.progress.desc', { percent: t('group.progress.percent') })}</p>
-            <span className="detail-sheet-meta">{t('group.sheet.progress.hint')}</span>
-          </>
-        );
-      case 'metric': {
-        const metric = activeSheet.payload;
-        return (
-          <>
-            <h4>{metric.label}</h4>
-            <p>{t('group.sheet.metric.desc', { value: metric.value })}</p>
-            <span className="detail-sheet-status">{metric.change}</span>
-            <span className="detail-sheet-meta">{t('group.sheet.metric.meta')}</span>
-          </>
-        );
+  // 获取团队数据
+  useEffect(() => {
+    const fetchTeamData = async () => {
+      if (!isAuthenticated) {
+        setLoading(false);
+        return;
       }
-      case 'upcoming': {
-        const item = activeSheet.payload;
-        return (
-          <>
-            <h4>{item.title}</h4>
-            <p>{t('group.sheet.upcoming.desc')}</p>
-            <span className="detail-sheet-status">{item.status}</span>
-            <span className="detail-sheet-meta">{item.participants}</span>
-            <span className="detail-sheet-meta">{item.remaining}</span>
-          </>
-        );
+
+      setLoading(true);
+      setError(null);
+      try {
+        const overview = await TeamsService.getMyTeamOverview();
+        setTeamOverview(overview);
+      } catch (err: any) {
+        console.error('获取团队数据失败:', err);
+        setError(err.message || '获取团队数据失败');
+        // 如果用户不是团队长，使用默认数据
+        if (err.status === 404) {
+          setTeamOverview(null);
+        }
+      } finally {
+        setLoading(false);
       }
-      case 'active': {
-        const item = activeSheet.payload;
-        return (
-          <>
-            <h4>{item.title}</h4>
-            <p>{t('group.sheet.active.desc')}</p>
-            <span className="detail-sheet-status">{item.status}</span>
-            <span className="detail-sheet-meta">{t('group.sheet.active.progress', { progress: item.progress })}</span>
-            <span className="detail-sheet-meta">{item.participants}</span>
-            <span className="detail-sheet-meta">{item.remaining}</span>
-          </>
-        );
-      }
-      default:
-        return null;
+    };
+
+    fetchTeamData();
+  }, [isAuthenticated]);
+
+  // 转换API数据为页面需要的格式
+  const metrics: TeamMetric[] = teamOverview ? [
+    {
+      label: t('group.metrics.0.label') || '团队人数',
+      value: teamOverview.team.total_members?.toString() || '0',
+      change: `+${teamOverview.team.active_members || 0} 活跃`
+    },
+    {
+      label: t('group.metrics.1.label') || '总销售额',
+      value: `¥${(teamOverview.team.total_sales || 0).toLocaleString('zh-CN')}`,
+      change: `+${Math.floor((teamOverview.team.total_sales || 0) / 100)}% 本周`
+    },
+    {
+      label: t('group.metrics.2.label') || '总订单数',
+      value: (teamOverview.team.total_orders || 0).toString(),
+      change: `+${Math.floor((teamOverview.team.total_orders || 0) / 10)} 本周`
     }
-  }, [activeSheet, t]);
+  ] : (t('group.metrics', { returnObjects: true }) as TeamMetric[]);
 
-  const sheetRoute = useMemo(() => {
-    if (!activeSheet) return undefined;
+  const upcoming: GroupItem[] = teamOverview?.upcomingGroups?.map((group: any, index: number) => ({
+    id: `#GRP${group.id || index}`,
+    title: group.product?.name || group.title || `团购活动 ${index + 1}`,
+    status: t('group.upcomingDetail.statusPending') || '待排期',
+    progress: 0,
+    participants: `${group.target_count || 0}人目标 · 已确认${group.current_count || 0}人`,
+    remaining: group.start_time ? `剩余${Math.ceil((new Date(group.start_time).getTime() - Date.now()) / (1000 * 60 * 60 * 24))}天` : '待定'
+  })) || (t('group.upcoming', { returnObjects: true }) as GroupItem[]);
 
-    switch (activeSheet.type) {
-      case 'hero':
-        return '/group/overview';
-      case 'progress':
-        return '/group/engagement';
+  const active: GroupItem[] = teamOverview?.activeGroups?.map((group: any, index: number) => {
+    const progress = group.target_count > 0 
+      ? Math.floor((group.current_count || 0) / group.target_count * 100)
+      : 0;
+    return {
+      id: `#GRP${group.id || index}`,
+      title: group.product?.name || group.title || `团购活动 ${index + 1}`,
+      status: t('group.activeDetail.statusActive') || '进行中',
+      progress,
+      participants: `已参团${group.current_count || 0}/${group.target_count || 0}`,
+      remaining: group.end_time ? `距离结束${Math.ceil((new Date(group.end_time).getTime() - Date.now()) / (1000 * 60 * 60 * 24))}天` : '进行中'
+    };
+  }) || (t('group.active', { returnObjects: true }) as GroupItem[]);
+
+  // Render sub-pages
+  if (activePage) {
+    switch (activePage.type) {
+      case 'overview':
+        return <GroupOverview onBack={() => setActivePage(null)} />;
+      case 'engagement':
+        return <EngagementPage onBack={() => setActivePage(null)} />;
       case 'metric':
-        return `/group/metric/${activeSheet.index}`;
+        return (
+          <MetricDetail
+            metric={activePage.payload}
+            onBack={() => setActivePage(null)}
+          />
+        );
       case 'upcoming':
-        return `/group/upcoming/${encodeURIComponent(activeSheet.payload.id)}`;
+        return (
+          <UpcomingDetail
+            item={activePage.payload}
+            onBack={() => setActivePage(null)}
+          />
+        );
       case 'active':
-        return `/group/active/${encodeURIComponent(activeSheet.payload.id)}`;
-      default:
-        return undefined;
+        return (
+          <ActiveDetail
+            item={activePage.payload}
+            onBack={() => setActivePage(null)}
+          />
+        );
     }
-  }, [activeSheet]);
-
-  const closeSheet = () => setActiveSheet(null);
+  }
 
   return (
     <div className="group-container">
@@ -172,7 +158,7 @@ const Group: React.FC = () => {
               <button>{t('group.actions.create')}</button>
               <button className="outline">{t('group.actions.invite')}</button>
             </div>
-            <div className="group-hero-card" onClick={() => setActiveSheet({ type: 'hero' })}>
+            <div className="group-hero-card" onClick={() => setActivePage({ type: 'overview' })}>
               <div>
                 <span>{t('group.hero.leader')}</span>
                 <strong>{t('group.hero.leaderName')}</strong>
@@ -196,11 +182,11 @@ const Group: React.FC = () => {
           </div>
           <div className="group-metrics-grid">
             <img src={metricsBg} alt="decor" className="group-metrics-decoration" />
-            {metrics.map((metric, index) => (
+            {metrics.map((metric) => (
               <article
                 key={metric.label}
                 className="group-metric-card"
-                onClick={() => setActiveSheet({ type: 'metric', payload: metric, index })}
+                onClick={() => setActivePage({ type: 'metric', payload: metric })}
               >
                 <span className="group-metric-label">{metric.label}</span>
                 <strong>{metric.value}</strong>
@@ -218,8 +204,8 @@ const Group: React.FC = () => {
             <span>{t('group.sections.upcomingSubtitle')}</span>
           </div>
           <div className="group-list">
-            {upcoming.map((item) => (
-              <article key={item.id} className="group-card upcoming" onClick={() => setActiveSheet({ type: 'upcoming', payload: item })}>
+            {upcoming.length > 0 ? upcoming.map((item) => (
+              <article key={item.id} className="group-card upcoming" onClick={() => setActivePage({ type: 'upcoming', payload: item })}>
                 <div className="group-card-main">
                   <span className="group-card-id">{item.id}</span>
                   <h3>{item.title}</h3>
@@ -233,14 +219,18 @@ const Group: React.FC = () => {
                   <button
                     onClick={(event) => {
                       event.stopPropagation();
-                      setActiveSheet({ type: 'upcoming', payload: item });
+                      setActivePage({ type: 'upcoming', payload: item });
                     }}
                   >
                     {t('group.actions.arrange')}
                   </button>
                 </div>
               </article>
-            ))}
+            )) : (
+              <div style={{ padding: '40px', textAlign: 'center', color: '#8c8c8c' }}>
+                {t('common.noData') || '暂无待启动的团购'}
+              </div>
+            )}
           </div>
         </section>
 
@@ -250,8 +240,8 @@ const Group: React.FC = () => {
             <span>{t('group.sections.activeSubtitle')}</span>
           </div>
           <div className="group-list">
-            {active.map((item) => (
-              <article key={item.id} className="group-card" onClick={() => setActiveSheet({ type: 'active', payload: item })}>
+            {active.length > 0 ? active.map((item) => (
+              <article key={item.id} className="group-card" onClick={() => setActivePage({ type: 'active', payload: item })}>
                 <div className="group-card-main">
                   <span className="group-card-id">{item.id}</span>
                   <h3>{item.title}</h3>
@@ -271,14 +261,18 @@ const Group: React.FC = () => {
                   <button
                     onClick={(event) => {
                       event.stopPropagation();
-                      setActiveSheet({ type: 'active', payload: item });
+                      setActivePage({ type: 'active', payload: item });
                     }}
                   >
                     {t('group.actions.manage')}
                   </button>
                 </div>
               </article>
-            ))}
+            )) : (
+              <div style={{ padding: '40px', textAlign: 'center', color: '#8c8c8c' }}>
+                {t('common.noData') || '暂无进行中的团购'}
+              </div>
+            )}
           </div>
         </section>
 
@@ -288,23 +282,10 @@ const Group: React.FC = () => {
               <h2>{t('group.progress.label')}</h2>
               <p>{t('group.sheet.progress.subtitle')}</p>
             </div>
-            <button onClick={() => setActiveSheet({ type: 'progress' })}>{t('group.sheet.progress.button')}</button>
+            <button onClick={() => setActivePage({ type: 'engagement' })}>{t('group.sheet.progress.button')}</button>
           </div>
         </section>
       </div>
-
-      {activeSheet && (
-        <DetailSheet
-          open={Boolean(activeSheet)}
-          title={sheetTitle}
-          onClose={() => setActiveSheet(null)}
-          ctaLabel={sheetCta || undefined}
-          closeLabel={t('group.sheet.close')}
-          to={sheetRoute}
-        >
-          {sheetContent}
-        </DetailSheet>
-      )}
     </div>
   );
 };

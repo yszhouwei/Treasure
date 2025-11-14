@@ -11,60 +11,56 @@
     </pattern>
   </defs>
   
-  <!-- Background -->
-  <rect width="400" height="400" fill="url(#stampsGradient)"/>
-  <rect width="400" height="400" fill="url(#stampPattern)"/>
-  
-  <!-- Stamp 1 - Red -->
-  <g transform="translate(80, 100) rotate(-15)">
-    <rect width="100" height="130" fill="#dc143c" rx="2"/>
-    <path d="M0,0 L5,5 L0,10 L5,15 L0,20 L5,25 L0,30 L5,35 L0,40 L5,45 L0,50 L5,55 L0,60 L5,65 L0,70 L5,75 L0,80 L5,85 L0,90 L5,95 L0,100 L5,105 L0,110 L5,115 L0,120 L5,125 L0,130 L0,0 Z" fill="#fff" opacity="0.3"/>
-    <path d="M100,0 L95,5 L100,10 L95,15 L100,20 L95,25 L100,30 L95,35 L100,40 L95,45 L100,50 L95,55 L100,60 L95,65 L100,70 L95,75 L100,80 L95,85 L100,90 L95,95 L100,100 L95,105 L100,110 L95,115 L100,120 L95,125 L100,130 L100,0 Z" fill="#fff" opacity="0.3"/>
-    <rect x="10" y="10" width="80" height="110" fill="#fff"/>
-    <text x="50" y="40" text-anchor="middle" fill="#dc143c" font-size="12" font-weight="bold">1980</text>
-    <rect x="20" y="50" width="60" height="50" fill="#dc143c" opacity="0.2"/>
-    <circle cx="50" cy="75" r="15" fill="#dc143c" opacity="0.3"/>
-    <text x="50" y="110" text-anchor="middle" fill="#dc143c" font-size="10">CHINA</text>
+  <!-- Stamp 1 - Red (scaled up 1.6x) -->
+  <g transform="translate(40, 40) rotate(-15)">
+    <rect width="160" height="208" fill="#dc143c" rx="3"/>
+    <!-- Perforated edges -->
+    <path d="M0,0 L8,8 L0,16 L8,24 L0,32 L8,40 L0,48 L8,56 L0,64 L8,72 L0,80 L8,88 L0,96 L8,104 L0,112 L8,120 L0,128 L8,136 L0,144 L8,152 L0,160 L8,168 L0,176 L8,184 L0,192 L8,200 L0,208 L0,0 Z" fill="#fff" opacity="0.3"/>
+    <path d="M160,0 L152,8 L160,16 L152,24 L160,32 L152,40 L160,48 L152,56 L160,64 L152,72 L160,80 L152,88 L160,96 L152,104 L160,112 L152,120 L160,128 L152,136 L160,144 L152,152 L160,160 L152,168 L160,176 L152,184 L160,192 L152,200 L160,208 L160,0 Z" fill="#fff" opacity="0.3"/>
+    <rect x="16" y="16" width="128" height="176" fill="#fff"/>
+    <text x="80" y="60" text-anchor="middle" fill="#dc143c" font-size="20" font-weight="bold">1980</text>
+    <rect x="32" y="80" width="96" height="80" fill="#dc143c" opacity="0.2"/>
+    <circle cx="80" cy="120" r="24" fill="#dc143c" opacity="0.3"/>
+    <text x="80" y="176" text-anchor="middle" fill="#dc143c" font-size="16">CHINA</text>
   </g>
   
-  <!-- Stamp 2 - Blue -->
-  <g transform="translate(220, 80) rotate(5)">
-    <rect width="90" height="120" fill="#1e90ff" rx="2"/>
-    <path d="M0,0 L5,5 L0,10 L5,15 L0,20 L5,25 L0,30 L5,35 L0,40 L5,45 L0,50 L5,55 L0,60 L5,65 L0,70 L5,75 L0,80 L5,85 L0,90 L5,95 L0,100 L5,105 L0,110 L5,115 L0,120 L0,0 Z" fill="#fff" opacity="0.3"/>
-    <rect x="10" y="10" width="70" height="100" fill="#fff"/>
-    <text x="45" y="35" text-anchor="middle" fill="#1e90ff" font-size="11" font-weight="bold">1995</text>
-    <rect x="20" y="45" width="50" height="40" fill="#1e90ff" opacity="0.2"/>
-    <polygon points="45,65 35,80 55,80" fill="#1e90ff" opacity="0.3"/>
-    <text x="45" y="100" text-anchor="middle" fill="#1e90ff" font-size="9">LIMITED</text>
+  <!-- Stamp 2 - Blue (scaled up 1.6x) -->
+  <g transform="translate(200, 30) rotate(5)">
+    <rect width="144" height="192" fill="#1e90ff" rx="3"/>
+    <path d="M0,0 L8,8 L0,16 L8,24 L0,32 L8,40 L0,48 L8,56 L0,64 L8,72 L0,80 L8,88 L0,96 L8,104 L0,112 L8,120 L0,128 L8,136 L0,144 L8,152 L0,160 L8,168 L0,176 L8,184 L0,192 L0,0 Z" fill="#fff" opacity="0.3"/>
+    <rect x="16" y="16" width="112" height="160" fill="#fff"/>
+    <text x="72" y="56" text-anchor="middle" fill="#1e90ff" font-size="18" font-weight="bold">1995</text>
+    <rect x="32" y="72" width="80" height="64" fill="#1e90ff" opacity="0.2"/>
+    <polygon points="72,104 56,128 88,128" fill="#1e90ff" opacity="0.3"/>
+    <text x="72" y="160" text-anchor="middle" fill="#1e90ff" font-size="14">LIMITED</text>
   </g>
   
-  <!-- Stamp 3 - Green -->
-  <g transform="translate(100, 240) rotate(10)">
-    <rect width="95" height="125" fill="#228b22" rx="2"/>
-    <path d="M0,0 L5,5 L0,10 L5,15 L0,20 L5,25 L0,30 L5,35 L0,40 L5,45 L0,50 L5,55 L0,60 L5,65 L0,70 L5,75 L0,80 L5,85 L0,90 L5,95 L0,100 L5,105 L0,110 L5,115 L0,120 L5,125 L0,0 Z" fill="#fff" opacity="0.3"/>
-    <rect x="10" y="10" width="75" height="105" fill="#fff"/>
-    <text x="47" y="38" text-anchor="middle" fill="#228b22" font-size="12" font-weight="bold">2000</text>
-    <rect x="18" y="48" width="59" height="45" fill="#228b22" opacity="0.2"/>
-    <circle cx="47" cy="70" r="12" fill="#228b22" opacity="0.3"/>
-    <text x="47" y="105" text-anchor="middle" fill="#228b22" font-size="9">RARE</text>
+  <!-- Stamp 3 - Green (scaled up 1.6x) -->
+  <g transform="translate(50, 220) rotate(10)">
+    <rect width="152" height="200" fill="#228b22" rx="3"/>
+    <path d="M0,0 L8,8 L0,16 L8,24 L0,32 L8,40 L0,48 L8,56 L0,64 L8,72 L0,80 L8,88 L0,96 L8,104 L0,112 L8,120 L0,128 L8,136 L0,144 L8,152 L0,160 L8,168 L0,176 L8,184 L0,192 L8,200 L0,0 Z" fill="#fff" opacity="0.3"/>
+    <rect x="16" y="16" width="120" height="168" fill="#fff"/>
+    <text x="76" y="60" text-anchor="middle" fill="#228b22" font-size="20" font-weight="bold">2000</text>
+    <rect x="29" y="77" width="94" height="72" fill="#228b22" opacity="0.2"/>
+    <circle cx="76" cy="112" r="20" fill="#228b22" opacity="0.3"/>
+    <text x="76" y="168" text-anchor="middle" fill="#228b22" font-size="14">RARE</text>
   </g>
   
-  <!-- Stamp 4 - Orange -->
-  <g transform="translate(250, 230) rotate(-8)">
-    <rect width="85" height="115" fill="#ff8c00" rx="2"/>
-    <path d="M0,0 L5,5 L0,10 L5,15 L0,20 L5,25 L0,30 L5,35 L0,40 L5,45 L0,50 L5,55 L0,60 L5,65 L0,70 L5,75 L0,80 L5,85 L0,90 L5,95 L0,100 L5,105 L0,110 L5,115 L0,0 Z" fill="#fff" opacity="0.3"/>
-    <rect x="10" y="10" width="65" height="95" fill="#fff"/>
-    <text x="42" y="35" text-anchor="middle" fill="#ff8c00" font-size="11" font-weight="bold">1975</text>
-    <rect x="17" y="43" width="51" height="40" fill="#ff8c00" opacity="0.2"/>
-    <text x="42" y="95" text-anchor="middle" fill="#ff8c00" font-size="9">VINTAGE</text>
+  <!-- Stamp 4 - Orange (scaled up 1.6x) -->
+  <g transform="translate(230, 210) rotate(-8)">
+    <rect width="136" height="184" fill="#ff8c00" rx="3"/>
+    <path d="M0,0 L8,8 L0,16 L8,24 L0,32 L8,40 L0,48 L8,56 L0,64 L8,72 L0,80 L8,88 L0,96 L8,104 L0,112 L8,120 L0,128 L8,136 L0,144 L8,152 L0,160 L8,168 L0,176 L8,184 L0,0 Z" fill="#fff" opacity="0.3"/>
+    <rect x="16" y="16" width="104" height="152" fill="#fff"/>
+    <text x="68" y="56" text-anchor="middle" fill="#ff8c00" font-size="18" font-weight="bold">1975</text>
+    <rect x="27" y="69" width="82" height="64" fill="#ff8c00" opacity="0.2"/>
+    <text x="68" y="152" text-anchor="middle" fill="#ff8c00" font-size="14">VINTAGE</text>
   </g>
   
-  <!-- Postmark overlay -->
+  <!-- Postmark overlay (scaled) -->
   <g opacity="0.3">
-    <circle cx="200" cy="200" r="60" fill="none" stroke="#000" stroke-width="3"/>
-    <circle cx="200" cy="200" r="55" fill="none" stroke="#000" stroke-width="1"/>
-    <text x="200" y="190" text-anchor="middle" fill="#000" font-size="14" font-weight="bold">BEIJING</text>
-    <text x="200" y="210" text-anchor="middle" fill="#000" font-size="12">2025.11.12</text>
+    <circle cx="200" cy="200" r="90" fill="none" stroke="#000" stroke-width="4"/>
+    <circle cx="200" cy="200" r="83" fill="none" stroke="#000" stroke-width="2"/>
+    <text x="200" y="185" text-anchor="middle" fill="#000" font-size="20" font-weight="bold">BEIJING</text>
+    <text x="200" y="215" text-anchor="middle" fill="#000" font-size="18">2025.11.12</text>
   </g>
 </svg>
-

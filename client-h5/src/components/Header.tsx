@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import React, { type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import cnFlag from '../assets/flags/cn.svg';
 import usFlag from '../assets/flags/us.svg';
@@ -57,7 +57,12 @@ interface AuthContent {
   features: AuthFeature[];
 }
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onBack?: () => void;
+  title?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ onBack, title }) => {
   const { t, i18n } = useTranslation();
   const {
     isAuthenticated,
@@ -68,7 +73,9 @@ const Header: React.FC = () => {
     openAuth,
     closeAuth,
     login,
-    logout
+    register,
+    logout,
+    loading: authLoading
   } = useAuth();
 
   const [showLangMenu, setShowLangMenu] = useState(false);
@@ -80,6 +87,7 @@ const Header: React.FC = () => {
   const [authPassword, setAuthPassword] = useState('');
   const [authConfirm, setAuthConfirm] = useState('');
   const [authError, setAuthError] = useState<string | null>(null);
+  const [authUsername, setAuthUsername] = useState(''); // 用户名（用于登录）
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const searchOverlay = t('searchOverlay', { returnObjects: true }) as SearchOverlayContent;
@@ -111,7 +119,8 @@ const Header: React.FC = () => {
     } else {
       setSearchHistory([]);
     }
-  }, [historyStorageKey, searchOverlay.historyItems]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [historyStorageKey]); // 仅依赖 historyStorageKey，避免 searchOverlay.historyItems 导致的无限循环
 
   useEffect(() => {
     if (showSearch && searchInputRef.current) {
@@ -133,9 +142,10 @@ const Header: React.FC = () => {
       setAuthError(null);
       setAuthPassword('');
       setAuthConfirm('');
+      setAuthEmail('');
+      setAuthName('');
+      setAuthUsername('');
       setAuthMode('login');
-      setAuthEmail(isAuthenticated ? user?.email ?? '' : '');
-      setAuthName(isAuthenticated ? user?.name ?? '' : '');
     }
   }, [showAuth, isAuthenticated, user, setAuthMode]);
 
@@ -157,27 +167,65 @@ const Header: React.FC = () => {
     handleSearchTrigger(searchQuery);
   };
 
-  const handleAuthSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleAuthSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setAuthError(null);
 
-    if (!authEmail.trim()) {
-      setAuthError(authContent.email);
-      return;
-    }
+    try {
+      if (authMode === 'login') {
+        // 登录：使用用户名/邮箱/手机号
+        const username = authEmail.trim() || authUsername.trim();
+        if (!username) {
+          setAuthError('请输入用户名、邮箱或手机号');
+          return;
+        }
+        if (!authPassword.trim()) {
+          setAuthError('请输入密码');
+          return;
+        }
+        if (authPassword.length < 6) {
+          setAuthError('密码长度至少6位');
+          return;
+        }
 
-    if (authMode === 'register') {
-      if (!authName.trim()) {
-        setAuthError(authContent.name || 'Name');
-        return;
-      }
-      if (authPassword !== authConfirm) {
-        setAuthError(authContent.passwordMismatch || 'Passwords do not match');
-        return;
-      }
-    }
+        await login({ username, password: authPassword });
+        // 登录成功，AuthContext会自动关闭弹窗
+      } else {
+        // 注册
+        const username = authName.trim() || authEmail.trim().split('@')[0];
+        if (!username) {
+          setAuthError('请输入用户名');
+          return;
+        }
+        if (username.length < 3) {
+          setAuthError('用户名长度至少3位');
+          return;
+        }
+        if (!authPassword.trim()) {
+          setAuthError('请输入密码');
+          return;
+        }
+        if (authPassword.length < 6) {
+          setAuthError('密码长度至少6位');
+          return;
+        }
+        if (authPassword !== authConfirm) {
+          setAuthError(authContent.passwordMismatch || '两次密码输入不一致');
+          return;
+        }
 
-    login({ email: authEmail, name: authName });
+        await register({
+          username,
+          password: authPassword,
+          email: authEmail.trim() || undefined,
+          nickname: authName.trim() || username,
+        });
+        // 注册成功，AuthContext会自动关闭弹窗
+      }
+    } catch (error: any) {
+      console.error('Auth error:', error);
+      setAuthError(error.message || error.data?.message || '操作失败，请重试');
+    }
   };
 
   const handleLogout = () => {
@@ -197,50 +245,64 @@ const Header: React.FC = () => {
     <>
       <header className="app-header">
         <div className="header-left">
-          <div
-            className="language-selector"
-            onClick={() => setShowLangMenu(!showLangMenu)}
-          >
-            <img
-              src={isZh ? cnFlag : usFlag}
-              alt={isZh ? 'CN' : 'US'}
-              className="flag-icon-large"
-            />
+          {onBack ? (
+            <button className="header-back-btn" onClick={onBack}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+            </button>
+          ) : (
+            <div
+              className="language-selector"
+              onClick={() => setShowLangMenu(!showLangMenu)}
+            >
+              <img
+                src={isZh ? cnFlag : usFlag}
+                alt={isZh ? 'CN' : 'US'}
+                className="flag-icon-large"
+              />
 
-            {showLangMenu && (
-              <div className="language-menu" onClick={(e) => e.stopPropagation()}>
-                <div
-                  className={`language-option ${isZh ? 'active' : ''}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    changeLanguage('zh-CN');
-                  }}
-                >
-                  <img src={cnFlag} alt="CN" className="flag-icon" />
-                  <span>中文</span>
+              {showLangMenu && (
+                <div className="language-menu" onClick={(e) => e.stopPropagation()}>
+                  <div
+                    className={`language-option ${isZh ? 'active' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      changeLanguage('zh-CN');
+                    }}
+                  >
+                    <img src={cnFlag} alt="CN" className="flag-icon" />
+                    <span>中文</span>
+                  </div>
+                  <div
+                    className={`language-option ${!isZh ? 'active' : ''}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      changeLanguage('en-US');
+                    }}
+                  >
+                    <img src={usFlag} alt="US" className="flag-icon" />
+                    <span>English</span>
+                  </div>
                 </div>
-                <div
-                  className={`language-option ${!isZh ? 'active' : ''}`}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    changeLanguage('en-US');
-                  }}
-                >
-                  <img src={usFlag} alt="US" className="flag-icon" />
-                  <span>English</span>
-                </div>
-              </div>
-            )}
-          </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="header-center">
-          <svg className="logo-icon" viewBox="0 0 24 24" fill="none">
-            <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#D4A574" />
-            <path d="M2 17L12 22L22 17" stroke="#D4A574" strokeWidth="2" />
-            <path d="M2 12L12 17L22 12" stroke="#D4A574" strokeWidth="2" />
-          </svg>
-          <span className="logo-text">TreasureX</span>
+          {title ? (
+            <span className="header-title">{title}</span>
+          ) : (
+            <>
+              <svg className="logo-icon" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#D4A574" />
+                <path d="M2 17L12 22L22 17" stroke="#D4A574" strokeWidth="2" />
+                <path d="M2 12L12 17L22 12" stroke="#D4A574" strokeWidth="2" />
+              </svg>
+              <span className="logo-text">TreasureX</span>
+            </>
+          )}
         </div>
 
         <div className="header-right">
@@ -424,28 +486,40 @@ const Header: React.FC = () => {
               {authError && <div className="auth-message error">{authError}</div>}
 
               <form className="auth-form" onSubmit={handleAuthSubmit}>
-                <label className="auth-field">
-                  <span>{authContent.email}</span>
-                  <input
-                    type="email"
-                    value={authEmail}
-                    onChange={(event) => setAuthEmail(event.target.value)}
-                    placeholder="name@example.com"
-                    required
-                  />
-                </label>
-
-                {authMode === 'register' && (
+                {authMode === 'login' ? (
                   <label className="auth-field">
-                    <span>{authContent.name || 'Name'}</span>
+                    <span>用户名/邮箱/手机号</span>
                     <input
                       type="text"
-                      value={authName}
-                      onChange={(event) => setAuthName(event.target.value)}
-                      placeholder="Charlotte"
+                      value={authEmail}
+                      onChange={(event) => setAuthEmail(event.target.value)}
+                      placeholder="请输入用户名、邮箱或手机号"
                       required
                     />
                   </label>
+                ) : (
+                  <>
+                    <label className="auth-field">
+                      <span>用户名</span>
+                      <input
+                        type="text"
+                        value={authName}
+                        onChange={(event) => setAuthName(event.target.value)}
+                        placeholder="请输入用户名（至少3位）"
+                        required
+                        minLength={3}
+                      />
+                    </label>
+                    <label className="auth-field">
+                      <span>{authContent.email}（可选）</span>
+                      <input
+                        type="email"
+                        value={authEmail}
+                        onChange={(event) => setAuthEmail(event.target.value)}
+                        placeholder="name@example.com"
+                      />
+                    </label>
+                  </>
                 )}
 
                 <label className="auth-field">
@@ -480,8 +554,15 @@ const Header: React.FC = () => {
                   </div>
                 )}
 
-                <button type="submit" className="auth-submit-btn">
-                  {authMode === 'login' ? authContent.ctaLogin : authContent.ctaRegister}
+                <button 
+                  type="submit" 
+                  className="auth-submit-btn"
+                  disabled={authLoading}
+                >
+                  {authLoading 
+                    ? (authMode === 'login' ? '登录中...' : '注册中...')
+                    : (authMode === 'login' ? authContent.ctaLogin : authContent.ctaRegister)
+                  }
                 </button>
               </form>
 

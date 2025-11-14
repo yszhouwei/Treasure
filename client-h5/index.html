@@ -4,7 +4,21 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>client-h5</title>
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>TreasureX</title>
+    <script>
+      // 检测微信浏览器并添加类名
+      (function() {
+        var ua = navigator.userAgent.toLowerCase();
+        var isWeChat = /micromessenger/.test(ua);
+        if (isWeChat) {
+          document.documentElement.classList.add('wechat-browser');
+          document.body.classList.add('wechat-browser');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

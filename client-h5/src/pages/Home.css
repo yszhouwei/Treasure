@@ -1,12 +1,32 @@
 .home-container {
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: 
+    radial-gradient(circle at 10% 20%, rgba(212, 165, 116, 0.06) 0%, transparent 30%),
+    radial-gradient(circle at 90% 40%, rgba(251, 191, 36, 0.05) 0%, transparent 25%),
+    radial-gradient(circle at 50% 80%, rgba(249, 227, 155, 0.04) 0%, transparent 20%),
+    linear-gradient(180deg, #fafafa 0%, #f5f5f5 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.home-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  background: radial-gradient(ellipse at top, rgba(212, 165, 116, 0.05), transparent);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .home-content {
   padding-top: 56px;
-  padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: 80px;
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
 /* ==================== Banner区域 ==================== */
@@ -232,7 +252,7 @@
 .section-title {
   font-size: 18px;
   font-weight: 700;
-  color: #262626;
+  color: #0f0000;
   margin: 0;
 }
 
@@ -253,27 +273,29 @@
 .product-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 6px;
 }
 
 .product-card {
   background: white;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.08);
+.product-card:active {
+  transform: scale(0.98);
 }
 
 .product-image {
   position: relative;
-  height: 140px;
-  background: #2c2416;
+  width: 100%;
+  height: 260px;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -281,69 +303,87 @@
 
 .product-tag {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 10px;
+  left: 10px;
   color: white;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 6px;
+  line-height: 1.2;
 }
 
 .product-info {
   padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .product-name {
   font-size: 15px;
   font-weight: 600;
-  color: #262626;
-  margin: 0 0 6px 0;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1;
 }
 
 .product-stats {
-  margin-bottom: 4px;
+  margin: 0;
 }
 
 .participants-count {
-  font-size: 12px;
-  color: #8c8c8c;
+  font-size: 13px;
+  color: #888;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.participants-count::before {
+  content: '👥';
+  font-size: 14px;
 }
 
 .product-status {
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 8px;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  display: block !important;
+  line-height: 1.2 !important;
+  background: transparent !important;
+  margin: 0;
 }
 
 .product-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 8px;
+  margin: 0;
 }
 
 .product-price {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
-  color: #ff4d4f;
+  color: #ff9500;
 }
 
 .join-btn {
-  background: linear-gradient(135deg, #B8860B 0%, #D4A574 100%);
+  background: linear-gradient(135deg, #c89860 0%, #a67c52 100%);
   color: white;
   border: none;
-  border-radius: 18px;
-  padding: 8px 20px;
-  font-size: 13px;
+  border-radius: 20px;
+  padding: 8px 0;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(184, 134, 11, 0.3);
-  transition: all 0.3s;
+  box-shadow: none;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-top: 4px;
 }
 
 .join-btn:active {
-  transform: scale(0.95);
+  transform: scale(0.98);
+  opacity: 0.95;
 }
 
 /* ==================== AI推荐 ==================== */
@@ -396,10 +436,15 @@
 
 .ai-product-image {
   position: relative;
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   flex-shrink: 0;
   background: #2c2c2c;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .ai-product-tag {
@@ -437,8 +482,9 @@
 }
 
 .info-icon {
-  font-size: 14px;
-  color: #1890ff;
+  display: none;
+  width: 3px;
+  height: 3px;
 }
 
 .ai-product-status {
@@ -482,12 +528,12 @@
   .banner-title {
     font-size: 24px;
   }
-  
+
   .product-grid {
     gap: 8px;
   }
-  
+
   .product-image {
-    height: 120px;
+    height: 200px;
   }
 }

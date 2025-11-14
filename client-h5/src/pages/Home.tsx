@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
 import ProductDetail from './home/ProductDetail';
@@ -8,6 +8,9 @@ import JoinGroupPage from './home/JoinGroupPage';
 import CreateGroupPage from './home/CreateGroupPage';
 import PaymentPage from './home/PaymentPage';
 import OrderSuccessPage from './home/OrderSuccessPage';
+import { ProductsService, type Product as ApiProduct } from '../services/products.service';
+import { BannersService } from '../services/banners.service';
+import { parsePrice } from '../utils/dataTransform';
 import './Home.css';
 
 type GroupTypeItem = {
@@ -60,6 +63,13 @@ type PageState =
 const Home: React.FC = () => {
   const { t } = useTranslation();
   const [activePage, setActivePage] = useState<PageState>(null);
+  const [hotProducts, setHotProducts] = useState<HotProduct[]>([]);
+  const [aiProducts, setAiProducts] = useState<AiProduct[]>([]);
+  const [banners, setBanners] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [productDetail, setProductDetail] = useState<ApiProduct | null>(null);
+  const [productDetailLoading, setProductDetailLoading] = useState(false);
 
   const groupTypes: GroupTypeItem[] = useMemo(() => (
     [
@@ -70,67 +80,115 @@ const Home: React.FC = () => {
     ]
   ), [t]);
 
-  const hotProducts: HotProduct[] = useMemo(() => (
-    [
-      {
-        id: 1,
-        name: t('products.antiqueWatch'),
-        price: 188.0,
-        participants: 58,
-        total: 10,
-        status: t('product.statusTight'),
-        statusColor: '#ff4d4f',
-        tag: t('tags.group10'),
-        tagColor: '#52c41a',
-        desc: t('home.sheet.hotProduct.descWatch'),
-        imageUrl: '/images/product-watch.svg',
-        backgroundColor: '#2c1810'
-      },
-      {
-        id: 2,
-        name: t('products.rareStamps'),
-        price: 99.0,
-        participants: 12,
-        total: 20,
-        status: t('product.statusAvailable'),
-        statusColor: '#52c41a',
-        tag: t('tags.group20'),
-        tagColor: '#1890ff',
-        desc: t('home.sheet.hotProduct.descStamps'),
-        imageUrl: '/images/product-stamps.svg',
-        backgroundColor: '#1a5757'
-      }
-    ]
-  ), [t]);
+  // 将API商品转换为HotProduct格式
+  const convertToHotProduct = (product: ApiProduct): HotProduct => {
+    const participants = Math.floor(Math.random() * 50) + 10; // 模拟参与人数
+    const total = 10; // 默认10人团，后续可以从团购信息获取
+    const isTight = participants >= total * 0.8;
+    
+    // 确保价格是数字类型
+    const price = parsePrice(product.group_price);
+    
+    return {
+      id: product.id,
+      name: product.name,
+      price: price,
+      participants,
+      total,
+      status: isTight ? t('product.statusTight') : t('product.statusAvailable'),
+      statusColor: isTight ? '#ff4d4f' : '#52c41a',
+      tag: t('tags.group10'),
+      tagColor: '#52c41a',
+      desc: product.description || '',
+      imageUrl: product.image_url || ProductsService.parseImages(product.images)[0] || '/images/product-watch.svg',
+      backgroundColor: '#2c1810'
+    };
+  };
 
-  const aiProducts: AiProduct[] = useMemo(() => (
-    [
-      {
-        id: 1,
-        name: t('products.vintageCamera'),
-        price: 850.0,
-        status: t('product.statusTight'),
-        statusColor: '#ff4d4f',
-        tag: t('tags.hotRecommend'),
-        tagColor: '#ff4d4f',
-        description: t('product.viewed', { name: t('products.vintageCamera') }),
-        imageUrl: '/images/product-camera.svg',
-        backgroundColor: '#2c2c2c'
-      },
-      {
-        id: 2,
-        name: t('products.mechanicalKeyboard'),
-        price: 499.0,
-        status: t('product.statusAvailable'),
-        statusColor: '#52c41a',
-        tag: t('tags.aiSelected'),
-        tagColor: '#1890ff',
-        description: t('home.sheet.aiProduct.descKeyboard'),
-        imageUrl: '/images/product-keyboard.svg',
-        backgroundColor: '#1a1a1a'
+  // 将API商品转换为AiProduct格式
+  const convertToAiProduct = (product: ApiProduct): AiProduct => {
+    const isTight = product.stock < 10;
+    
+    // 确保价格是数字类型
+    const price = parsePrice(product.group_price);
+    
+    return {
+      id: product.id,
+      name: product.name,
+      price: price,
+      status: isTight ? t('product.statusTight') : t('product.statusAvailable'),
+      statusColor: isTight ? '#ff4d4f' : '#52c41a',
+      tag: product.is_recommend ? t('tags.hotRecommend') : t('tags.aiSelected'),
+      tagColor: product.is_recommend ? '#ff4d4f' : '#1890ff',
+      description: product.description || t('product.viewed', { name: product.name }),
+      imageUrl: product.image_url || ProductsService.parseImages(product.images)[0] || '/images/product-camera.svg',
+      backgroundColor: '#2c2c2c'
+    };
+  };
+
+  // 获取商品数据
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        // 并行获取热门商品、推荐商品和轮播图
+        const [hotData, recommendData, bannersData] = await Promise.all([
+          ProductsService.getHotProducts(),
+          ProductsService.getRecommendProducts(),
+          BannersService.getBanners().catch(() => []) // 轮播图失败不影响主流程
+        ]);
+
+        // 转换热门商品
+        const hot = hotData.map(convertToHotProduct);
+        setHotProducts(hot);
+
+        // 转换推荐商品
+        const recommend = recommendData.map(convertToAiProduct);
+        setAiProducts(recommend);
+
+        // 设置轮播图
+        setBanners(bannersData);
+      } catch (err: any) {
+        console.error('获取商品数据失败:', err);
+        setError(err.message || '获取数据失败');
+        // 如果API失败，使用空数组，页面会显示空状态
+        setHotProducts([]);
+        setAiProducts([]);
+        setBanners([]);
+      } finally {
+        setLoading(false);
       }
-    ]
-  ), [t]);
+    };
+
+    fetchData();
+  }, [t]);
+
+  // 获取商品详情
+  useEffect(() => {
+    const fetchProductDetail = async () => {
+      if (activePage && (activePage.type === 'hotProduct' || activePage.type === 'aiProduct')) {
+        const productId = activePage.payload.id;
+        if (!productDetail || productDetail.id !== productId) {
+          setProductDetailLoading(true);
+          try {
+            const detail = await ProductsService.getProductById(productId);
+            setProductDetail(detail);
+          } catch (err) {
+            console.error('获取商品详情失败:', err);
+            setProductDetail(null);
+          } finally {
+            setProductDetailLoading(false);
+          }
+        }
+      } else {
+        // 离开商品详情页时清空数据
+        setProductDetail(null);
+      }
+    };
+
+    fetchProductDetail();
+  }, [activePage]);
 
   // 渲染子页面
   if (activePage) {
@@ -182,46 +240,46 @@ const Home: React.FC = () => {
           />
         );
       case 'hotProduct':
+      case 'aiProduct': {
+        const currentProduct = productDetail && productDetail.id === activePage.payload.id
+          ? productDetail
+          : null;
+
+        const images = currentProduct 
+          ? ProductsService.parseImages(currentProduct.images)
+          : (activePage.payload.imageUrl ? [activePage.payload.imageUrl] : []);
+
         return (
           <ProductDetail
             product={{
-              ...activePage.payload,
-              originalPrice: activePage.payload.price * 1.5,
-              description: activePage.payload.desc
+              id: activePage.payload.id,
+              name: currentProduct?.name || activePage.payload.name,
+              price: currentProduct ? parsePrice(currentProduct.group_price) : activePage.payload.price,
+              originalPrice: currentProduct ? parsePrice(currentProduct.original_price) : (activePage.payload.price * 1.5),
+              participants: activePage.type === 'hotProduct' ? activePage.payload.participants : undefined,
+              total: activePage.type === 'hotProduct' ? activePage.payload.total : undefined,
+              status: activePage.payload.status,
+              tag: activePage.payload.tag,
+              description: currentProduct?.description || (activePage.type === 'hotProduct' ? activePage.payload.desc : activePage.payload.description),
+              images: images.length > 0 ? images : undefined
             }}
-            onBack={() => setActivePage(null)}
+            onBack={() => {
+              setActivePage(null);
+              setProductDetail(null);
+            }}
             onJoin={() => {
               setActivePage({
                 type: 'joinGroup',
                 payload: {
                   product: activePage.payload,
-                  groupSize: activePage.payload.total
+                  groupSize: activePage.type === 'hotProduct' ? activePage.payload.total : 10
                 }
               });
             }}
+            loading={productDetailLoading}
           />
         );
-      case 'aiProduct':
-        return (
-          <ProductDetail
-            product={{
-              ...activePage.payload,
-              originalPrice: activePage.payload.price * 1.8,
-              participants: undefined,
-              total: undefined
-            }}
-            onBack={() => setActivePage(null)}
-            onJoin={() => {
-              setActivePage({
-                type: 'joinGroup',
-                payload: {
-                  product: activePage.payload,
-                  groupSize: 10
-                }
-              });
-            }}
-          />
-        );
+      }
       case 'joinGroup':
         return (
           <JoinGroupPage
@@ -235,17 +293,17 @@ const Home: React.FC = () => {
               timeLeft: '23:45:12'
             }}
             onBack={() => setActivePage(null)}
-            onConfirm={() => {
-              const orderNo = `TG${Date.now().toString().slice(-8)}`;
+            onConfirm={(orderData) => {
               setActivePage({
                 type: 'payment',
                 payload: {
                   order: {
-                    orderNo,
-                    productName: activePage.payload.product.name,
-                    quantity: 1,
-                    amount: activePage.payload.product.price,
-                    groupType: `${activePage.payload.groupSize}人团`
+                    orderNo: orderData.orderNo,
+                    productName: orderData.productName,
+                    quantity: orderData.quantity,
+                    amount: orderData.amount,
+                    groupType: orderData.groupType,
+                    orderId: orderData.id
                   }
                 }
               });
@@ -324,20 +382,81 @@ const Home: React.FC = () => {
       <Header />
 
       <div className="home-content">
-        {/* 轮播Banner区域 */}
-        <section className="banner-section">
-          <div className="banner-content" style={{ backgroundImage: 'url(/images/banner-bg.svg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-            <div className="banner-badge">{t('banner.limitedTime')}</div>
-            <div className="banner-overlay">
-              <h1 className="banner-title">{t('banner.title')}</h1>
-              <p className="banner-subtitle">{t('banner.subtitle')}</p>
-              <button className="banner-btn" onClick={() => setActivePage({ type: 'banner' })}>
-                <span className="btn-icon">⊕</span>
-                <span>{t('banner.action')}</span>
-              </button>
-            </div>
+        {/* 加载状态 */}
+        {loading && (
+          <div style={{ padding: '40px', textAlign: 'center', color: '#8c8c8c' }}>
+            {t('common.loading') || '加载中...'}
           </div>
-        </section>
+        )}
+
+        {/* 错误提示 */}
+        {error && !loading && (
+          <div style={{ padding: '20px', textAlign: 'center', color: '#ff4d4f' }}>
+            {error}
+            <br />
+            <button 
+              onClick={() => window.location.reload()} 
+              style={{ marginTop: '10px', padding: '8px 16px', background: '#1890ff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+            >
+              重试
+            </button>
+          </div>
+        )}
+
+        {/* 轮播Banner区域 */}
+        {!loading && (
+          <section className="banner-section">
+            {banners.length > 0 ? (
+              banners.map((banner, index) => (
+                <div 
+                  key={banner.id || index}
+                  className="banner-content" 
+                  style={{ 
+                    backgroundImage: banner.image_url ? `url(${banner.image_url})` : 'url(/images/banner-bg.svg)', 
+                    backgroundSize: 'cover', 
+                    backgroundPosition: 'center',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => {
+                    if (banner.link_url) {
+                      if (banner.link_type === 'product') {
+                        // TODO: 实现商品详情跳转
+                        // const productId = banner.link_url.split('/').pop();
+                        setActivePage({ type: 'banner' });
+                      } else {
+                        setActivePage({ type: 'banner' });
+                      }
+                    } else {
+                      setActivePage({ type: 'banner' });
+                    }
+                  }}
+                >
+                  <div className="banner-badge">{t('banner.limitedTime')}</div>
+                  <div className="banner-overlay">
+                    <h1 className="banner-title">{banner.title || t('banner.title')}</h1>
+                    <p className="banner-subtitle">{t('banner.subtitle')}</p>
+                    <button className="banner-btn" onClick={(e) => { e.stopPropagation(); setActivePage({ type: 'banner' }); }}>
+                      <span className="btn-icon">⊕</span>
+                      <span>{t('banner.action')}</span>
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="banner-content" style={{ backgroundImage: 'url(/images/banner-bg.svg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                <div className="banner-badge">{t('banner.limitedTime')}</div>
+                <div className="banner-overlay">
+                  <h1 className="banner-title">{t('banner.title')}</h1>
+                  <p className="banner-subtitle">{t('banner.subtitle')}</p>
+                  <button className="banner-btn" onClick={() => setActivePage({ type: 'banner' })}>
+                    <span className="btn-icon">⊕</span>
+                    <span>{t('banner.action')}</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* 新人优惠卡片 */}
         <section className="promo-card">
@@ -376,20 +495,22 @@ const Home: React.FC = () => {
         </section>
 
         {/* 热门团购 */}
-        <section className="hot-section">
-          <div className="section-header">
-            <h2 className="section-title">{t('section.hotGroup')}</h2>
-            <a href="#more" className="section-more">
-              {t('common.more')} <span className="arrow">›</span>
-            </a>
-          </div>
-          <div className="product-grid">
-            {hotProducts.map((product) => (
-              <div
-                key={product.id}
-                className="product-card"
-                onClick={() => setActivePage({ type: 'hotProduct', payload: product })}
-              >
+        {!loading && (
+          <section className="hot-section">
+            <div className="section-header">
+              <h2 className="section-title">{t('section.hotGroup')}</h2>
+              <a href="#more" className="section-more">
+                {t('common.more')} <span className="arrow">›</span>
+              </a>
+            </div>
+            {hotProducts.length > 0 ? (
+              <div className="product-grid">
+                {hotProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="product-card"
+                    onClick={() => setActivePage({ type: 'hotProduct', payload: product })}
+                  >
                 <div
                   className="product-image"
                   style={{
@@ -425,26 +546,46 @@ const Home: React.FC = () => {
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
+                ))}
+              </div>
+            ) : (
+              <div style={{ padding: '40px', textAlign: 'center', color: '#8c8c8c' }}>
+                {t('common.noData') || '暂无热门商品'}
+              </div>
+            )}
+          </section>
+        )}
 
         {/* AI推荐 */}
-        <section className="ai-section">
-          <div className="section-header">
-            <h2 className="section-title">{t('section.aiRecommend')}</h2>
-            <button className="refresh-btn" onClick={() => setActivePage({ type: 'aiProduct', payload: aiProducts[0] })}>
-              <span className="refresh-icon">⟳</span>
-              <span>{t('common.refresh')}</span>
-            </button>
-          </div>
-          <div className="ai-product-list">
-            {aiProducts.map((product) => (
-              <div
-                key={product.id}
-                className="ai-product-card"
-                onClick={() => setActivePage({ type: 'aiProduct', payload: product })}
+        {!loading && (
+          <section className="ai-section">
+            <div className="section-header">
+              <h2 className="section-title">{t('section.aiRecommend')}</h2>
+              <button 
+                className="refresh-btn" 
+                onClick={async () => {
+                  // 刷新推荐商品
+                  try {
+                    const recommendData = await ProductsService.getRecommendProducts();
+                    const recommend = recommendData.map(convertToAiProduct);
+                    setAiProducts(recommend);
+                  } catch (err) {
+                    console.error('刷新失败:', err);
+                  }
+                }}
               >
+                <span className="refresh-icon">⟳</span>
+                <span>{t('common.refresh')}</span>
+              </button>
+            </div>
+            {aiProducts.length > 0 ? (
+              <div className="ai-product-list">
+                {aiProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="ai-product-card"
+                    onClick={() => setActivePage({ type: 'aiProduct', payload: product })}
+                  >
                 <div
                   className="ai-product-image"
                   style={{
@@ -480,11 +621,16 @@ const Home: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
+                ))}
+              </div>
+            ) : (
+              <div style={{ padding: '40px', textAlign: 'center', color: '#8c8c8c' }}>
+                {t('common.noData') || '暂无推荐商品'}
+              </div>
+            )}
+          </section>
+        )}
       </div>
-
     </div>
   );
 };

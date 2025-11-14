@@ -21,9 +21,6 @@
     </linearGradient>
   </defs>
   
-  <!-- Background -->
-  <rect width="400" height="400" fill="url(#keyboardGradient)"/>
-  
   <!-- Keyboard base -->
   <rect x="50" y="150" width="300" height="120" fill="#1a1a2e" rx="8"/>
   <rect x="55" y="155" width="290" height="110" fill="#0d0d1a" rx="5"/>

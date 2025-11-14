@@ -134,3 +134,26 @@ img {
     font-size: 14px;
   }
 }
+
+/* 微信浏览器导航栏隐藏 */
+.wechat-browser #wx_navbar,
+.wechat-browser #wx_navbar_iframe,
+.wechat-browser iframe[id*="wx_navbar"],
+.wechat-browser iframe[name*="wx_navbar"] {
+  display: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* 隐藏微信浏览器顶部导航栏容器 */
+.wechat-browser body > div:first-child[style*="position: fixed"][style*="top: 0"] {
+  display: none !important;
+}
+
+/* 针对微信浏览器特定的导航栏元素 */
+.wechat-browser .wx_navbar,
+.wechat-browser .wx_navbar_iframe {
+  display: none !important;
+}

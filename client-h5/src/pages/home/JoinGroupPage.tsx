@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { OrdersService, type CreateOrderDto } from '../../services/orders.service';
+import { useAuth } from '../../context/AuthContext';
 import './JoinGroupPage.css';
 
 interface JoinGroupPageProps {
@@ -13,13 +15,16 @@ interface JoinGroupPageProps {
     timeLeft: string;
   };
   onBack: () => void;
-  onConfirm: () => void;
+  onConfirm: (order: any) => void;
 }
 
 const JoinGroupPage: React.FC<JoinGroupPageProps> = ({ product, onBack, onConfirm }) => {
   const { t } = useTranslation();
+  const { isAuthenticated, user } = useAuth();
   const [quantity, setQuantity] = useState(1);
   const [selectedAddress, setSelectedAddress] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const addresses = [
     { id: 0, name: '张三', phone: '138****8888', address: '北京市朝阳区xxx街道xxx号' },
@@ -28,6 +33,46 @@ const JoinGroupPage: React.FC<JoinGroupPageProps> = ({ product, onBack, onConfir
 
   const savings = ((product.originalPrice || product.price * 1.5) - product.price) * quantity;
   const total = product.price * quantity;
+
+  const handleConfirm = async () => {
+    if (!isAuthenticated) {
+      setError('请先登录');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // 创建订单
+      const orderData: CreateOrderDto = {
+        product_id: product.id,
+        quantity: quantity,
+        shipping_address: addresses[selectedAddress] ? {
+          name: addresses[selectedAddress].name,
+          phone: addresses[selectedAddress].phone,
+          address: addresses[selectedAddress].address
+        } : undefined
+      };
+
+      const order = await OrdersService.createOrder(orderData);
+
+      // 调用父组件的onConfirm，传递订单数据
+      onConfirm({
+        id: order.id,
+        orderNo: order.order_no,
+        productName: order.product_name,
+        quantity: order.quantity,
+        amount: order.actual_amount,
+        groupType: `${product.groupSize}人团`
+      });
+    } catch (err: any) {
+      console.error('创建订单失败:', err);
+      setError(err.message || err.data?.message || '创建订单失败，请重试');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="join-group-page">
@@ -163,6 +208,21 @@ const JoinGroupPage: React.FC<JoinGroupPageProps> = ({ product, onBack, onConfir
           </svg>
           <p>{t('joinGroup.rulesNotice')}</p>
         </div>
+
+        {/* 错误提示 */}
+        {error && (
+          <div style={{ 
+            padding: '12px 16px', 
+            margin: '16px 0', 
+            background: '#fff2f0', 
+            border: '1px solid #ffccc7', 
+            borderRadius: '8px', 
+            color: '#ff4d4f',
+            fontSize: '14px'
+          }}>
+            {error}
+          </div>
+        )}
       </div>
 
       {/* 底部确认栏 */}
@@ -174,8 +234,12 @@ const JoinGroupPage: React.FC<JoinGroupPageProps> = ({ product, onBack, onConfir
             <span className="savings-badge">{t('joinGroup.save')} ¥{savings.toFixed(2)}</span>
           </div>
         </div>
-        <button className="confirm-join-btn" onClick={onConfirm}>
-          {t('joinGroup.confirmJoin')}
+        <button 
+          className="confirm-join-btn" 
+          onClick={handleConfirm}
+          disabled={loading || !isAuthenticated}
+        >
+          {loading ? (t('common.loading') || '创建订单中...') : t('joinGroup.confirmJoin')}
         </button>
       </div>
     </div>

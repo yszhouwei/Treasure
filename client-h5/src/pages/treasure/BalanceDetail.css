@@ -1,0 +1,406 @@
+.balance-detail-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffc837 0%, #ff8008 100%);
+  padding-bottom: 80px;
+}
+
+/* 头部 */
+.balance-detail-header {
+  position: relative;
+  padding: 60px 20px 40px;
+  color: white;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+}
+
+.balance-hero {
+  text-align: center;
+}
+
+.balance-label {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.balance-amount {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0 0 24px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.balance-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.balance-action-btn {
+  flex: 1;
+  max-width: 140px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.balance-action-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2.5;
+}
+
+.balance-action-btn.recharge {
+  background: white;
+  color: #ff8008;
+}
+
+.balance-action-btn.recharge svg {
+  stroke: #ff8008;
+}
+
+.balance-action-btn.recharge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.balance-action-btn.withdraw {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.balance-action-btn.withdraw svg {
+  stroke: white;
+}
+
+.balance-action-btn.withdraw:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* 内容区域 */
+.balance-detail-content {
+  padding: 20px 16px;
+}
+
+.balance-card {
+  background: white;
+  border-radius: 20px;
+  padding: 24px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.balance-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  color: #1a1a1a;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.record-count {
+  font-size: 13px;
+  color: #999;
+  background: #f0f2f5;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+/* 账户信息 */
+.account-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.account-info-item {
+  padding: 14px;
+  background: #f8f9ff;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-label {
+  font-size: 13px;
+  color: #999;
+}
+
+.info-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.info-value.status-active {
+  color: #52c41a;
+}
+
+.info-value.status-high {
+  color: #ff8008;
+}
+
+/* 资产统计 */
+.asset-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.asset-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  background: #f8f9ff;
+  border-radius: 14px;
+}
+
+.asset-stat-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.asset-stat-icon.income {
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+}
+
+.asset-stat-icon.expense {
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+}
+
+.asset-stat-icon.balance {
+  background: linear-gradient(135deg, #ffc837 0%, #ff8008 100%);
+}
+
+.asset-stat-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: white;
+  stroke-width: 2;
+}
+
+.asset-stat-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.asset-stat-label {
+  font-size: 13px;
+  color: #999;
+}
+
+.asset-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.asset-stat-value.income {
+  color: #52c41a;
+}
+
+.asset-stat-value.expense {
+  color: #ff4d4f;
+}
+
+.asset-stat-value.balance {
+  color: #ff8008;
+}
+
+/* 标签页 */
+.transaction-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  background: #f0f2f5;
+  padding: 4px;
+  border-radius: 12px;
+}
+
+.transaction-tab {
+  flex: 1;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.transaction-tab.active {
+  background: white;
+  color: #ff8008;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* 交易列表 */
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: #f8f9ff;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.transaction-item:hover {
+  background: #f0f2ff;
+  transform: translateX(4px);
+}
+
+.transaction-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.transaction-icon.income {
+  background: linear-gradient(135deg, #52c41a 0%, #73d13d 100%);
+}
+
+.transaction-icon.expense {
+  background: linear-gradient(135deg, #ff4d4f 0%, #ff7875 100%);
+}
+
+.transaction-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: white;
+  stroke-width: 2.5;
+}
+
+.transaction-content {
+  flex: 1;
+}
+
+.transaction-content h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #1a1a1a;
+}
+
+.transaction-content p {
+  font-size: 13px;
+  color: #999;
+  margin: 0;
+}
+
+.transaction-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.transaction-amount {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.transaction-amount.income {
+  color: #52c41a;
+}
+
+.transaction-amount.expense {
+  color: #ff4d4f;
+}
+
+.transaction-status {
+  font-size: 12px;
+  color: #999;
+}
+
+/* 提示信息 */
+.tips-card {
+  background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
+  border: 2px solid #ffd591;
+}
+
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tip-icon {
+  flex-shrink: 0;
+  font-size: 20px;
+}
+
+.tip-item p {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #ad6800;
+  margin: 2px 0 0;
+}
+
+/* 响应式 */
+@media (max-width: 480px) {
+  .balance-amount {
+    font-size: 42px;
+  }
+
+  .account-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .balance-actions {
+    flex-direction: column;
+  }
+
+  .balance-action-btn {
+    max-width: 100%;
+  }
+}
+

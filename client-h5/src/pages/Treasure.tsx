@@ -1,7 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
-import DetailSheet from '../components/DetailSheet';
+import BalanceDetail from './treasure/BalanceDetail';
+import StatDetail from './treasure/StatDetail';
+import MissionDetail from './treasure/MissionDetail';
+import OrderDetail from './treasure/OrderDetail';
 import './Treasure.css';
 
 type StatItem = {
@@ -25,11 +28,12 @@ type OrderItem = {
   time: string;
 };
 
-type SheetState =
+type PageState =
   | { type: 'balance' }
   | { type: 'stat'; payload: StatItem; index: number }
   | { type: 'mission'; payload: MissionItem; index: number }
-  | { type: 'order'; payload: OrderItem };
+  | { type: 'order'; payload: OrderItem }
+  | null;
 
 const Treasure: React.FC = () => {
   const { t } = useTranslation();
@@ -38,112 +42,46 @@ const Treasure: React.FC = () => {
   const missions = t('treasure.missions', { returnObjects: true }) as MissionItem[];
   const orders = t('treasure.orders', { returnObjects: true }) as OrderItem[];
 
-  const [activeSheet, setActiveSheet] = useState<SheetState | null>(null);
+  const [activePage, setActivePage] = useState<PageState>(null);
 
-  const sheetTitle = useMemo(() => {
-    if (!activeSheet) return '';
-
-    switch (activeSheet.type) {
+  // 渲染子页面
+  if (activePage) {
+    switch (activePage.type) {
       case 'balance':
-        return t('treasure.sheet.balance.title');
+        return (
+          <BalanceDetail
+            balance={{ amount: t('treasure.hero.balanceValue'), currency: 'CNY' }}
+            onBack={() => setActivePage(null)}
+            onRecharge={() => alert('充值功能')}
+            onWithdraw={() => alert('提现功能')}
+          />
+        );
       case 'stat':
-        return t('treasure.sheet.stat.title', { label: activeSheet.payload.label });
+        return (
+          <StatDetail
+            stat={activePage.payload}
+            onBack={() => setActivePage(null)}
+          />
+        );
       case 'mission':
-        return t('treasure.sheet.mission.title');
+        return (
+          <MissionDetail
+            mission={activePage.payload}
+            onBack={() => setActivePage(null)}
+            onStart={() => alert(t('treasure.sheet.mission.cta'))}
+          />
+        );
       case 'order':
-        return t('treasure.sheet.order.title');
-      default:
-        return '';
-    }
-  }, [activeSheet, t]);
-
-  const sheetRoute = useMemo(() => {
-    if (!activeSheet) return undefined;
-
-    switch (activeSheet.type) {
-      case 'balance':
-        return '/treasure/balance';
-      case 'stat':
-        return `/treasure/stat/${activeSheet.index}`;
-      case 'mission':
-        return `/treasure/mission/${activeSheet.index}`;
-      case 'order':
-        return `/treasure/order/${encodeURIComponent(activeSheet.payload.id.replace('#', ''))}`;
-      default:
-        return undefined;
-    }
-  }, [activeSheet]);
-
-  const sheetCta = useMemo(() => {
-    if (!activeSheet) return '';
-
-    switch (activeSheet.type) {
-      case 'balance':
-        return t('treasure.sheet.balance.cta');
-      case 'stat':
-        return t('treasure.sheet.stat.cta');
-      case 'mission':
-        return t('treasure.sheet.mission.cta');
-      case 'order':
-        return t('treasure.sheet.order.cta');
-      default:
-        return '';
-    }
-  }, [activeSheet, t]);
-
-  const sheetContent = useMemo(() => {
-    if (!activeSheet) return null;
-
-    switch (activeSheet.type) {
-      case 'balance':
         return (
-          <>
-            <h4>{t('treasure.hero.balanceLabel')}</h4>
-            <p>{t('treasure.sheet.balance.desc', { amount: t('treasure.hero.balanceValue') })}</p>
-            <span className="detail-sheet-meta">{t('treasure.sheet.balance.meta')}</span>
-            <span className="detail-sheet-status">{t('treasure.sheet.balance.status')}</span>
-          </>
+          <OrderDetail
+            order={activePage.payload}
+            onBack={() => setActivePage(null)}
+            onContact={() => alert('联系客服')}
+          />
         );
-      case 'stat': {
-        const stat = activeSheet.payload;
-        return (
-          <>
-            <h4>{stat.label}</h4>
-            <p>{t('treasure.sheet.stat.desc', { label: stat.label, value: stat.value })}</p>
-            <span className="detail-sheet-status">{stat.trend}</span>
-            <span className="detail-sheet-meta">{t('treasure.sheet.stat.meta')}</span>
-          </>
-        );
-      }
-      case 'mission': {
-        const mission = activeSheet.payload;
-        return (
-          <>
-            <h4>{mission.title}</h4>
-            <p>{mission.desc}</p>
-            <span className="detail-sheet-status">{t('treasure.sheet.mission.progress', { progress: mission.progress })}</span>
-            <span className="detail-sheet-meta">{t('treasure.sheet.mission.reward', { reward: mission.reward })}</span>
-          </>
-        );
-      }
-      case 'order': {
-        const order = activeSheet.payload;
-        return (
-          <>
-            <h4>{order.title}</h4>
-            <span className="detail-sheet-status">{t('treasure.sheet.order.status', { status: order.status })}</span>
-            <span className="detail-sheet-meta">{t('treasure.sheet.order.amount', { amount: order.amount })}</span>
-            <span className="detail-sheet-meta">{t('treasure.sheet.order.time', { time: order.time })}</span>
-            <span className="detail-sheet-meta">{t('treasure.sheet.order.id', { id: order.id })}</span>
-          </>
-        );
-      }
-      default:
-        return null;
     }
-  }, [activeSheet, t]);
+  }
 
-  const closeSheet = () => setActiveSheet(null);
 
   return (
     <div className="treasure-container">
@@ -164,7 +102,7 @@ const Treasure: React.FC = () => {
                 <span className="treasure-balance-label">{t('treasure.hero.balanceLabel')}</span>
                 <strong>{t('treasure.hero.balanceValue')}</strong>
               </div>
-              <button onClick={() => setActiveSheet({ type: 'balance' })}>{t('treasure.hero.recharge')}</button>
+              <button onClick={() => setActivePage({ type: 'balance' })}>{t('treasure.hero.recharge')}</button>
             </div>
             <div className="treasure-progress">
               <div className="treasure-progress-head">
@@ -189,7 +127,7 @@ const Treasure: React.FC = () => {
               <article
                 key={stat.label}
                 className="treasure-stat-card"
-                onClick={() => setActiveSheet({ type: 'stat', payload: stat, index })}
+                  onClick={() => setActivePage({ type: 'stat', payload: stat, index })}
               >
                 <div className="treasure-stat-icon">★</div>
                 <div className="treasure-stat-content">
@@ -225,7 +163,10 @@ const Treasure: React.FC = () => {
                 </div>
                 <div className="treasure-mission-right">
                   <span className="treasure-mission-reward">{mission.reward}</span>
-                  <button onClick={() => setActiveSheet({ type: 'mission', payload: mission, index })}>
+                  <button onClick={(e) => {
+                    e.stopPropagation();
+                    setActivePage({ type: 'mission', payload: mission, index });
+                  }}>
                     {t('treasure.actions.view')}
                   </button>
                 </div>
@@ -244,7 +185,7 @@ const Treasure: React.FC = () => {
               <article
                 key={order.id}
                 className="treasure-order-card"
-                onClick={() => setActiveSheet({ type: 'order', payload: order })}
+                  onClick={() => setActivePage({ type: 'order', payload: order })}
               >
                 <div>
                   <span className="treasure-order-id">{order.id}</span>
@@ -263,18 +204,6 @@ const Treasure: React.FC = () => {
         </section>
       </div>
 
-      {activeSheet && (
-        <DetailSheet
-          open={Boolean(activeSheet)}
-          title={sheetTitle}
-          onClose={closeSheet}
-          ctaLabel={sheetCta || undefined}
-          closeLabel={t('treasure.sheet.close')}
-          to={sheetRoute}
-        >
-          {sheetContent}
-        </DetailSheet>
-      )}
     </div>
   );
 };

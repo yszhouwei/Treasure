@@ -1,0 +1,293 @@
+.engagement-container {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.engagement-content {
+  padding-top: 56px;
+  padding-bottom: 80px;
+}
+
+/* Hero Section with Score */
+.engagement-hero {
+  background: white;
+  margin: 16px 16px 24px;
+  border-radius: 16px;
+  padding: 32px 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.engagement-score-circle {
+  width: 200px;
+  height: 200px;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.progress-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(0deg);
+}
+
+.score-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score-text strong {
+  font-size: 48px;
+  font-weight: 700;
+  color: #52c41a;
+  line-height: 1;
+}
+
+.score-text span {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin-top: 8px;
+}
+
+.engagement-hero p {
+  margin: 0;
+  font-size: 15px;
+  color: #595959;
+  line-height: 1.6;
+}
+
+/* Sections */
+.engagement-section {
+  margin: 0 16px 24px;
+}
+
+.engagement-section h2 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #262626;
+}
+
+/* Trend Chart */
+.trend-chart {
+  background: white;
+  border-radius: 12px;
+  padding: 24px 20px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 12px;
+  height: 200px;
+}
+
+.trend-bar-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.trend-bar-wrapper {
+  width: 100%;
+  height: 140px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.trend-bar-inner {
+  width: 100%;
+  background: linear-gradient(180deg, #52c41a, #2e8e0f);
+  border-radius: 8px 8px 0 0;
+  position: relative;
+  min-height: 20px;
+  transition: height 0.5s ease;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.trend-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.trend-label {
+  font-size: 12px;
+  color: #8c8c8c;
+  text-align: center;
+}
+
+/* Metrics Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.engagement-metric-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.metric-icon {
+  font-size: 36px;
+  margin-bottom: 4px;
+}
+
+.engagement-metric-card strong {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1b4d3e;
+}
+
+.engagement-metric-card span {
+  font-size: 13px;
+  color: #8c8c8c;
+  line-height: 1.3;
+}
+
+/* Top Members */
+.top-members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.top-member-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.member-rank-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.member-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.member-details strong {
+  font-size: 16px;
+  color: #262626;
+}
+
+.member-details span {
+  font-size: 13px;
+  color: #8c8c8c;
+}
+
+.member-score {
+  font-size: 20px;
+  font-weight: 700;
+  color: #52c41a;
+}
+
+/* Insights */
+.insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.insight-card {
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-left: 4px solid;
+}
+
+.insight-card.positive {
+  background: #f6ffed;
+  border-left-color: #52c41a;
+}
+
+.insight-card.neutral {
+  background: #fff7e6;
+  border-left-color: #faad14;
+}
+
+.insight-card.info {
+  background: #e6f7ff;
+  border-left-color: #1890ff;
+}
+
+.insight-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.insight-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #595959;
+  line-height: 1.5;
+}
+
+/* Actions */
+.engagement-actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  padding: 16px;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+}
+
+.engagement-primary-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #1b4d3e, #287056);
+  color: white;
+  border: none;
+  border-radius: 24px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(27, 77, 62, 0.3);
+  transition: all 0.3s;
+}
+
+.engagement-primary-btn:active {
+  transform: scale(0.98);
+}
+
