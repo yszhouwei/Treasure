@@ -158,7 +158,7 @@ const Profile: React.FC = () => {
   const [profileData, setProfileData] = useState<ProfileDataset | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [activePage, setActivePage] = useState<PageState | null>(null);
-  const refreshTimerRef = useRef<number>();
+  const refreshTimerRef = useRef<number | undefined>(undefined);
 
   const cloneSections = useCallback((sections: ProfileSections): ProfileSections => {
     const result: ProfileSections = {};

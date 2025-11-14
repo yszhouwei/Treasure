@@ -28,6 +28,8 @@ type HotProduct = {
   tag: string;
   tagColor: string;
   desc: string;
+  imageUrl?: string;
+  backgroundColor?: string;
 };
 
 type AiProduct = {
@@ -39,6 +41,8 @@ type AiProduct = {
   tag: string;
   tagColor: string;
   description: string;
+  imageUrl?: string;
+  backgroundColor?: string;
 };
 
 type PageState =
@@ -78,7 +82,9 @@ const Home: React.FC = () => {
         statusColor: '#ff4d4f',
         tag: t('tags.group10'),
         tagColor: '#52c41a',
-        desc: t('home.sheet.hotProduct.descWatch')
+        desc: t('home.sheet.hotProduct.descWatch'),
+        imageUrl: '/images/product-watch.svg',
+        backgroundColor: '#2c1810'
       },
       {
         id: 2,
@@ -90,7 +96,9 @@ const Home: React.FC = () => {
         statusColor: '#52c41a',
         tag: t('tags.group20'),
         tagColor: '#1890ff',
-        desc: t('home.sheet.hotProduct.descStamps')
+        desc: t('home.sheet.hotProduct.descStamps'),
+        imageUrl: '/images/product-stamps.svg',
+        backgroundColor: '#1a5757'
       }
     ]
   ), [t]);
@@ -105,7 +113,9 @@ const Home: React.FC = () => {
         statusColor: '#ff4d4f',
         tag: t('tags.hotRecommend'),
         tagColor: '#ff4d4f',
-        description: t('product.viewed', { name: t('products.vintageCamera') })
+        description: t('product.viewed', { name: t('products.vintageCamera') }),
+        imageUrl: '/images/product-camera.svg',
+        backgroundColor: '#2c2c2c'
       },
       {
         id: 2,
@@ -115,7 +125,9 @@ const Home: React.FC = () => {
         statusColor: '#52c41a',
         tag: t('tags.aiSelected'),
         tagColor: '#1890ff',
-        description: t('home.sheet.aiProduct.descKeyboard')
+        description: t('home.sheet.aiProduct.descKeyboard'),
+        imageUrl: '/images/product-keyboard.svg',
+        backgroundColor: '#1a1a1a'
       }
     ]
   ), [t]);
@@ -381,8 +393,8 @@ const Home: React.FC = () => {
                 <div
                   className="product-image"
                   style={{
-                    backgroundImage: `url(/images/${product.id === 1 ? 'product-watch' : 'product-stamps'}.svg)`,
-                    backgroundColor: product.id === 1 ? '#2c1810' : '#1a5757'
+                    backgroundImage: product.imageUrl ? `url(${product.imageUrl})` : undefined,
+                    backgroundColor: product.backgroundColor || (product.id === 1 ? '#2c1810' : '#1a5757')
                   }}
                 >
                   <span className="product-tag" style={{ backgroundColor: product.tagColor }}>
@@ -436,8 +448,8 @@ const Home: React.FC = () => {
                 <div
                   className="ai-product-image"
                   style={{
-                    backgroundImage: `url(/images/${product.id === 1 ? 'product-camera' : 'product-keyboard'}.svg)`,
-                    backgroundColor: product.id === 1 ? '#2c2c2c' : '#1a1a1a'
+                    backgroundImage: product.imageUrl ? `url(${product.imageUrl})` : undefined,
+                    backgroundColor: product.backgroundColor || (product.id === 1 ? '#2c2c2c' : '#1a1a1a')
                   }}
                 >
                   <span className="ai-product-tag" style={{ backgroundColor: product.tagColor }}>
