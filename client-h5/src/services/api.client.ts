@@ -105,6 +105,57 @@ class FetchClient {
   async delete<T = any>(url: string): Promise<T> {
     return this.request<T>(url, { method: 'DELETE' });
   }
+
+  // 文件上传
+  async uploadFile<T = any>(url: string, file: File, fieldName: string = 'file'): Promise<T> {
+    const token = localStorage.getItem('treasure-token');
+    const formData = new FormData();
+    formData.append(fieldName, file);
+
+    const headers: HeadersInit = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    // 不设置Content-Type，让浏览器自动设置multipart/form-data边界
+
+    const fullUrl = url.startsWith('http') ? url : `${this.baseURL}${url}`;
+
+    try {
+      const response = await fetch(fullUrl, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+
+      if (response.status === 401) {
+        localStorage.removeItem('treasure-token');
+        localStorage.removeItem('treasure-user');
+        window.dispatchEvent(new CustomEvent('auth-required'));
+        throw new Error('未授权，请重新登录');
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw {
+          message: errorData.message || response.statusText || '上传失败',
+          status: response.status,
+          data: errorData,
+        };
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      if (error.message && error.status) {
+        throw error;
+      }
+      throw {
+        message: error.message || '文件上传失败',
+        status: 0,
+        data: null,
+      };
+    }
+  }
 }
 
 const fetchClient = new FetchClient(API_BASE_URL);
@@ -125,6 +176,10 @@ export class ApiClient {
 
   static async delete<T = any>(url: string): Promise<T> {
     return fetchClient.delete<T>(url);
+  }
+
+  static async uploadFile<T = any>(url: string, file: File, fieldName: string = 'file'): Promise<T> {
+    return fetchClient.uploadFile<T>(url, file, fieldName);
   }
 }
 

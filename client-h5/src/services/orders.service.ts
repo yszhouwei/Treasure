@@ -58,5 +58,10 @@ export class OrdersService {
       payment_method: paymentMethod
     });
   }
+
+  // 取消订单
+  static async cancelOrder(orderId: number): Promise<Order> {
+    return ApiClient.post<Order>(`${API_ENDPOINTS.ORDERS.GET_BY_ID(orderId)}/cancel`, {});
+  }
 }
 

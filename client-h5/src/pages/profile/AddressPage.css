@@ -25,6 +25,7 @@
   padding: 20px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   position: relative;
+  margin-top: 15px;
 }
 
 .address-default-badge {

@@ -8,9 +8,11 @@ import './OrderListPage.css';
 interface OrderListPageProps {
   onBack: () => void;
   onOrderClick?: (order: Order) => void;
+  onPay?: (order: Order) => void;
+  onCancel?: (order: Order) => void;
 }
 
-const OrderListPage: React.FC<OrderListPageProps> = ({ onBack, onOrderClick }) => {
+const OrderListPage: React.FC<OrderListPageProps> = ({ onBack, onOrderClick, onPay, onCancel }) => {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
@@ -166,9 +168,23 @@ const OrderListPage: React.FC<OrderListPageProps> = ({ onBack, onOrderClick }) =
                     <div className="order-footer">
                       <button
                         className="order-action-btn secondary"
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.stopPropagation();
-                          // TODO: 取消订单
+                          if (onCancel) {
+                            onCancel(order);
+                          } else {
+                            // 如果没有传递回调，直接调用API
+                            if (window.confirm(t('order.confirmCancel') || '确定要取消这个订单吗？')) {
+                              try {
+                                await OrdersService.cancelOrder(order.id);
+                                // 重新加载订单列表
+                                const updatedOrders = await OrdersService.getOrders(selectedStatus);
+                                setOrders(updatedOrders);
+                              } catch (error: any) {
+                                alert(error.message || t('order.cancelFailed') || '取消订单失败');
+                              }
+                            }
+                          }
                         }}
                       >
                         {t('order.cancel') || '取消订单'}
@@ -177,7 +193,12 @@ const OrderListPage: React.FC<OrderListPageProps> = ({ onBack, onOrderClick }) =
                         className="order-action-btn primary"
                         onClick={(e) => {
                           e.stopPropagation();
-                          // TODO: 去支付
+                          if (onPay) {
+                            onPay(order);
+                          } else if (onOrderClick) {
+                            // 如果没有支付回调，跳转到订单详情页
+                            onOrderClick(order);
+                          }
                         }}
                       >
                         {t('order.pay') || '去支付'}

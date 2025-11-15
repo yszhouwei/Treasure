@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
   USERS: {
     PROFILE: '/users/profile',
     UPDATE: '/users/profile',
+    UPLOAD_AVATAR: '/users/avatar',
     GET_BY_ID: (id: number) => `/users/${id}`,
   },
   // 商品相关

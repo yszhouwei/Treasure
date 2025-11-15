@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '../../components/Header';
+import { UsersService } from '../../services/users.service';
+import { useAuth } from '../../context/AuthContext';
 import './ProfileEditPage.css';
 
 interface User {
   name?: string;
   email?: string;
+  avatar?: string;
 }
 
 interface ProfileEditPageProps {
@@ -15,14 +18,132 @@ interface ProfileEditPageProps {
 
 const ProfileEditPage: React.FC<ProfileEditPageProps> = ({ onBack, user }) => {
   const { t } = useTranslation();
+  const { refreshUser, user: authUser } = useAuth();
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
-  const [phone, setPhone] = useState('138****8888');
+  const [phone, setPhone] = useState(user?.phone || '');
   const [bio, setBio] = useState('');
   const [gender, setGender] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSave = () => {
-    alert(t('profile.profileEdit.saveSuccess'));
+  // 构建完整的头像URL
+  const getAvatarUrl = (url: string | null | undefined) => {
+    if (!url) return null;
+    if (url.startsWith('http')) return url;
+    return `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}${url}`;
+  };
+
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(
+    getAvatarUrl(user?.avatar || authUser?.avatar)
+  );
+
+  // 处理头像选择
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  // 处理头像文件选择
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // 验证文件类型
+    if (!file.type.startsWith('image/')) {
+      setError(t('profile.profileEdit.avatarTypeError') || '请选择图片文件');
+      return;
+    }
+
+    // 验证文件大小（最大5MB）
+    if (file.size > 5 * 1024 * 1024) {
+      setError(t('profile.profileEdit.avatarSizeError') || '图片大小不能超过5MB');
+      return;
+    }
+
+    // 预览图片
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setAvatarPreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+
+    // 上传头像
+    setUploadingAvatar(true);
+    setError(null);
+
+    try {
+      const result = await UsersService.uploadAvatar(file);
+      
+      // 构建完整的头像URL
+      const avatarUrl = result.url.startsWith('http') 
+        ? result.url 
+        : `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}${result.url}`;
+      
+      // 更新预览
+      setAvatarPreview(avatarUrl);
+
+      // 刷新用户信息（头像URL已经在后端更新）
+      if (refreshUser) {
+        await refreshUser();
+      }
+
+      // 清除文件输入
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (err: any) {
+      console.error('上传头像失败:', err);
+      const errorMessage = err.message || err.data?.message || err.data?.error || '上传头像失败，请重试';
+      setError(errorMessage);
+      alert(errorMessage); // 显示错误提示
+      // 恢复原来的头像
+      setAvatarPreview(getAvatarUrl(user?.avatar || authUser?.avatar));
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
+
+  const handleSave = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      await UsersService.updateProfile({
+        nickname: name,
+        email: email || undefined,
+        phone: phone || undefined,
+        bio: bio || undefined,
+        gender: gender || undefined,
+        avatar: avatarPreview || undefined,
+      });
+
+      // 刷新用户信息
+      if (refreshUser) {
+        await refreshUser();
+      }
+
+      alert(t('profile.profileEdit.saveSuccess') || '保存成功');
+      onBack();
+    } catch (err: any) {
+      console.error('保存用户信息失败:', err);
+      // 处理验证错误消息（可能是数组格式）
+      let errorMessage = '保存失败，请重试';
+      if (err.data?.message) {
+        if (Array.isArray(err.data.message)) {
+          errorMessage = err.data.message.join(', ');
+        } else {
+          errorMessage = err.data.message;
+        }
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      setError(errorMessage);
+      alert(errorMessage); // 显示错误提示
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -32,8 +153,38 @@ const ProfileEditPage: React.FC<ProfileEditPageProps> = ({ onBack, user }) => {
       <div className="profile-edit-page-content">
         <section className="profile-edit-avatar-section">
           <div className="profile-edit-avatar-wrapper">
-            <div className="profile-edit-avatar">{name?.[0] || 'U'}</div>
-            <button className="profile-edit-avatar-btn">{t('profile.profileEdit.changeAvatar')}</button>
+            <div 
+              className={`profile-edit-avatar ${uploadingAvatar ? 'uploading' : ''}`}
+              onClick={handleAvatarClick}
+              style={avatarPreview ? {
+                backgroundImage: `url(${avatarPreview})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              } : {}}
+            >
+              {!avatarPreview && (name?.[0] || 'U')}
+              {uploadingAvatar && (
+                <div className="avatar-uploading-overlay">
+                  <div className="avatar-uploading-spinner"></div>
+                </div>
+              )}
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              style={{ display: 'none' }}
+            />
+            <button 
+              className="profile-edit-avatar-btn"
+              onClick={handleAvatarClick}
+              disabled={uploadingAvatar}
+            >
+              {uploadingAvatar 
+                ? (t('profile.profileEdit.uploading') || '上传中...') 
+                : t('profile.profileEdit.changeAvatar')}
+            </button>
           </div>
         </section>
 
@@ -115,8 +266,27 @@ const ProfileEditPage: React.FC<ProfileEditPageProps> = ({ onBack, user }) => {
           </div>
         </section>
 
-        <button className="profile-edit-save-btn" onClick={handleSave}>
-          {t('profile.profileEdit.save')}
+        {/* 错误提示 */}
+        {error && (
+          <div style={{ 
+            padding: '12px 16px', 
+            margin: '16px 0', 
+            background: '#fff2f0', 
+            border: '1px solid #ffccc7', 
+            borderRadius: '8px', 
+            color: '#ff4d4f',
+            fontSize: '14px'
+          }}>
+            {error}
+          </div>
+        )}
+
+        <button 
+          className="profile-edit-save-btn" 
+          onClick={handleSave}
+          disabled={loading}
+        >
+          {loading ? (t('common.loading') || '保存中...') : t('profile.profileEdit.save')}
         </button>
       </div>
     </div>

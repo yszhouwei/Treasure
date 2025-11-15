@@ -15,6 +15,9 @@ import HelpCenterPage from './profile/HelpCenterPage';
 import TimelineDetailPage from './profile/TimelineDetailPage';
 import OrderListPage from './profile/OrderListPage';
 import OrderDetailPage from './profile/OrderDetailPage';
+import PaymentPage from './home/PaymentPage';
+import OrderSuccessPage from './home/OrderSuccessPage';
+import { parsePrice } from '../utils/dataTransform';
 import './Profile.css';
 
 type ProfileHero = {
@@ -80,6 +83,8 @@ type PageState =
   | { type: 'helpCenter' }
   | { type: 'orderList' }
   | { type: 'orderDetail'; payload: { orderId: number } }
+  | { type: 'payment'; payload: { order: any } }
+  | { type: 'orderSuccess'; payload: { order: any } }
   | { type: 'timelineDetail'; payload: ProfileSectionItem };
 
 const renderIcon = (icon?: string) => {
@@ -144,6 +149,13 @@ const ProfileSkeleton: React.FC = () => (
 const Profile: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { isAuthenticated, user, openAuth, logout, refreshUser } = useAuth();
+
+  // 构建完整的头像URL
+  const getAvatarUrl = (url: string | null | undefined) => {
+    if (!url) return null;
+    if (url.startsWith('http')) return url;
+    return `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}${url}`;
+  };
 
   const heroTranslation = useMemo(
     () => t('profile.hero', { returnObjects: true }) as ProfileHero,
@@ -354,6 +366,37 @@ const Profile: React.FC = () => {
             onOrderClick={(order) => {
               setActivePage({ type: 'orderDetail', payload: { orderId: order.id } });
             }}
+            onPay={(order) => {
+              // 跳转到支付页面
+              setActivePage({
+                type: 'payment',
+                payload: {
+                  order: {
+                    orderNo: order.order_no,
+                    productName: order.product_name,
+                    quantity: order.quantity,
+                    amount: parsePrice(order.actual_amount),
+                    groupType: order.team_id ? '团队' : '个人',
+                    orderId: order.id,
+                    groupSize: 10,
+                    currentMembers: 5
+                  }
+                }
+              });
+            }}
+            onCancel={async (order) => {
+              // 取消订单
+              if (window.confirm(t('orderDetail.confirmCancel') || '确定要取消这个订单吗？')) {
+                try {
+                  const { OrdersService } = await import('../services/orders.service');
+                  await OrdersService.cancelOrder(order.id);
+                  // 刷新订单列表 - 通过重新设置页面状态来触发刷新
+                  setActivePage({ type: 'orderList' });
+                } catch (error: any) {
+                  alert(error.message || t('orderDetail.cancelFailed') || '取消订单失败');
+                }
+              }
+            }}
           />
         );
       case 'orderDetail':
@@ -362,15 +405,61 @@ const Profile: React.FC = () => {
             orderId={activePage.payload.orderId}
             onBack={() => setActivePage({ type: 'orderList' })}
             onPay={(order) => {
-              // TODO: 跳转到支付页面
-              alert('跳转到支付页面');
+              // 跳转到支付页面
+              setActivePage({
+                type: 'payment',
+                payload: {
+                  order: {
+                    orderNo: order.order_no,
+                    productName: order.product_name,
+                    quantity: order.quantity,
+                    amount: parsePrice(order.actual_amount),
+                    groupType: order.team_id ? '团队' : '个人',
+                    orderId: order.id,
+                    groupSize: 10, // 默认值，实际应该从订单中获取
+                    currentMembers: 5 // 默认值，实际应该从订单中获取
+                  }
+                }
+              });
             }}
-            onCancel={(order) => {
-              // TODO: 取消订单
-              alert('取消订单功能待实现');
+            onCancel={async (order) => {
+              // 取消订单
+              if (window.confirm(t('orderDetail.confirmCancel') || '确定要取消这个订单吗？')) {
+                try {
+                  const { OrdersService } = await import('../services/orders.service');
+                  await OrdersService.cancelOrder(order.id);
+                  // 刷新订单列表
+                  setActivePage({ type: 'orderList' });
+                } catch (error: any) {
+                  alert(error.message || t('orderDetail.cancelFailed') || '取消订单失败');
+                }
+              }
             }}
             onContact={() => {
               setActivePage({ type: 'customerService' });
+            }}
+          />
+        );
+      case 'payment':
+        return (
+          <PaymentPage
+            order={activePage.payload.order}
+            onBack={() => setActivePage({ type: 'orderDetail', payload: { orderId: activePage.payload.order.orderId } })}
+            onSuccess={() => {
+              setActivePage({
+                type: 'orderSuccess',
+                payload: { order: activePage.payload.order }
+              });
+            }}
+          />
+        );
+      case 'orderSuccess':
+        return (
+          <OrderSuccessPage
+            order={activePage.payload.order}
+            onBack={() => setActivePage({ type: 'orderList' })}
+            onViewOrder={() => {
+              setActivePage({ type: 'orderList' });
             }}
           />
         );
@@ -406,7 +495,16 @@ const Profile: React.FC = () => {
               <div className="profile-hero-overlay">
                 <div className="profile-hero-top">
                   <div className="profile-hero-header">
-                    <div className="profile-avatar">{profileData.hero.name?.[0] || 'U'}</div>
+                    <div 
+                      className="profile-avatar"
+                      style={user?.avatar ? {
+                        backgroundImage: `url(${getAvatarUrl(user.avatar)})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      } : {}}
+                    >
+                      {!user?.avatar && (profileData.hero.name?.[0] || 'U')}
+                    </div>
                     <div className="profile-hero-info">
                       <span className="profile-hero-greeting">{profileData.hero.greeting}</span>
                       <h1>{profileData.hero.name}</h1>
@@ -445,14 +543,29 @@ const Profile: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="profile-stats-grid">
-                  {profileData.hero.stats?.map((stat) => (
-                    <article key={stat.label} className="profile-stat-card">
-                      <span className="profile-stat-label">{stat.label}</span>
-                      <strong className="profile-stat-value">{stat.value}</strong>
-                      <span className="profile-stat-change">{stat.change}</span>
-                    </article>
-                  ))}
+                <div className="profile-stats-wrapper">
+                  {profileData.hero.stats && profileData.hero.stats.length > 0 && (
+                    <>
+                      {/* 账户资产 - 单独一行 */}
+                      <article className="profile-stat-card stat-primary">
+                        <span className="profile-stat-label">{profileData.hero.stats[0].label}</span>
+                        <strong className="profile-stat-value">{profileData.hero.stats[0].value}</strong>
+                        <span className="profile-stat-change">{profileData.hero.stats[0].change}</span>
+                      </article>
+                      {/* 积分和优惠券 - 同一行 */}
+                      {profileData.hero.stats.length > 1 && (
+                        <div className="profile-stats-secondary-row">
+                          {profileData.hero.stats.slice(1).map((stat) => (
+                            <article key={stat.label} className="profile-stat-card stat-secondary">
+                              <span className="profile-stat-label">{stat.label}</span>
+                              <strong className="profile-stat-value">{stat.value}</strong>
+                              <span className="profile-stat-change">{stat.change}</span>
+                            </article>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </section>
