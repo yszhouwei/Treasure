@@ -613,8 +613,8 @@ const Home: React.FC = () => {
           <div className="promo-content">
             <div className="promo-text">
               <h3 className="promo-title">{t('promo.title')}</h3>
-              <p className="promo-desc">{t('promo.description')}</p>
-              <p className="promo-subtitle">{t('promo.subtitle')}</p>
+              <p className="promo-desc">{t('promo.description')}{t('promo.subtitle')}</p>
+              <p className="promo-subtitle"></p>
             </div>
             <button className="promo-btn" onClick={() => navigateToPage({ type: 'promo' })}>
               <span className="btn-icon">👑</span>

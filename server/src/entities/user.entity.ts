@@ -49,6 +49,9 @@ export class User {
   @Column({ type: 'tinyint', default: 0 })
   is_team_leader: number;
 
+  @Column({ type: 'varchar', length: 20, default: 'user' })
+  role: string;
+
   @Column({ type: 'int', unsigned: true, nullable: true })
   team_id: number;
 

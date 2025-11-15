@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Product } from '../../entities/product.entity';
@@ -6,6 +6,8 @@ import { ProductCategory } from '../../entities/product-category.entity';
 import { GroupBuying } from '../../entities/group-buying.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class ProductsService {
@@ -161,6 +163,118 @@ export class ProductsService {
 
     product.status = 0;
     await this.productsRepository.save(product);
+  }
+
+  async findAllCategories(includeDisabled: boolean = false) {
+    const where: any = {};
+    if (!includeDisabled) {
+      where.status = 1;
+    }
+    const categories = await this.categoriesRepository.find({
+      where,
+      order: { sort_order: 'DESC', id: 'ASC' },
+    });
+    return categories.map(category => ({
+      id: category.id,
+      name: category.name,
+      sortOrder: category.sort_order,
+    }));
+  }
+
+  async findCategoryById(id: number) {
+    const category = await this.categoriesRepository.findOne({ where: { id } });
+    if (!category) {
+      throw new NotFoundException('分类不存在');
+    }
+    return {
+      id: category.id,
+      name: category.name,
+      parentId: category.parent_id,
+      icon: category.icon,
+      sortOrder: category.sort_order,
+      status: category.status,
+    };
+  }
+
+  async createCategory(createCategoryDto: CreateCategoryDto) {
+    // 检查分类名称是否已存在
+    const existingCategory = await this.categoriesRepository.findOne({
+      where: { name: createCategoryDto.name },
+    });
+
+    if (existingCategory) {
+      throw new BadRequestException('分类名称已存在');
+    }
+
+    const category = this.categoriesRepository.create({
+      name: createCategoryDto.name,
+      parent_id: createCategoryDto.parentId || 0,
+      icon: createCategoryDto.icon,
+      sort_order: createCategoryDto.sortOrder || 0,
+      status: 1,
+    });
+
+    const saved = await this.categoriesRepository.save(category);
+    return this.findCategoryById(saved.id);
+  }
+
+  async updateCategory(id: number, updateCategoryDto: UpdateCategoryDto) {
+    const category = await this.categoriesRepository.findOne({ where: { id } });
+    if (!category) {
+      throw new NotFoundException('分类不存在');
+    }
+
+    // 如果更新名称，检查是否与其他分类重复
+    if (updateCategoryDto.name && updateCategoryDto.name !== category.name) {
+      const existingCategory = await this.categoriesRepository.findOne({
+        where: { name: updateCategoryDto.name },
+      });
+
+      if (existingCategory && existingCategory.id !== id) {
+        throw new BadRequestException('分类名称已存在');
+      }
+    }
+
+    if (updateCategoryDto.name !== undefined) {
+      category.name = updateCategoryDto.name;
+    }
+    if (updateCategoryDto.parentId !== undefined) {
+      category.parent_id = updateCategoryDto.parentId;
+    }
+    if (updateCategoryDto.icon !== undefined) {
+      category.icon = updateCategoryDto.icon;
+    }
+    if (updateCategoryDto.sortOrder !== undefined) {
+      category.sort_order = updateCategoryDto.sortOrder;
+    }
+    if (updateCategoryDto.status !== undefined) {
+      category.status = updateCategoryDto.status;
+    }
+
+    await this.categoriesRepository.save(category);
+    return this.findCategoryById(id);
+  }
+
+  async removeCategory(id: number) {
+    const category = await this.categoriesRepository.findOne({ where: { id } });
+    if (!category) {
+      throw new NotFoundException('分类不存在');
+    }
+
+    // 检查是否有商品使用此分类
+    const productsCount = await this.productsRepository.count({
+      where: { category_id: id },
+    });
+
+    if (productsCount > 0) {
+      throw new BadRequestException(`该分类下有 ${productsCount} 个商品，无法删除`);
+    }
+
+    // 软删除：将状态设置为禁用
+    category.status = 0;
+    await this.categoriesRepository.save(category);
+
+    return { message: '分类已删除' };
   }
 }
 

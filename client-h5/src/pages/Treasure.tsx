@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
 import { useAuth } from '../context/AuthContext';
-import BalanceDetail from './treasure/BalanceDetail';
 import StatDetail from './treasure/StatDetail';
 import MissionDetail from './treasure/MissionDetail';
 import OrderDetail from './treasure/OrderDetail';
@@ -30,7 +29,6 @@ type OrderItem = {
 };
 
 type PageState =
-  | { type: 'balance' }
   | { type: 'stat'; payload: StatItem; index: number }
   | { type: 'mission'; payload: MissionItem; index: number }
   | { type: 'order'; payload: OrderItem }
@@ -64,15 +62,6 @@ const Treasure: React.FC = () => {
   // 渲染子页面
   if (activePage) {
     switch (activePage.type) {
-      case 'balance':
-        return (
-          <BalanceDetail
-            balance={{ amount: t('treasure.hero.balanceValue'), currency: 'CNY' }}
-            onBack={() => setActivePage(null)}
-            onRecharge={() => alert('充值功能')}
-            onWithdraw={() => alert('提现功能')}
-          />
-        );
       case 'stat':
         return (
           <StatDetail
@@ -137,13 +126,6 @@ const Treasure: React.FC = () => {
                 <p>{t('treasure.hero.subtitle')}</p>
                 <span className="treasure-hero-badge">{t('treasure.hero.badge')}</span>
               </div>
-            </div>
-            <div className="treasure-balance">
-              <div>
-                <span className="treasure-balance-label">{t('treasure.hero.balanceLabel')}</span>
-                <strong>{t('treasure.hero.balanceValue')}</strong>
-              </div>
-              <button onClick={() => setActivePage({ type: 'balance' })}>{t('treasure.hero.recharge')}</button>
             </div>
             <div className="treasure-progress">
               <div className="treasure-progress-head">

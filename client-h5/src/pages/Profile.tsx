@@ -226,7 +226,6 @@ const Profile: React.FC = () => {
 
     // 计算等级进度（基于level，假设每级需要1000积分）
     const currentLevel = user?.level || 1;
-    const levelProgress = currentLevel * 1000; // 假设每级1000积分
     const nextLevelProgress = (currentLevel + 1) * 1000;
     const currentPoints = user?.points || 0;
     const progressPercent = Math.min(99, Math.floor((currentPoints % 1000) / 10)); // 当前等级的进度百分比
@@ -301,6 +300,26 @@ const Profile: React.FC = () => {
     window.addEventListener('openOrderList', handleOpenOrderList as EventListener);
     return () => {
       window.removeEventListener('openOrderList', handleOpenOrderList as EventListener);
+    };
+  }, []);
+
+  // 监听导航到订单详情的事件
+  useEffect(() => {
+    const handleNavigateToOrder = (event: Event) => {
+      const customEvent = event as CustomEvent<{ orderId: number }>;
+      if (customEvent.detail?.orderId) {
+        // 先切换到 profile tab，然后打开订单详情
+        window.dispatchEvent(new CustomEvent('switchTab', { detail: 'profile' }));
+        // 使用 setTimeout 确保 tab 切换完成后再打开订单详情
+        setTimeout(() => {
+          setActivePage({ type: 'orderDetail', payload: { orderId: customEvent.detail.orderId } });
+        }, 100);
+      }
+    };
+
+    window.addEventListener('navigate-to-order', handleNavigateToOrder as EventListener);
+    return () => {
+      window.removeEventListener('navigate-to-order', handleNavigateToOrder as EventListener);
     };
   }, []);
 
@@ -504,9 +523,13 @@ const Profile: React.FC = () => {
         return (
           <OrderSuccessPage
             order={activePage.payload.order}
-            onBack={() => setActivePage({ type: 'orderList' })}
+            onBackHome={() => setActivePage({ type: 'orderList' })}
             onViewOrder={() => {
               setActivePage({ type: 'orderList' });
+            }}
+            onInviteFriends={() => {
+              // 可以导航到邀请页面或显示提示
+              alert(t('order.success.inviteHint') || '邀请功能开发中');
             }}
           />
         );

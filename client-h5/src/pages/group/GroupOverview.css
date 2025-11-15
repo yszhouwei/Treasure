@@ -5,8 +5,8 @@
 
 .group-overview-content {
   padding-top: 56px;
-  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px) + 100px);
-  /* 80px 是底部导航栏高度，100px 是底部按钮区域高度 */
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px) + 140px);
+  /* 80px 是底部导航栏高度，140px 是底部按钮区域高度（包括间距） */
 }
 
 /* Hero Section */
@@ -142,7 +142,8 @@
   padding: 16px;
   padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
-  z-index: 10;
+  z-index: 1001;
+  /* z-index 需要高于底部导航栏 (1000) */
 }
 
 .overview-primary-btn {

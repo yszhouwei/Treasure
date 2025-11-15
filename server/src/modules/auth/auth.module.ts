@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { TestPasswordController } from './test-password.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { User } from '../../entities/user.entity';
@@ -26,7 +27,7 @@ import { UsersModule } from '../users/users.module';
     }),
     TypeOrmModule.forFeature([User]),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, TestPasswordController],
   providers: [AuthService, JwtStrategy, LocalStrategy],
   exports: [AuthService],
 })

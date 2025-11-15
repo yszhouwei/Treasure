@@ -72,19 +72,75 @@ export class AuthService {
   }
 
   async validateUser(username: string, password: string): Promise<any> {
+    console.log(`[validateUser] 开始验证用户: ${username}`);
+    console.log(`[validateUser] 接收到的密码长度: ${password?.length}`);
+    
     const user = await this.usersRepository.findOne({
       where: [{ username }, { email: username }, { phone: username }],
     });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      const { password: _, ...result } = user;
-      return result;
+    if (!user) {
+      console.log(`[validateUser] ❌ 用户不存在: ${username}`);
+      return null;
     }
-    return null;
+
+    console.log(`[validateUser] ✅ 找到用户:`, {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      status: user.status,
+      passwordLength: user.password?.length,
+      passwordPreview: user.password?.substring(0, 20) + '...',
+    });
+
+    // 检查用户状态
+    if (user.status === 0) {
+      console.log(`[validateUser] ❌ 用户已被禁用: ${username}`);
+      throw new UnauthorizedException('账户已被禁用');
+    }
+
+    // 检查密码字段
+    if (!user.password) {
+      console.log(`[validateUser] ❌ 用户密码字段为空: ${username}`);
+      return null;
+    }
+
+    // 验证密码
+    console.log(`[validateUser] 开始验证密码...`);
+    console.log(`[validateUser] 数据库密码哈希: ${user.password.substring(0, 30)}...`);
+    
+    try {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      console.log(`[validateUser] 密码验证结果: ${isPasswordValid}`);
+      
+      if (!isPasswordValid) {
+        // 尝试直接比较（调试用）
+        console.log(`[validateUser] ⚠️ 密码验证失败，尝试调试...`);
+        console.log(`[validateUser] 输入密码: ${password}`);
+        console.log(`[validateUser] 数据库哈希: ${user.password}`);
+        
+        // 测试生成新哈希
+        const testHash = await bcrypt.hash(password, 10);
+        console.log(`[validateUser] 新生成的哈希: ${testHash}`);
+        console.log(`[validateUser] 新哈希验证: ${await bcrypt.compare(password, testHash)}`);
+      }
+      
+      if (isPasswordValid) {
+        const { password: _, ...result } = user;
+        console.log(`[validateUser] ✅ 验证成功，返回用户信息`);
+        return result;
+      }
+      
+      console.log(`[validateUser] ❌ 密码错误: ${username}`);
+      return null;
+    } catch (error) {
+      console.error(`[validateUser] ❌ 密码验证异常:`, error);
+      return null;
+    }
   }
 
   async login(user: any) {
-    const payload = { sub: user.id, username: user.username };
+    const payload = { sub: user.id, username: user.username, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),
       user: {
@@ -99,6 +155,7 @@ export class AuthService {
         level: user.level,
         is_team_leader: user.is_team_leader,
         team_id: user.team_id,
+        role: user.role,
       },
     };
   }

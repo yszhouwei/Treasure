@@ -35,6 +35,8 @@ export const API_ENDPOINTS = {
     LIST: '/teams',
     GET_BY_ID: (id: number) => `/teams/${id}`,
     MY_OVERVIEW: '/teams/my/overview',
+    UPDATE_SETTINGS: '/teams/my/settings',
+    GET_SETTINGS: '/teams/my/settings',
   },
   // 支付相关
   PAYMENTS: {

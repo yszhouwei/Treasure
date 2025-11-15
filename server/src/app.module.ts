@@ -13,6 +13,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
 import { ContentsModule } from './modules/contents/contents.module';
 import { BannersModule } from './modules/banners/banners.module';
 import { LotteryModule } from './modules/lottery/lottery.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { LotteryModule } from './modules/lottery/lottery.module';
     ContentsModule,
     BannersModule,
     LotteryModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

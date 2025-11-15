@@ -268,10 +268,7 @@
     "hero": {
       "title": "欢迎回来，寻宝大师",
       "subtitle": "今日已为你匹配3条专属宝藏线索",
-      "badge": "VIP先锋会员",
-      "balanceLabel": "账户余额",
-      "balanceValue": "¥12,680.00",
-      "recharge": "充值"
+      "badge": "VIP先锋会员"
     },
     "progress": {
       "label": "等级进度",
@@ -419,8 +416,9 @@
       "viewOrder": "查看订单",
       "inviteFriends": "邀请好友",
       "inviteDesc": "邀请好友一起参团，更快成团！",
-      "shareText": "快来和我一起参团购买",
+      "shareText": "快来和我一起参团购买 {{productName}}！",
       "share": "分享给好友",
+      "shareFailed": "分享失败，请稍后重试",
       "linkCopied": "链接已复制到剪贴板"
     },
     "sheet": {

@@ -260,10 +260,7 @@
     "hero": {
       "title": "Welcome back, Treasure Master",
       "subtitle": "We matched 3 new treasure leads tailored for you today",
-      "badge": "VIP Pioneer Member",
-      "balanceLabel": "Account Balance",
-      "balanceValue": "$ 12,680.00",
-      "recharge": "Top Up"
+      "badge": "VIP Pioneer Member"
     },
     "progress": {
       "label": "Level Progress",
@@ -411,8 +408,9 @@
       "viewOrder": "View Order",
       "inviteFriends": "Invite Friends",
       "inviteDesc": "Invite friends to join the group for faster completion!",
-      "shareText": "Join me in group buying",
+      "shareText": "Join me in group buying {{productName}}!",
       "share": "Share with Friends",
+      "shareFailed": "Share failed, please try again later",
       "linkCopied": "Link copied to clipboard"
     },
     "sheet": {

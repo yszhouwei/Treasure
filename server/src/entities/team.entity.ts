@@ -49,6 +49,12 @@ export class Team {
   @Column({ type: 'int', unsigned: true, default: 0 })
   total_orders: number;
 
+  @Column({ type: 'tinyint', default: 1, comment: '自动审核成员：1-开启，0-关闭' })
+  auto_approve: number;
+
+  @Column({ type: 'tinyint', default: 1, comment: '消息通知：1-开启，0-关闭' })
+  notification_enabled: number;
+
   @CreateDateColumn({ type: 'datetime' })
   created_at: Date;
 

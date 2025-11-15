@@ -182,7 +182,8 @@ const MyGroupDetail: React.FC<MyGroupDetailProps> = ({ groupOrder, onBack }) => 
                     </div>
                     <button
                       className="view-order-btn"
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation();
                         // 导航到订单详情
                         window.dispatchEvent(new CustomEvent('navigate-to-order', { detail: { orderId: order.id } }));
                       }}
@@ -201,18 +202,63 @@ const MyGroupDetail: React.FC<MyGroupDetailProps> = ({ groupOrder, onBack }) => 
                 <p>{t('group.myGroups.inviteDesc') || '邀请好友一起参团，更快成团！'}</p>
                 <button
                   className="share-btn"
-                  onClick={() => {
-                    // 分享功能
-                    if (navigator.share) {
-                      navigator.share({
-                        title: groupOrder.product_name,
-                        text: t('group.myGroups.shareText') || `快来和我一起参团购买 ${groupOrder.product_name}！`,
-                        url: window.location.href,
-                      });
-                    } else {
-                      // 复制链接
-                      navigator.clipboard.writeText(window.location.href);
-                      alert(t('group.myGroups.linkCopied') || '链接已复制到剪贴板');
+                  onClick={async () => {
+                    try {
+                      // 构建分享链接（包含商品ID和团购信息）
+                      const shareUrl = `${window.location.origin}/#/group/${groupOrder.product_id}`;
+                      const shareText = t('group.myGroups.shareText', { productName: groupOrder.product_name }) || `快来和我一起参团购买 ${groupOrder.product_name}！`;
+                      
+                      // 优先使用 Web Share API（如果支持）
+                      if (navigator.share) {
+                        try {
+                          await navigator.share({
+                            title: groupOrder.product_name,
+                            text: shareText,
+                            url: shareUrl,
+                          });
+                          return;
+                        } catch (err: any) {
+                          // 用户取消分享，不显示错误
+                          if (err.name !== 'AbortError') {
+                            console.error('分享失败:', err);
+                          } else {
+                            return; // 用户取消，直接返回
+                          }
+                        }
+                      }
+                      
+                      // 降级方案：复制链接到剪贴板
+                      if (navigator.clipboard && navigator.clipboard.writeText) {
+                        try {
+                          await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`);
+                          alert(t('group.myGroups.linkCopied') || '链接已复制到剪贴板');
+                        } catch (clipboardErr) {
+                          // 如果复制失败，使用传统方法
+                          const textArea = document.createElement('textarea');
+                          textArea.value = `${shareText}\n${shareUrl}`;
+                          textArea.style.position = 'fixed';
+                          textArea.style.opacity = '0';
+                          document.body.appendChild(textArea);
+                          textArea.select();
+                          try {
+                            document.execCommand('copy');
+                            alert(t('group.myGroups.linkCopied') || '链接已复制到剪贴板');
+                          } catch (execErr) {
+                            alert(t('group.myGroups.shareFailed') || '分享失败，请手动复制链接');
+                          }
+                          document.body.removeChild(textArea);
+                        }
+                      } else {
+                        // 最后的降级方案：显示链接让用户手动复制
+                        const message = `${shareText}\n${shareUrl}\n\n请手动复制以上链接`;
+                        if (window.confirm(message + '\n\n点击确定后，链接将显示在控制台')) {
+                          console.log('分享链接:', shareUrl);
+                          console.log('分享文本:', shareText);
+                        }
+                      }
+                    } catch (error) {
+                      console.error('分享功能出错:', error);
+                      alert(t('group.myGroups.shareFailed') || '分享失败，请稍后重试');
                     }
                   }}
                 >

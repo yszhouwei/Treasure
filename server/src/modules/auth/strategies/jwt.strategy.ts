@@ -14,7 +14,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return { userId: payload.sub, username: payload.username };
+    console.log('[JwtStrategy] 验证JWT token, payload:', payload);
+    const user = {
+      userId: payload.sub,
+      id: payload.sub,
+      username: payload.username,
+      role: payload.role || 'user',
+    };
+    console.log('[JwtStrategy] 返回用户信息:', user);
+    return user;
   }
 }
 

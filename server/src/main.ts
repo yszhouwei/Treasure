@@ -31,6 +31,9 @@ async function bootstrap() {
   app.enableCors({
     origin: true,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    exposedHeaders: ['Authorization'],
   });
 
   // 配置静态文件服务，用于提供上传的头像
