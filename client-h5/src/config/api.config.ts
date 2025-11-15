@@ -20,12 +20,14 @@ export const API_ENDPOINTS = {
     HOT: '/products/hot',
     RECOMMEND: '/products/recommend',
     GET_BY_ID: (id: number) => `/products/${id}`,
+    BY_GROUP_SIZE: (groupSize: number) => `/products/by-group-size/${groupSize}`,
   },
   // 订单相关
   ORDERS: {
     LIST: '/orders',
     CREATE: '/orders',
     GET_BY_ID: (id: number) => `/orders/${id}`,
+    PAY: (id: number) => `/orders/${id}/pay`,
   },
   // 团队相关
   TEAMS: {
@@ -48,6 +50,12 @@ export const API_ENDPOINTS = {
   // 轮播图相关
   BANNERS: {
     LIST: '/banners',
+  },
+  // 开奖相关
+  LOTTERY: {
+    DRAW: (groupId: number) => `/lottery/draw/${groupId}`,
+    RESULT: (groupId: number) => `/lottery/result/${groupId}`,
+    MY_RECORDS: '/lottery/my-records',
   },
 };
 

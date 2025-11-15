@@ -8,6 +8,7 @@ import {
   Param,
   Query,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -45,6 +46,12 @@ export class ProductsController {
     return this.productsService.findRecommend();
   }
 
+  @Get('by-group-size/:groupSize')
+  async findByGroupSize(@Param('groupSize', ParseIntPipe) groupSize: number) {
+    return this.productsService.findByGroupSize(groupSize);
+  }
+
+  // 注意：这个路由必须放在最后，否则会匹配到上面的路由
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.productsService.findOne(id);

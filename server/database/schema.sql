@@ -75,6 +75,8 @@ CREATE TABLE IF NOT EXISTS `products` (
   `sort_order` INT DEFAULT 0 COMMENT '排序',
   `specifications` TEXT DEFAULT NULL COMMENT '规格（JSON）',
   `warranty` VARCHAR(100) DEFAULT NULL COMMENT '保修信息',
+  `winner_count` INT UNSIGNED DEFAULT 1 COMMENT '中奖数量（平台设定）',
+  `dividend_rate` DECIMAL(5,2) DEFAULT 5.00 COMMENT '分红比例（平台设定，单位：%）',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
@@ -199,16 +201,28 @@ CREATE TABLE IF NOT EXISTS `lottery_records` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '开奖ID',
   `group_id` INT UNSIGNED NOT NULL COMMENT '团购ID',
   `product_id` INT UNSIGNED NOT NULL COMMENT '商品ID',
-  `winner_id` INT UNSIGNED DEFAULT NULL COMMENT '中奖用户ID',
+  `winner_count` INT UNSIGNED DEFAULT 1 COMMENT '中奖数量（平台设定）',
   `lottery_time` DATETIME DEFAULT NULL COMMENT '开奖时间',
   `lottery_method` VARCHAR(50) DEFAULT NULL COMMENT '开奖方式',
   `status` TINYINT DEFAULT 0 COMMENT '状态：0-未开奖，1-已开奖',
   `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  KEY `idx_group_id` (`group_id`),
-  KEY `idx_winner_id` (`winner_id`)
+  KEY `idx_group_id` (`group_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='开奖记录表';
+
+-- 9.1 中奖者表
+CREATE TABLE IF NOT EXISTS `lottery_winners` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `lottery_id` INT UNSIGNED NOT NULL COMMENT '开奖ID',
+  `winner_id` INT UNSIGNED NOT NULL COMMENT '中奖用户ID',
+  `order_id` INT UNSIGNED NOT NULL COMMENT '订单ID',
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_lottery_id` (`lottery_id`),
+  KEY `idx_winner_id` (`winner_id`),
+  KEY `idx_order_id` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='中奖者表';
 
 -- 10. 分红记录表
 CREATE TABLE IF NOT EXISTS `dividends` (

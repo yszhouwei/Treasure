@@ -55,6 +55,11 @@ export class ProductsService {
     return ApiClient.get<Product[]>(API_ENDPOINTS.PRODUCTS.RECOMMEND);
   }
 
+  // 根据团购类型获取商品
+  static async getProductsByGroupSize(groupSize: number): Promise<Product[]> {
+    return ApiClient.get<Product[]>(API_ENDPOINTS.PRODUCTS.BY_GROUP_SIZE(groupSize));
+  }
+
   // 获取商品详情
   static async getProductById(id: number): Promise<Product> {
     return ApiClient.get<Product>(API_ENDPOINTS.PRODUCTS.GET_BY_ID(id));

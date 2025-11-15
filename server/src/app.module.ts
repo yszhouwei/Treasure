@@ -12,6 +12,7 @@ import { TeamsModule } from './modules/teams/teams.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { ContentsModule } from './modules/contents/contents.module';
 import { BannersModule } from './modules/banners/banners.module';
+import { LotteryModule } from './modules/lottery/lottery.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BannersModule } from './modules/banners/banners.module';
     PaymentsModule,
     ContentsModule,
     BannersModule,
+    LotteryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

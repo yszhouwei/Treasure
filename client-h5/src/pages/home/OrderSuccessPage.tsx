@@ -14,13 +14,15 @@ interface OrderSuccessPageProps {
   onViewOrder: () => void;
   onBackHome: () => void;
   onInviteFriends: () => void;
+  onViewLottery?: () => void;
 }
 
 const OrderSuccessPage: React.FC<OrderSuccessPageProps> = ({ 
   order, 
   onViewOrder, 
   onBackHome, 
-  onInviteFriends 
+  onInviteFriends,
+  onViewLottery
 }) => {
   const { t } = useTranslation();
 
@@ -100,13 +102,35 @@ const OrderSuccessPage: React.FC<OrderSuccessPageProps> = ({
               </span>
             </div>
           ) : (
-            <div className="progress-status success">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                <polyline points="22 4 12 14.01 9 11.01"/>
-              </svg>
-              <span>{t('orderSuccess.groupComplete')}</span>
-            </div>
+            <>
+              <div className="progress-status success">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                <span>{t('orderSuccess.groupComplete')}</span>
+              </div>
+              {onViewLottery && (
+                <button 
+                  className="lottery-btn"
+                  onClick={onViewLottery}
+                  style={{
+                    marginTop: '16px',
+                    padding: '12px 24px',
+                    background: 'linear-gradient(135deg, #D4A574 0%, #B8860B 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '24px',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(212, 165, 116, 0.4)'
+                  }}
+                >
+                  🎁 {t('orderSuccess.viewLottery') || '查看开奖'}
+                </button>
+              )}
+            </>
           )}
 
           <div className="estimated-time">

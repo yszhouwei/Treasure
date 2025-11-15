@@ -5,4 +5,6 @@ export * from './products.service';
 export * from './orders.service';
 export * from './teams.service';
 export * from './banners.service';
+export * from './payments.service';
+export * from './lottery.service';
 

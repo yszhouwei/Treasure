@@ -105,15 +105,23 @@
     "action": "立即夺宝"
   },
   "promo": {
-    "title": "新人专享团购福利",
-    "description": "限时优惠，发起团购立减20元！",
-    "action": "去开团"
+    "title": "招募团长，申请开团",
+    "description": "成为团长，发起团购，享受专属权益！",
+    "action": "立即申请",
+    "subtitle": "零门槛申请，审核通过即可开团"
   },
   "groupType": {
     "group10": "10人团",
+    "group10Desc": "适合小规模团购，成团速度快",
     "group20": "20人团",
+    "group20Desc": "中等规模，性价比高",
     "group50": "50人团",
+    "group50Desc": "大规模团购，收益更高",
     "group100": "100人团",
+    "group100Desc": "超大规模，最大收益",
+    "benefit1": "成团门槛低，容易达成",
+    "benefit2": "审核通过后即可开团",
+    "benefit3": "适合新手团长",
     "rules": "点击查看团购规则"
   },
   "section": {
@@ -647,6 +655,12 @@
         "layout": "grid",
         "items": [
           {
+            "id": "orderList",
+            "icon": "📦",
+            "title": "我的订单",
+            "desc": "查看所有订单"
+          },
+          {
             "id": "security",
             "icon": "shield",
             "title": "账户安全",
@@ -1026,28 +1040,35 @@
     "faq2Answer": "当然可以！分享链接一起享受团购优惠。",
     "faq3Question": "支持退货吗？",
     "faq3Answer": "支持，7天退货政策。商品须未使用且保持原状。",
-    "startGroup": "开始团购"
+    "startGroup": "开始团购",
+    "viewProducts": "查看团购商品"
+  },
+  "productList": {
+    "title": "团购商品",
+    "subtitle": "选择商品参与团购",
+    "emptyTitle": "暂无商品",
+    "emptyDesc": "该类型暂无团购商品，请查看其他类型"
   },
   "campaign": {
     "limitedTime": "限时",
-    "newUser": "新用户",
+    "newUser": "招募团长",
     "detailsTitle": "活动详情",
     "defaultDescription": "精选优质商品，团购价超值！",
     "bannerDescription": "24小时闪购！所有团购商品最高5折，还有额外优惠券！",
-    "promoDescription": "新用户专享！首单立减50元，还有免费欢迎礼！",
-    "highlight1Title": "闪购",
-    "highlight1Desc": "24小时内下单特别优惠",
-    "highlight2Title": "超值优惠",
-    "highlight2Desc": "所有商品最高5折",
-    "highlight3Title": "团购折扣",
-    "highlight3Desc": "邀请好友省更多",
-    "rulesTitle": "如何参与",
-    "step1Title": "浏览商品",
-    "step1Desc": "找到你喜欢的团购商品",
-    "step2Title": "开团或参团",
-    "step2Desc": "创建新团或加入现有团购",
-    "step3Title": "等待成团",
-    "step3Desc": "成团后自动发货",
+    "promoDescription": "成为团长，享受专属权益！审核通过后即可发起团购，获得丰厚收益。",
+    "highlight1Title": "零门槛申请",
+    "highlight1Desc": "无需资质，提交申请即可",
+    "highlight2Title": "专属权益",
+    "highlight2Desc": "享受团长专属优惠和收益",
+    "highlight3Title": "快速审核",
+    "highlight3Desc": "1-3个工作日完成审核",
+    "rulesTitle": "申请流程",
+    "step1Title": "提交申请",
+    "step1Desc": "填写基本信息，提交团长申请",
+    "step2Title": "等待审核",
+    "step2Desc": "平台将在1-3个工作日内完成审核",
+    "step3Title": "开始开团",
+    "step3Desc": "审核通过后即可发起团购活动",
     "recommendedTitle": "推荐商品",
     "hot": "热门",
     "view": "查看",
@@ -1056,7 +1077,7 @@
     "notice2": "团购失败全额退款，无风险参与",
     "notice3": "TreasureX保留最终解释权",
     "joinNow": "立即参与",
-    "startGroup": "开始团购"
+    "startGroup": "立即申请"
   },
   "joinGroup": {
     "title": "确认参与",
@@ -1076,16 +1097,22 @@
     "confirmJoin": "确认并参团"
   },
   "createGroup": {
-    "title": "开始团购",
+    "title": "申请开团",
     "groupSize": "{size}人团",
     "typeDescription": "邀请好友加入省更多",
+    "typeHint": "审核通过后即可发起此规模的团购活动",
     "selectProduct": "选择商品",
+    "selectProductHint": "请选择您想要发起团购的商品（可选，审核通过后可修改）",
     "duration": "时长",
     "durationHint": "推荐 24-48小时",
+    "durationDesc": "团购活动持续时间，审核通过后可在后台调整",
     "settings": "团购设置",
+    "settingsHint": "审核通过后可在后台修改这些设置",
     "publicGroup": "公开团购",
     "publicGroupDesc": "其他人可搜索并加入你的团购",
-    "leaderRewards": "团长奖励",
+    "leaderRewards": "团长权益",
+    "leaderRewardsHint": "审核通过成为团长后，您将享受以下专属权益",
+    "rulesHint": "请仔细阅读以下规则，确保您了解团购流程",
     "extraDiscount": "额外折扣",
     "extraDiscountDesc": "成团后5%返现",
     "bonusPoints": "奖励积分",
@@ -1097,8 +1124,39 @@
     "rule2": "团购过期自动退款，3-5个工作日",
     "rule3": "团长获得额外积分和优惠券奖励",
     "rule4": "成功后不支持单独退款，仅全团退款",
-    "depositRequired": "需要预付款",
-    "confirmCreate": "创建团购"
+    "depositRequired": "申请说明",
+    "depositDesc": "提交申请后，平台将在1-3个工作日内完成审核，审核通过后即可发起团购",
+    "confirmCreate": "提交申请"
+  },
+  "selectGroupType": {
+    "title": "选择团购类型",
+    "subtitle": "选择适合的团购规模",
+    "description": "不同规模的团购有不同的成团要求和收益，请根据您的实际情况选择",
+    "clickToSelect": "点击选择",
+    "tipsTitle": "温馨提示",
+    "tip1": "提交申请后，平台将在1-3个工作日内完成审核",
+    "tip2": "审核通过后，您即可发起对应规模的团购活动",
+    "tip3": "不同规模的团购有不同的收益分配规则"
+  },
+  "applicationSuccess": {
+    "title": "申请已提交",
+    "subtitle": "您的团长申请已成功提交，请等待审核",
+    "applicationType": "申请类型",
+    "applicationNo": "申请编号",
+    "productName": "申请商品",
+    "processTitle": "审核流程",
+    "step1Title": "提交申请",
+    "step1Desc": "申请信息已提交",
+    "step2Title": "平台审核",
+    "step2Desc": "1-3个工作日内完成审核",
+    "step3Title": "审核结果",
+    "step3Desc": "审核通过后即可发起团购",
+    "tipsTitle": "温馨提示",
+    "tip1": "审核结果将通过站内消息通知您",
+    "tip2": "您可以在\"我的团购\"中查看审核状态",
+    "tip3": "审核通过后，您即可发起对应规模的团购活动",
+    "viewStatus": "查看状态",
+    "backHome": "返回首页"
   },
   "payment": {
     "title": "结算",
@@ -1147,5 +1205,64 @@
     "viewOrder": "查看订单",
     "backHome": "返回首页",
     "shareMessage": "加入我的团购！"
+  },
+  "order": {
+    "list": {
+      "title": "我的订单",
+      "empty": "暂无订单",
+      "emptyDesc": "您还没有任何订单，快去选购吧"
+    },
+    "all": "全部",
+    "orderNo": "订单号",
+    "quantity": "数量",
+    "totalAmount": "合计",
+    "cancel": "取消订单",
+    "pay": "去支付",
+    "status": {
+      "pending": "待支付",
+      "paid": "已支付",
+      "shipped": "已发货",
+      "completed": "已完成",
+      "cancelled": "已取消",
+      "refunded": "已退款"
+    }
+  },
+  "orderDetail": {
+    "title": "订单详情",
+    "productInfo": "商品信息",
+    "orderInfo": "订单信息",
+    "logistics": "物流信息",
+    "shippingAddress": "收货地址",
+    "feeDetails": "费用明细",
+    "remark": "备注",
+    "orderTime": "下单时间",
+    "paymentMethod": "支付方式",
+    "paymentTime": "支付时间",
+    "shippingCompany": "物流公司",
+    "shippingNo": "物流单号",
+    "shippingTime": "发货时间",
+    "completedTime": "完成时间",
+    "spec": "规格",
+    "defaultSpec": "默认规格",
+    "productAmount": "商品金额",
+    "shippingFee": "运费",
+    "freeShipping": "免运费",
+    "discount": "优惠",
+    "actualAmount": "实付金额",
+    "defaultShipping": "顺丰速运",
+    "trackLogistics": "查看物流",
+    "signed": "已签收",
+    "signedDesc": "您的快件已由本人签收，感谢使用",
+    "contactService": "联系客服",
+    "urgeShipping": "催促发货",
+    "deleteOrder": "删除订单",
+    "buyAgain": "再次购买",
+    "confirmCancel": "确定要取消订单吗？",
+    "statusPendingDesc": "订单已创建，请尽快完成支付",
+    "statusPaidDesc": "支付成功，等待成团",
+    "statusShippedDesc": "商品已发货，请注意查收",
+    "statusCompletedDesc": "订单已完成，感谢您的支持",
+    "statusCancelledDesc": "订单已取消",
+    "statusRefundedDesc": "订单已退款，退款将原路返回"
   }
 }

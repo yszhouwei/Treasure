@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '../../components/Header';
+import { PaymentsService } from '../../services/payments.service';
+import { useAuth } from '../../context/AuthContext';
 import './WithdrawPage.css';
 
 interface WithdrawPageProps {
   onBack: () => void;
+  onSuccess?: () => void;
 }
 
-const WithdrawPage: React.FC<WithdrawPageProps> = ({ onBack }) => {
+const WithdrawPage: React.FC<WithdrawPageProps> = ({ onBack, onSuccess }) => {
   const { t } = useTranslation();
+  const { user, refreshUser } = useAuth();
   const [amount, setAmount] = useState<string>('');
   const [selectedAccount, setSelectedAccount] = useState<string>('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const availableBalance = 58920;
+  const availableBalance = user?.balance || 0;
   const minWithdraw = 100;
   const maxWithdraw = availableBalance;
   const fee = 2; // 2% fee
@@ -48,25 +54,54 @@ const WithdrawPage: React.FC<WithdrawPageProps> = ({ onBack }) => {
     return getWithdrawAmount() - getFeeAmount();
   };
 
-  const handleWithdraw = () => {
+  const handleWithdraw = async () => {
     const withdrawAmount = getWithdrawAmount();
     
     if (withdrawAmount < minWithdraw) {
-      alert(t('profile.withdraw.minError', { min: minWithdraw }));
+      setError(t('profile.withdraw.minError', { min: minWithdraw }) || `最小提现金额为¥${minWithdraw}`);
       return;
     }
     
     if (withdrawAmount > maxWithdraw) {
-      alert(t('profile.withdraw.maxError'));
+      setError(t('profile.withdraw.maxError') || '提现金额超过可用余额');
       return;
     }
     
     if (!selectedAccount) {
-      alert(t('profile.withdraw.accountError'));
+      setError(t('profile.withdraw.accountError') || '请选择提现账户');
       return;
     }
-    
-    alert(`${t('profile.withdraw.success')}: ¥${withdrawAmount}`);
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      await PaymentsService.withdraw({
+        amount: withdrawAmount,
+        account: accounts.find(a => a.id === selectedAccount)?.number || selectedAccount,
+        account_type: selectedAccount
+      });
+
+      // 刷新用户数据
+      if (refreshUser) {
+        await refreshUser();
+      }
+
+      // 成功提示
+      alert(`${t('profile.withdraw.success') || '提现申请已提交'}: ¥${withdrawAmount}`);
+      
+      // 调用成功回调
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        onBack();
+      }
+    } catch (err: any) {
+      console.error('提现失败:', err);
+      setError(err.message || err.data?.message || '提现失败，请重试');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const withdrawAmount = getWithdrawAmount();
@@ -158,12 +193,27 @@ const WithdrawPage: React.FC<WithdrawPageProps> = ({ onBack }) => {
           </div>
         </section>
 
+        {/* 错误提示 */}
+        {error && (
+          <div style={{ 
+            padding: '12px 16px', 
+            margin: '16px 0', 
+            background: '#fff2f0', 
+            border: '1px solid #ffccc7', 
+            borderRadius: '8px', 
+            color: '#ff4d4f',
+            fontSize: '14px'
+          }}>
+            {error}
+          </div>
+        )}
+
         <button
           className="withdraw-submit-btn"
           onClick={handleWithdraw}
-          disabled={withdrawAmount < minWithdraw || !selectedAccount}
+          disabled={withdrawAmount < minWithdraw || !selectedAccount || loading}
         >
-          {t('profile.withdraw.submit')}
+          {loading ? (t('common.loading') || '提现中...') : t('profile.withdraw.submit')}
         </button>
 
         <div className="withdraw-tips">

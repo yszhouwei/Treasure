@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { OrdersService } from '../../services/orders.service';
+import { useAuth } from '../../context/AuthContext';
 import './PaymentPage.css';
 
 interface PaymentPageProps {
@@ -9,6 +11,7 @@ interface PaymentPageProps {
     quantity: number;
     amount: number;
     groupType: string;
+    orderId?: number;
   };
   onBack: () => void;
   onSuccess: () => void;
@@ -16,27 +19,57 @@ interface PaymentPageProps {
 
 const PaymentPage: React.FC<PaymentPageProps> = ({ order, onBack, onSuccess }) => {
   const { t } = useTranslation();
+  const { user, refreshUser } = useAuth();
   const [selectedMethod, setSelectedMethod] = useState<string>('wechat');
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // 确保余额是数字类型
+  const userBalance = typeof user?.balance === 'number' ? user.balance : (typeof user?.balance === 'string' ? parseFloat(user.balance) || 0 : 0);
 
   const paymentMethods = [
     { id: 'wechat', name: t('payment.wechatPay'), icon: '💬', color: '#07C160' },
     { id: 'alipay', name: t('payment.alipay'), icon: '💰', color: '#1677FF' },
-    { id: 'balance', name: t('payment.balance'), icon: '👛', color: '#D4A574', balance: 1250.00 }
+    { id: 'balance', name: t('payment.balance'), icon: '👛', color: '#D4A574', balance: userBalance }
   ];
 
-  const handlePay = () => {
+  const handlePay = async () => {
     if (!agreeTerms) {
-      alert(t('payment.pleaseAgreeTerms'));
+      setError(t('payment.pleaseAgreeTerms') || '请同意支付协议');
       return;
     }
+
+    if (!order.orderId) {
+      setError('订单ID不存在');
+      return;
+    }
+
     setIsPaying(true);
-    // 模拟支付过程
-    setTimeout(() => {
-      setIsPaying(false);
+    setError(null);
+
+    try {
+      // 调用支付API
+      const paymentMethodMap: Record<string, string> = {
+        'wechat': 'wechat',
+        'alipay': 'alipay',
+        'balance': 'balance'
+      };
+
+      await OrdersService.payOrder(order.orderId, paymentMethodMap[selectedMethod] || selectedMethod);
+
+      // 刷新用户数据（更新余额等）
+      if (refreshUser) {
+        await refreshUser();
+      }
+
+      // 支付成功，跳转到成功页面
       onSuccess();
-    }, 2000);
+    } catch (err: any) {
+      console.error('支付失败:', err);
+      setError(err.message || err.data?.message || '支付失败，请重试');
+      setIsPaying(false);
+    }
   };
 
   return (
@@ -98,7 +131,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ order, onBack, onSuccess }) =
                   </div>
                   <div className="method-info">
                     <h4>{method.name}</h4>
-                    {method.id === 'balance' && method.balance !== undefined && (
+                    {method.id === 'balance' && typeof method.balance === 'number' && (
                       <span className="balance-amount">
                         {t('payment.availableBalance')}: ¥{method.balance.toFixed(2)}
                       </span>
@@ -136,6 +169,21 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ order, onBack, onSuccess }) =
             <li>{t('payment.notice3')}</li>
           </ul>
         </div>
+
+        {/* 错误提示 */}
+        {error && (
+          <div style={{ 
+            padding: '12px 16px', 
+            margin: '16px 0', 
+            background: '#fff2f0', 
+            border: '1px solid #ffccc7', 
+            borderRadius: '8px', 
+            color: '#ff4d4f',
+            fontSize: '14px'
+          }}>
+            {error}
+          </div>
+        )}
       </div>
 
       {/* 底部支付栏 */}

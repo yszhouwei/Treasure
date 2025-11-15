@@ -62,6 +62,12 @@ export class Product {
   @Column({ type: 'varchar', length: 100, nullable: true })
   warranty: string;
 
+  @Column({ type: 'int', unsigned: true, default: 1 })
+  winner_count: number; // 中奖数量（平台设定）
+
+  @Column({ type: 'decimal', precision: 5, scale: 2, default: 5.00 })
+  dividend_rate: number; // 分红比例（平台设定，单位：%）
+
   @CreateDateColumn({ type: 'datetime' })
   created_at: Date;
 

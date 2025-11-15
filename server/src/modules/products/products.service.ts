@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { Product } from '../../entities/product.entity';
 import { ProductCategory } from '../../entities/product-category.entity';
+import { GroupBuying } from '../../entities/group-buying.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
@@ -13,6 +14,8 @@ export class ProductsService {
     private productsRepository: Repository<Product>,
     @InjectRepository(ProductCategory)
     private categoriesRepository: Repository<ProductCategory>,
+    @InjectRepository(GroupBuying)
+    private groupBuyingRepository: Repository<GroupBuying>,
   ) {}
 
   async findAll(options: {
@@ -89,6 +92,31 @@ export class ProductsService {
       where: { status: 1, is_recommend: 1 },
       order: { sort_order: 'DESC', created_at: 'DESC' },
       take: 10,
+    });
+  }
+
+  async findByGroupSize(groupSize: number): Promise<Product[]> {
+    // 查找该团购类型下的所有商品ID（从团购活动中获取）
+    const groupBuyings = await this.groupBuyingRepository.find({
+      where: { group_size: groupSize },
+      select: ['product_id'],
+    });
+
+    // 提取唯一的商品ID
+    const productIds = [...new Set(groupBuyings.map(gb => gb.product_id))];
+
+    if (productIds.length === 0) {
+      // 如果没有找到该类型的团购活动，返回空数组
+      return [];
+    }
+
+    // 根据商品ID获取商品列表
+    return this.productsRepository.find({
+      where: {
+        id: In(productIds),
+        status: 1,
+      },
+      order: { sort_order: 'DESC', created_at: 'DESC' },
     });
   }
 

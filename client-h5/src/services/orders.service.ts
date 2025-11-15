@@ -51,5 +51,12 @@ export class OrdersService {
   static async createOrder(data: CreateOrderDto): Promise<Order> {
     return ApiClient.post<Order>(API_ENDPOINTS.ORDERS.CREATE, data);
   }
+
+  // 支付订单
+  static async payOrder(orderId: number, paymentMethod: string): Promise<Order> {
+    return ApiClient.post<Order>(API_ENDPOINTS.ORDERS.PAY(orderId), {
+      payment_method: paymentMethod
+    });
+  }
 }
 

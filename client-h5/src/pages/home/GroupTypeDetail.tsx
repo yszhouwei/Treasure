@@ -8,11 +8,13 @@ interface GroupTypeDetailProps {
     name: string;
     color: string;
     icon: string;
+    size?: number;
   };
   onBack: () => void;
+  onViewProducts?: () => void;
 }
 
-const GroupTypeDetail: React.FC<GroupTypeDetailProps> = ({ groupType, onBack }) => {
+const GroupTypeDetail: React.FC<GroupTypeDetailProps> = ({ groupType, onBack, onViewProducts }) => {
   const { t } = useTranslation();
 
   return (
@@ -134,11 +136,17 @@ const GroupTypeDetail: React.FC<GroupTypeDetailProps> = ({ groupType, onBack }) 
         </section>
 
         {/* 底部按钮 */}
-        <div className="group-type-footer">
-          <button className="start-group-btn" style={{ background: `linear-gradient(135deg, ${groupType.color}, ${groupType.color}dd)` }}>
-            {t('groupTypeDetail.startGroup')}
-          </button>
-        </div>
+        {onViewProducts && (
+          <div className="group-type-footer">
+            <button 
+              className="start-group-btn" 
+              style={{ background: `linear-gradient(135deg, ${groupType.color}, ${groupType.color}dd)` }}
+              onClick={onViewProducts}
+            >
+              {t('groupTypeDetail.viewProducts') || '查看团购商品'}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

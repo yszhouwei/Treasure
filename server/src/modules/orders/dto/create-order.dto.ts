@@ -19,7 +19,6 @@ export class CreateOrderDto {
   @IsOptional()
   team_id?: number;
 
-  @IsObject()
   @IsOptional()
   shipping_address?: any;
 }

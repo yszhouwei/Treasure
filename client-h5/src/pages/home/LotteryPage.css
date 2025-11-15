@@ -1,0 +1,380 @@
+.lottery-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f5f5f5 0%, #ffffff 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.lottery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: white;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.lottery-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.lottery-header .back-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+}
+
+.lottery-header .back-btn svg {
+  width: 24px;
+  height: 24px;
+  color: #262626;
+}
+
+.lottery-content {
+  flex: 1;
+  padding: 24px 16px;
+  padding-bottom: 100px;
+}
+
+/* 开奖前卡片 */
+.lottery-before-card {
+  background: white;
+  border-radius: 16px;
+  padding: 40px 24px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.lottery-icon-wrapper {
+  margin-bottom: 24px;
+}
+
+.lottery-icon {
+  font-size: 80px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.lottery-before-card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 12px 0;
+}
+
+.lottery-product-name {
+  font-size: 16px;
+  color: #8c8c8c;
+  margin: 0 0 16px 0;
+}
+
+.lottery-desc {
+  font-size: 14px;
+  color: #595959;
+  line-height: 1.6;
+  margin: 0 0 32px 0;
+}
+
+.lottery-draw-btn {
+  width: 100%;
+  max-width: 280px;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #D4A574 0%, #B8860B 100%);
+  color: white;
+  border: none;
+  border-radius: 28px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(212, 165, 116, 0.4);
+  transition: all 0.3s;
+}
+
+.lottery-draw-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 165, 116, 0.5);
+}
+
+.lottery-draw-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.lottery-error {
+  padding: 12px 16px;
+  margin: 16px 0;
+  background: #fff2f0;
+  border: 1px solid #ffccc7;
+  border-radius: 8px;
+  color: #ff4d4f;
+  font-size: 14px;
+}
+
+/* 开奖结果卡片 */
+.lottery-result-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+.lottery-result-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: celebrate 1s ease-in-out;
+}
+
+.lottery-result-icon.winner {
+  animation: celebrate 1s ease-in-out, rotate 2s infinite;
+}
+
+@keyframes celebrate {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes rotate {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-5deg);
+  }
+  75% {
+    transform: rotate(5deg);
+  }
+}
+
+.lottery-result-card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 24px 0;
+}
+
+.lottery-result-card h2.winner-title {
+  color: #ff4d4f;
+  font-size: 28px;
+}
+
+.lottery-winner-info {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 24px 0;
+}
+
+.winner-label {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin-bottom: 8px;
+}
+
+.winners-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.winner-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.winner-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.winner-badge {
+  font-size: 14px;
+  color: #ff4d4f;
+  font-weight: 600;
+}
+
+.lottery-time {
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.dividend-info {
+  background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 16px 0;
+}
+
+.dividend-label {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin-bottom: 8px;
+}
+
+.dividend-amount {
+  font-size: 32px;
+  font-weight: 700;
+  color: #D4A574;
+  margin-bottom: 8px;
+}
+
+.dividend-status {
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.winner-notice {
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.winner-notice p {
+  font-size: 14px;
+  color: #52c41a;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.winner-dividend-notice {
+  background: #fff7e6;
+  border: 1px solid #ffe7ba;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.winner-dividend-notice p {
+  font-size: 14px;
+  color: #D4A574;
+  margin: 0;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+/* 分红列表 */
+.dividend-list-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dividend-list-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+}
+
+.dividend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dividend-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+.dividend-user {
+  font-size: 14px;
+  color: #595959;
+}
+
+.dividend-amount-item {
+  font-size: 16px;
+  font-weight: 600;
+  color: #D4A574;
+}
+
+.dividend-more {
+  text-align: center;
+  font-size: 12px;
+  color: #8c8c8c;
+  padding: 8px;
+}
+
+/* 底部按钮 */
+.lottery-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid #f0f0f0;
+  padding: 12px 16px;
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+
+.lottery-view-detail-btn,
+.lottery-back-btn {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.lottery-view-detail-btn {
+  background: linear-gradient(135deg, #D4A574 0%, #B8860B 100%);
+  color: white;
+}
+
+.lottery-back-btn {
+  background: #f5f5f5;
+  color: #595959;
+}
+
+.lottery-view-detail-btn:active,
+.lottery-back-btn:active {
+  transform: scale(0.98);
+}
+

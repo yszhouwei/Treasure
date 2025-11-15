@@ -1,0 +1,245 @@
+.select-group-type-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #f5f5f5;
+  z-index: 3000;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 头部 */
+.select-type-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.select-type-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.select-type-header .back-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+}
+
+.select-type-header .back-btn svg {
+  width: 24px;
+  height: 24px;
+  color: #262626;
+}
+
+/* 内容区域 */
+.select-type-content {
+  padding: 20px 16px;
+  padding-bottom: 100px;
+}
+
+/* 说明卡片 */
+.info-card {
+  background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.info-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.info-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.info-card p {
+  font-size: 14px;
+  color: #595959;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 团购类型列表 */
+.group-types-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.group-type-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.group-type-card:active {
+  transform: scale(0.98);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.type-card-header {
+  position: relative;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 80px;
+}
+
+.type-badge-large {
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 20px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.type-icon-large {
+  font-size: 48px;
+  opacity: 0.3;
+}
+
+.type-card-body {
+  padding: 20px;
+  padding-top: 0;
+}
+
+.type-card-body h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+}
+
+.type-desc {
+  font-size: 14px;
+  color: #8c8c8c;
+  margin: 0 0 16px 0;
+  line-height: 1.5;
+}
+
+.type-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #595959;
+}
+
+.benefit-icon {
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  border-radius: 50%;
+  color: #52c41a;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.type-card-footer {
+  padding: 16px 20px;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #f0f0f0;
+}
+
+.select-hint {
+  font-size: 13px;
+  color: #8c8c8c;
+}
+
+.arrow-icon {
+  font-size: 20px;
+  color: #8c8c8c;
+  font-weight: 300;
+}
+
+/* 温馨提示 */
+.tips-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.tips-card h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 12px 0;
+}
+
+.tips-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tips-card li {
+  font-size: 13px;
+  color: #595959;
+  line-height: 1.6;
+  padding-left: 20px;
+  position: relative;
+}
+
+.tips-card li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #D4A574;
+  font-size: 16px;
+  font-weight: 700;
+}
+

@@ -6,8 +6,12 @@ import GroupTypeDetail from './home/GroupTypeDetail';
 import CampaignPage from './home/CampaignPage';
 import JoinGroupPage from './home/JoinGroupPage';
 import CreateGroupPage from './home/CreateGroupPage';
+import SelectGroupTypePage from './home/SelectGroupTypePage';
+import ApplicationSuccessPage from './home/ApplicationSuccessPage';
+import ProductListPage from './home/ProductListPage';
 import PaymentPage from './home/PaymentPage';
 import OrderSuccessPage from './home/OrderSuccessPage';
+import LotteryPage from './home/LotteryPage';
 import { ProductsService, type Product as ApiProduct } from '../services/products.service';
 import { BannersService } from '../services/banners.service';
 import { parsePrice } from '../utils/dataTransform';
@@ -18,6 +22,7 @@ type GroupTypeItem = {
   name: string;
   color: string;
   icon: string;
+  size?: number;
 };
 
 type HotProduct = {
@@ -55,9 +60,13 @@ type PageState =
   | { type: 'hotProduct'; payload: HotProduct }
   | { type: 'aiProduct'; payload: AiProduct }
   | { type: 'joinGroup'; payload: { product: HotProduct | AiProduct; groupSize: number } }
+  | { type: 'selectGroupType' }
+  | { type: 'productList'; payload: { groupType: GroupTypeItem } }
   | { type: 'createGroup'; payload: { groupType: GroupTypeItem } }
+  | { type: 'applicationSuccess'; payload: { application: any } }
   | { type: 'payment'; payload: { order: any } }
   | { type: 'orderSuccess'; payload: { order: any } }
+  | { type: 'lottery'; payload: { groupId: number; productName: string } }
   | null;
 
 const Home: React.FC = () => {
@@ -73,10 +82,10 @@ const Home: React.FC = () => {
 
   const groupTypes: GroupTypeItem[] = useMemo(() => (
     [
-      { id: 1, name: t('groupType.group10'), color: '#52c41a', icon: '👥' },
-      { id: 2, name: t('groupType.group20'), color: '#1890ff', icon: '🏆' },
-      { id: 3, name: t('groupType.group50'), color: '#722ed1', icon: '🎯' },
-      { id: 4, name: t('groupType.group100'), color: '#ff4d4f', icon: '👑' }
+      { id: 1, name: t('groupType.group10'), color: '#52c41a', icon: '👥', size: 10 },
+      { id: 2, name: t('groupType.group20'), color: '#1890ff', icon: '🏆', size: 20 },
+      { id: 3, name: t('groupType.group50'), color: '#722ed1', icon: '🎯', size: 50 },
+      { id: 4, name: t('groupType.group100'), color: '#ff4d4f', icon: '👑', size: 100 }
     ]
   ), [t]);
 
@@ -224,11 +233,8 @@ const Home: React.FC = () => {
             }}
             onBack={() => setActivePage(null)}
             onAction={() => {
-              // 跳转到创建团购
-              setActivePage({
-                type: 'createGroup',
-                payload: { groupType: groupTypes[0] }
-              });
+              // 跳转到选择团购类型页面
+              setActivePage({ type: 'selectGroupType' });
             }}
           />
         );
@@ -237,8 +243,32 @@ const Home: React.FC = () => {
           <GroupTypeDetail
             groupType={activePage.payload}
             onBack={() => setActivePage(null)}
+            onViewProducts={() => {
+              // 跳转到该类型的商品列表页面
+              setActivePage({
+                type: 'productList',
+                payload: { groupType: activePage.payload }
+              });
+            }}
           />
         );
+      case 'productList': {
+        // 使用 ProductListPage 组件，它会自己获取对应类型的商品
+        return (
+          <ProductListPage
+            groupType={activePage.payload.groupType}
+            onBack={() => setActivePage(null)}
+            onProductClick={(product) => {
+              // 判断是热门商品还是AI推荐商品
+              const isHotProduct = hotProducts.some(p => p.id === product.id);
+              setActivePage({
+                type: isHotProduct ? 'hotProduct' : 'aiProduct',
+                payload: product
+              });
+            }}
+          />
+        );
+      }
       case 'hotProduct':
       case 'aiProduct': {
         const currentProduct = productDetail && productDetail.id === activePage.payload.id
@@ -317,22 +347,48 @@ const Home: React.FC = () => {
               id: activePage.payload.groupType.id,
               name: activePage.payload.groupType.name,
               color: activePage.payload.groupType.color,
-              size: parseInt(activePage.payload.groupType.name.match(/\d+/)?.[0] || '10')
+              size: activePage.payload.groupType.size || parseInt(activePage.payload.groupType.name.match(/\d+/)?.[0] || '10')
             }}
-            onBack={() => setActivePage(null)}
-            onConfirm={() => {
-              const orderNo = `TG${Date.now().toString().slice(-8)}`;
+            onBack={() => {
+              // 返回到选择团购类型页面
+              setActivePage({ type: 'selectGroupType' });
+            }}
+            onConfirm={(applicationData) => {
+              // 提交申请后跳转到申请成功页面
               setActivePage({
-                type: 'payment',
+                type: 'applicationSuccess',
                 payload: {
-                  order: {
-                    orderNo,
-                    productName: '自选商品',
-                    quantity: 1,
-                    amount: 188,
-                    groupType: activePage.payload.groupType.name
+                  application: {
+                    groupType: activePage.payload.groupType.name,
+                    productName: applicationData?.productName,
+                    applicationNo: `APP${Date.now().toString().slice(-8)}`
                   }
                 }
+              });
+            }}
+          />
+        );
+      case 'applicationSuccess':
+        return (
+          <ApplicationSuccessPage
+            application={activePage.payload.application}
+            onBack={() => setActivePage(null)}
+            onViewStatus={() => {
+              // 触发自定义事件，通知 App 组件切换到"我的团购"页面
+              window.dispatchEvent(new CustomEvent('switchTab', { detail: 'group' }));
+              setActivePage(null);
+            }}
+          />
+        );
+      case 'selectGroupType':
+        return (
+          <SelectGroupTypePage
+            groupTypes={groupTypes}
+            onBack={() => setActivePage(null)}
+            onSelect={(groupType) => {
+              setActivePage({
+                type: 'createGroup',
+                payload: { groupType }
               });
             }}
           />
@@ -364,13 +420,41 @@ const Home: React.FC = () => {
           <OrderSuccessPage
             order={activePage.payload.order}
             onViewOrder={() => {
-              // TODO: 跳转到订单详情
+              // 触发自定义事件，切换到"我的"页面，然后打开订单列表
+              window.dispatchEvent(new CustomEvent('switchTab', { detail: 'profile' }));
+              // 延迟一下，确保页面切换完成后再打开订单列表
+              setTimeout(() => {
+                window.dispatchEvent(new CustomEvent('openOrderList'));
+              }, 100);
               setActivePage(null);
             }}
             onBackHome={() => setActivePage(null)}
             onInviteFriends={() => {
               // TODO: 打开分享面板
               alert(t('orderSuccess.shareMessage'));
+            }}
+            onViewLottery={() => {
+              // 跳转到开奖页面（需要groupId，这里暂时使用模拟值）
+              const groupId = 1; // TODO: 从订单中获取真实的groupId
+              setActivePage({
+                type: 'lottery',
+                payload: {
+                  groupId: groupId,
+                  productName: activePage.payload.order.productName
+                }
+              });
+            }}
+          />
+        );
+      case 'lottery':
+        return (
+          <LotteryPage
+            groupId={activePage.payload.groupId}
+            productName={activePage.payload.productName}
+            onBack={() => setActivePage(null)}
+            onViewResult={() => {
+              // TODO: 查看详细结果
+              setActivePage(null);
             }}
           />
         );
@@ -458,15 +542,16 @@ const Home: React.FC = () => {
           </section>
         )}
 
-        {/* 新人优惠卡片 */}
+        {/* 招募团长卡片 */}
         <section className="promo-card">
           <div className="promo-content">
             <div className="promo-text">
               <h3 className="promo-title">{t('promo.title')}</h3>
               <p className="promo-desc">{t('promo.description')}</p>
+              <p className="promo-subtitle">{t('promo.subtitle')}</p>
             </div>
             <button className="promo-btn" onClick={() => setActivePage({ type: 'promo' })}>
-              <span className="btn-icon">👥+</span>
+              <span className="btn-icon">👑</span>
               <span>{t('promo.action')}</span>
             </button>
           </div>

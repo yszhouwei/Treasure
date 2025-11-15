@@ -26,7 +26,7 @@ const CampaignPage: React.FC<CampaignPageProps> = ({ campaign, onBack, onAction 
           </svg>
         </button>
         <div className="campaign-hero">
-          <div className="campaign-badge">{campaign.type === 'banner' ? t('campaign.limitedTime') : t('campaign.newUser')}</div>
+          <div className="campaign-badge">{campaign.type === 'banner' ? t('campaign.limitedTime') : t('campaign.newUser') || '招募团长'}</div>
           <h1>{campaign.title}</h1>
           {campaign.subtitle && <p className="campaign-subtitle">{campaign.subtitle}</p>}
         </div>

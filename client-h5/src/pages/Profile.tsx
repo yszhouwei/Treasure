@@ -13,6 +13,8 @@ import SettingsPage from './profile/SettingsPage';
 import CustomerServicePage from './profile/CustomerServicePage';
 import HelpCenterPage from './profile/HelpCenterPage';
 import TimelineDetailPage from './profile/TimelineDetailPage';
+import OrderListPage from './profile/OrderListPage';
+import OrderDetailPage from './profile/OrderDetailPage';
 import './Profile.css';
 
 type ProfileHero = {
@@ -76,6 +78,8 @@ type PageState =
   | { type: 'settings' }
   | { type: 'customerService' }
   | { type: 'helpCenter' }
+  | { type: 'orderList' }
+  | { type: 'orderDetail'; payload: { orderId: number } }
   | { type: 'timelineDetail'; payload: ProfileSectionItem };
 
 const renderIcon = (icon?: string) => {
@@ -236,6 +240,18 @@ const Profile: React.FC = () => {
     }
   }, []);
 
+  // 监听打开订单列表的事件
+  useEffect(() => {
+    const handleOpenOrderList = () => {
+      setActivePage({ type: 'orderList' });
+    };
+
+    window.addEventListener('openOrderList', handleOpenOrderList as EventListener);
+    return () => {
+      window.removeEventListener('openOrderList', handleOpenOrderList as EventListener);
+    };
+  }, []);
+
   const handleRefresh = async () => {
     if (!isAuthenticated) {
       openAuth('login');
@@ -277,6 +293,9 @@ const Profile: React.FC = () => {
 
   const handleItemClick = (itemId: string, item?: ProfileSectionItem) => {
     switch (itemId) {
+      case 'orderList':
+        setActivePage({ type: 'orderList' });
+        break;
       case 'security':
         setActivePage({ type: 'security' });
         break;
@@ -328,6 +347,33 @@ const Profile: React.FC = () => {
         return <CustomerServicePage onBack={onBack} />;
       case 'helpCenter':
         return <HelpCenterPage onBack={onBack} />;
+      case 'orderList':
+        return (
+          <OrderListPage 
+            onBack={onBack}
+            onOrderClick={(order) => {
+              setActivePage({ type: 'orderDetail', payload: { orderId: order.id } });
+            }}
+          />
+        );
+      case 'orderDetail':
+        return (
+          <OrderDetailPage
+            orderId={activePage.payload.orderId}
+            onBack={() => setActivePage({ type: 'orderList' })}
+            onPay={(order) => {
+              // TODO: 跳转到支付页面
+              alert('跳转到支付页面');
+            }}
+            onCancel={(order) => {
+              // TODO: 取消订单
+              alert('取消订单功能待实现');
+            }}
+            onContact={() => {
+              setActivePage({ type: 'customerService' });
+            }}
+          />
+        );
       case 'timelineDetail':
         return <TimelineDetailPage onBack={onBack} item={activePage.payload} />;
     }

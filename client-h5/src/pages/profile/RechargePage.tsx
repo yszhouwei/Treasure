@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '../../components/Header';
+import { PaymentsService } from '../../services/payments.service';
+import { useAuth } from '../../context/AuthContext';
 import './RechargePage.css';
 
 interface RechargePageProps {
   onBack: () => void;
+  onSuccess?: () => void;
 }
 
-const RechargePage: React.FC<RechargePageProps> = ({ onBack }) => {
+const RechargePage: React.FC<RechargePageProps> = ({ onBack, onSuccess }) => {
   const { t } = useTranslation();
+  const { user, refreshUser } = useAuth();
   const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
   const [customAmount, setCustomAmount] = useState<string>('');
   const [selectedPayment, setSelectedPayment] = useState<string>('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const quickAmounts = [100, 200, 500, 1000, 2000, 5000];
   const paymentMethods = [
@@ -39,17 +45,46 @@ const RechargePage: React.FC<RechargePageProps> = ({ onBack }) => {
     return 0;
   };
 
-  const handleRecharge = () => {
+  const handleRecharge = async () => {
     const amount = getCurrentAmount();
     if (amount <= 0) {
-      alert(t('profile.recharge.amountError'));
+      setError(t('profile.recharge.amountError') || '请输入有效金额');
       return;
     }
     if (!selectedPayment) {
-      alert(t('profile.recharge.paymentError'));
+      setError(t('profile.recharge.paymentError') || '请选择支付方式');
       return;
     }
-    alert(`${t('profile.recharge.success')}: ¥${amount}`);
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      await PaymentsService.recharge({
+        amount: amount,
+        payment_method: selectedPayment
+      });
+
+      // 刷新用户数据
+      if (refreshUser) {
+        await refreshUser();
+      }
+
+      // 成功提示
+      alert(`${t('profile.recharge.success') || '充值成功'}: ¥${amount}`);
+      
+      // 调用成功回调
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        onBack();
+      }
+    } catch (err: any) {
+      console.error('充值失败:', err);
+      setError(err.message || err.data?.message || '充值失败，请重试');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const currentAmount = getCurrentAmount();
@@ -61,7 +96,7 @@ const RechargePage: React.FC<RechargePageProps> = ({ onBack }) => {
       <div className="recharge-page-content">
         <section className="recharge-balance-card">
           <div className="recharge-balance-label">{t('profile.recharge.currentBalance')}</div>
-          <div className="recharge-balance-value">¥ 58,920</div>
+          <div className="recharge-balance-value">¥ {user?.balance?.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}</div>
           <div className="recharge-balance-hint">{t('profile.recharge.balanceHint')}</div>
         </section>
 
@@ -133,12 +168,27 @@ const RechargePage: React.FC<RechargePageProps> = ({ onBack }) => {
           </div>
         </section>
 
+        {/* 错误提示 */}
+        {error && (
+          <div style={{ 
+            padding: '12px 16px', 
+            margin: '16px 0', 
+            background: '#fff2f0', 
+            border: '1px solid #ffccc7', 
+            borderRadius: '8px', 
+            color: '#ff4d4f',
+            fontSize: '14px'
+          }}>
+            {error}
+          </div>
+        )}
+
         <button
           className="recharge-submit-btn"
           onClick={handleRecharge}
-          disabled={currentAmount <= 0 || !selectedPayment}
+          disabled={currentAmount <= 0 || !selectedPayment || loading}
         >
-          {t('profile.recharge.submit')}
+          {loading ? (t('common.loading') || '充值中...') : t('profile.recharge.submit')}
         </button>
 
         <div className="recharge-tips">

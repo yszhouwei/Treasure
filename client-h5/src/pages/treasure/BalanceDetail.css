@@ -388,7 +388,7 @@
 /* 响应式 */
 @media (max-width: 480px) {
   .balance-amount {
-    font-size: 42px;
+    font-size: 15px;
   }
 
   .account-info-grid {
