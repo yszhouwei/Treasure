@@ -56,10 +56,14 @@ const Group: React.FC = () => {
         const overview = await TeamsService.getMyTeamOverview();
         setTeamOverview(overview);
       } catch (err: any) {
-        console.error('获取团队数据失败:', err);
-        setError(err.message || '获取团队数据失败');
-        // 如果用户不是团队长，使用默认数据
+        // 如果用户不是团队长（404），这是正常情况，静默处理
         if (err.status === 404) {
+          setTeamOverview(null);
+          setError(null); // 不显示错误信息
+        } else {
+          // 其他错误才显示
+          console.error('获取团队数据失败:', err);
+          setError(err.message || '获取团队数据失败');
           setTeamOverview(null);
         }
       } finally {

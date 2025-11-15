@@ -9,7 +9,14 @@
     "openGroup": "去开团",
     "loading": "加载中...",
     "noData": "暂无数据",
-    "required": "必填"
+    "required": "必填",
+    "retry": "重试",
+    "cancel": "取消",
+    "save": "保存"
+  },
+  "home": {
+    "noHotProducts": "暂无热门商品",
+    "noRecommendProducts": "暂无推荐商品"
   },
   "header": {
     "logo": "TreasureX",
@@ -1085,6 +1092,7 @@
     "progressText": "还需{total}人({current}人已参团)",
     "productInfo": "商品信息",
     "shippingAddress": "收货地址",
+    "selectAddress": "请选择收货地址",
     "addNewAddress": "添加新地址",
     "priceBreakdown": "价格明细",
     "subtotal": "小计",
@@ -1182,7 +1190,8 @@
     "payNow": "立即支付",
     "processing": "处理中...",
     "processingPayment": "正在处理你的支付...",
-    "pleaseAgreeTerms": "请先同意支付条款"
+    "pleaseAgreeTerms": "请先同意支付条款",
+    "insufficientBalance": "余额不足，当前余额：¥{balance}，需要支付：¥{amount}"
   },
   "orderSuccess": {
     "title": "支付成功",
@@ -1195,6 +1204,7 @@
     "stillNeed": "还需{count}人",
     "groupComplete": "成团完成！",
     "estimatedTime": "预计发货时间",
+    "estimatedTimeValue": "48小时内",
     "inviteTitle": "邀请好友",
     "inviteDesc": "分享以更快成团",
     "shareWithFriends": "分享给好友",
@@ -1264,5 +1274,25 @@
     "statusCompletedDesc": "订单已完成，感谢您的支持",
     "statusCancelledDesc": "订单已取消",
     "statusRefundedDesc": "订单已退款，退款将原路返回"
+  },
+  "addressEdit": {
+    "addTitle": "添加地址",
+    "editTitle": "编辑地址",
+    "recipientName": "收货人姓名",
+    "phone": "手机号码",
+    "detailAddress": "详细地址",
+    "nameRequired": "请输入收货人姓名",
+    "phoneRequired": "请输入手机号码",
+    "phoneInvalid": "请输入正确的手机号码",
+    "addressRequired": "请输入详细地址",
+    "namePlaceholder": "请输入收货人姓名",
+    "phonePlaceholder": "请输入手机号码",
+    "addressPlaceholder": "请输入详细地址，如街道、门牌号等",
+    "setAsDefault": "设为默认地址",
+    "default": "默认",
+    "edit": "编辑",
+    "delete": "删除",
+    "confirmDelete": "确定要删除这个地址吗？",
+    "noAddress": "暂无收货地址"
   }
 }

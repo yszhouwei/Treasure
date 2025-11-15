@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ProductsService, type Product as ApiProduct } from '../../services/products.service';
 import { parsePrice } from '../../utils/dataTransform';
+import { getTranslatedProductName } from '../../utils/productTranslations';
 import './ProductListPage.css';
 
 interface ProductListPageProps {
@@ -37,7 +38,7 @@ const ProductListPage: React.FC<ProductListPageProps> = ({
   onBack, 
   onProductClick 
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [products, setProducts] = useState<DisplayProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -64,7 +65,7 @@ const ProductListPage: React.FC<ProductListPageProps> = ({
           
           return {
             id: product.id,
-            name: product.name,
+            name: getTranslatedProductName(product.id, product.name, i18n.language),
             price: price,
             participants,
             total,

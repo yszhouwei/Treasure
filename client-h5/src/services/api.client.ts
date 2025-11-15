@@ -41,11 +41,20 @@ class FetchClient {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw {
+        const error = {
           message: errorData.message || response.statusText || '请求失败',
           status: response.status,
           data: errorData,
         };
+        
+        // 对于404错误，如果是"您不是团队长"这种业务逻辑错误，静默处理
+        if (response.status === 404 && errorData.message && errorData.message.includes('团队长')) {
+          // 静默处理，不打印到控制台
+        } else {
+          // 其他错误才抛出
+        }
+        
+        throw error;
       }
 
       const data = await response.json();

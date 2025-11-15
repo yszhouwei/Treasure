@@ -14,7 +14,8 @@ import OrderSuccessPage from './home/OrderSuccessPage';
 import LotteryPage from './home/LotteryPage';
 import { ProductsService, type Product as ApiProduct } from '../services/products.service';
 import { BannersService } from '../services/banners.service';
-import { parsePrice } from '../utils/dataTransform';
+import { parsePrice, formatPrice } from '../utils/dataTransform';
+import { getTranslatedProductName } from '../utils/productTranslations';
 import './Home.css';
 
 type GroupTypeItem = {
@@ -70,8 +71,9 @@ type PageState =
   | null;
 
 const Home: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [activePage, setActivePage] = useState<PageState>(null);
+  const [pageHistory, setPageHistory] = useState<PageState[]>([]); // 页面历史记录
   const [hotProducts, setHotProducts] = useState<HotProduct[]>([]);
   const [aiProducts, setAiProducts] = useState<AiProduct[]>([]);
   const [banners, setBanners] = useState<any[]>([]);
@@ -79,6 +81,25 @@ const Home: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [productDetail, setProductDetail] = useState<ApiProduct | null>(null);
   const [productDetailLoading, setProductDetailLoading] = useState(false);
+
+  // 导航到新页面（带历史记录）
+  const navigateToPage = (page: PageState) => {
+    if (activePage) {
+      setPageHistory(prev => [...prev, activePage]);
+    }
+    setActivePage(page);
+  };
+
+  // 返回上一页
+  const goBack = () => {
+    if (pageHistory.length > 0) {
+      const previousPage = pageHistory[pageHistory.length - 1];
+      setPageHistory(prev => prev.slice(0, -1));
+      setActivePage(previousPage);
+    } else {
+      setActivePage(null);
+    }
+  };
 
   const groupTypes: GroupTypeItem[] = useMemo(() => (
     [
@@ -100,7 +121,7 @@ const Home: React.FC = () => {
     
     return {
       id: product.id,
-      name: product.name,
+      name: getTranslatedProductName(product.id, product.name, i18n.language),
       price: price,
       participants,
       total,
@@ -120,16 +141,17 @@ const Home: React.FC = () => {
     
     // 确保价格是数字类型
     const price = parsePrice(product.group_price);
+    const translatedName = getTranslatedProductName(product.id, product.name, i18n.language);
     
     return {
       id: product.id,
-      name: product.name,
+      name: translatedName,
       price: price,
       status: isTight ? t('product.statusTight') : t('product.statusAvailable'),
       statusColor: isTight ? '#ff4d4f' : '#52c41a',
       tag: product.is_recommend ? t('tags.hotRecommend') : t('tags.aiSelected'),
       tagColor: product.is_recommend ? '#ff4d4f' : '#1890ff',
-      description: product.description || t('product.viewed', { name: product.name }),
+      description: product.description || t('product.viewed', { name: translatedName }),
       imageUrl: product.image_url || ProductsService.parseImages(product.images)[0] || '/images/product-camera.svg',
       backgroundColor: '#2c2c2c'
     };
@@ -171,7 +193,7 @@ const Home: React.FC = () => {
     };
 
     fetchData();
-  }, [t]);
+  }, [t, i18n.language]);
 
   // 获取商品详情
   useEffect(() => {
@@ -211,15 +233,52 @@ const Home: React.FC = () => {
               subtitle: t('banner.subtitle'),
               description: t('campaign.bannerDescription')
             }}
-            onBack={() => setActivePage(null)}
+            onBack={goBack}
             onAction={() => {
-              // 选择第一个热门产品加入团购
-              const product = hotProducts[0];
-              setActivePage({
-                type: 'joinGroup',
-                payload: { product, groupSize: 10 }
-              });
+              // 对于"立即夺宝"，应该跳转到团购类型选择，然后选择商品参与团购
+              // 这里直接跳转到第一个团购类型的商品列表，让用户选择商品
+              if (groupTypes.length > 0) {
+                navigateToPage({
+                  type: 'productList',
+                  payload: { groupType: groupTypes[0] } // 默认10人团
+                });
+              } else {
+                // 如果没有团购类型，跳转到选择页面
+                navigateToPage({ type: 'selectGroupType' });
+              }
             }}
+            onProductClick={(productId: number) => {
+              // 从热门商品或推荐商品中查找
+              const product = [...hotProducts, ...aiProducts].find(p => p.id === productId);
+              if (product) {
+                // 获取商品详情
+                ProductsService.getProductById(productId).then((detail) => {
+                  const displayProduct = hotProducts.find(p => p.id === productId) 
+                    ? convertToHotProduct(detail)
+                    : convertToAiProduct(detail);
+                  // 默认使用10人团，用户可以在参团页面看到其他选项
+                  navigateToPage({
+                    type: 'joinGroup',
+                    payload: { 
+                      product: displayProduct, 
+                      groupSize: 10 
+                    }
+                  });
+                }).catch((err) => {
+                  console.error('获取商品详情失败:', err);
+                  // 如果获取失败，使用已有数据
+                  navigateToPage({
+                    type: 'joinGroup',
+                    payload: { 
+                      product, 
+                      groupSize: 10 
+                    }
+                  });
+                });
+              }
+            }}
+            hotProducts={hotProducts}
+            aiProducts={aiProducts}
           />
         );
       case 'promo':
@@ -231,10 +290,10 @@ const Home: React.FC = () => {
               subtitle: t('promo.description'),
               description: t('campaign.promoDescription')
             }}
-            onBack={() => setActivePage(null)}
+            onBack={goBack}
             onAction={() => {
               // 跳转到选择团购类型页面
-              setActivePage({ type: 'selectGroupType' });
+              navigateToPage({ type: 'selectGroupType' });
             }}
           />
         );
@@ -242,10 +301,10 @@ const Home: React.FC = () => {
         return (
           <GroupTypeDetail
             groupType={activePage.payload}
-            onBack={() => setActivePage(null)}
+            onBack={goBack}
             onViewProducts={() => {
               // 跳转到该类型的商品列表页面
-              setActivePage({
+              navigateToPage({
                 type: 'productList',
                 payload: { groupType: activePage.payload }
               });
@@ -257,11 +316,11 @@ const Home: React.FC = () => {
         return (
           <ProductListPage
             groupType={activePage.payload.groupType}
-            onBack={() => setActivePage(null)}
+            onBack={goBack}
             onProductClick={(product) => {
               // 判断是热门商品还是AI推荐商品
               const isHotProduct = hotProducts.some(p => p.id === product.id);
-              setActivePage({
+              navigateToPage({
                 type: isHotProduct ? 'hotProduct' : 'aiProduct',
                 payload: product
               });
@@ -283,7 +342,9 @@ const Home: React.FC = () => {
           <ProductDetail
             product={{
               id: activePage.payload.id,
-              name: currentProduct?.name || activePage.payload.name,
+              name: currentProduct 
+                ? getTranslatedProductName(currentProduct.id, currentProduct.name, i18n.language)
+                : getTranslatedProductName(activePage.payload.id, activePage.payload.name, i18n.language),
               price: currentProduct ? parsePrice(currentProduct.group_price) : activePage.payload.price,
               originalPrice: currentProduct ? parsePrice(currentProduct.original_price) : (activePage.payload.price * 1.5),
               participants: activePage.type === 'hotProduct' ? activePage.payload.participants : undefined,
@@ -320,9 +381,10 @@ const Home: React.FC = () => {
               originalPrice: activePage.payload.product.price * 1.5,
               groupSize: activePage.payload.groupSize,
               currentMembers: Math.floor(Math.random() * activePage.payload.groupSize),
-              timeLeft: '23:45:12'
+              timeLeft: '23:45:12',
+              imageUrl: activePage.payload.product.imageUrl
             }}
-            onBack={() => setActivePage(null)}
+            onBack={goBack}
             onConfirm={(orderData) => {
               setActivePage({
                 type: 'payment',
@@ -333,7 +395,9 @@ const Home: React.FC = () => {
                     quantity: orderData.quantity,
                     amount: orderData.amount,
                     groupType: orderData.groupType,
-                    orderId: orderData.id
+                    orderId: orderData.id,
+                    groupSize: orderData.groupSize,
+                    currentMembers: orderData.currentMembers
                   }
                 }
               });
@@ -372,7 +436,7 @@ const Home: React.FC = () => {
         return (
           <ApplicationSuccessPage
             application={activePage.payload.application}
-            onBack={() => setActivePage(null)}
+            onBack={goBack}
             onViewStatus={() => {
               // 触发自定义事件，通知 App 组件切换到"我的团购"页面
               window.dispatchEvent(new CustomEvent('switchTab', { detail: 'group' }));
@@ -384,7 +448,7 @@ const Home: React.FC = () => {
         return (
           <SelectGroupTypePage
             groupTypes={groupTypes}
-            onBack={() => setActivePage(null)}
+            onBack={goBack}
             onSelect={(groupType) => {
               setActivePage({
                 type: 'createGroup',
@@ -397,8 +461,10 @@ const Home: React.FC = () => {
         return (
           <PaymentPage
             order={activePage.payload.order}
-            onBack={() => setActivePage(null)}
+            onBack={goBack}
             onSuccess={() => {
+              // 从支付页面的订单数据中获取团购信息
+              const groupSize = parseInt(activePage.payload.order.groupType.match(/\d+/)?.[0] || '10');
               setActivePage({
                 type: 'orderSuccess',
                 payload: {
@@ -406,9 +472,9 @@ const Home: React.FC = () => {
                     orderNo: activePage.payload.order.orderNo,
                     productName: activePage.payload.order.productName,
                     amount: activePage.payload.order.amount,
-                    groupSize: parseInt(activePage.payload.order.groupType.match(/\d+/)?.[0] || '10'),
-                    currentMembers: 1,
-                    estimatedTime: '48小时内'
+                    groupSize: groupSize,
+                    currentMembers: activePage.payload.order.currentMembers || 1,
+                    estimatedTime: t('orderSuccess.estimatedTimeValue') || '48小时内'
                   }
                 }
               });
@@ -451,7 +517,7 @@ const Home: React.FC = () => {
           <LotteryPage
             groupId={activePage.payload.groupId}
             productName={activePage.payload.productName}
-            onBack={() => setActivePage(null)}
+            onBack={goBack}
             onViewResult={() => {
               // TODO: 查看详细结果
               setActivePage(null);
@@ -482,7 +548,7 @@ const Home: React.FC = () => {
               onClick={() => window.location.reload()} 
               style={{ marginTop: '10px', padding: '8px 16px', background: '#1890ff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
             >
-              重试
+              {t('common.retry') || 'Retry'}
             </button>
           </div>
         )}
@@ -506,12 +572,12 @@ const Home: React.FC = () => {
                       if (banner.link_type === 'product') {
                         // TODO: 实现商品详情跳转
                         // const productId = banner.link_url.split('/').pop();
-                        setActivePage({ type: 'banner' });
+                        navigateToPage({ type: 'banner' });
                       } else {
-                        setActivePage({ type: 'banner' });
+                        navigateToPage({ type: 'banner' });
                       }
                     } else {
-                      setActivePage({ type: 'banner' });
+                      navigateToPage({ type: 'banner' });
                     }
                   }}
                 >
@@ -519,7 +585,7 @@ const Home: React.FC = () => {
                   <div className="banner-overlay">
                     <h1 className="banner-title">{banner.title || t('banner.title')}</h1>
                     <p className="banner-subtitle">{t('banner.subtitle')}</p>
-                    <button className="banner-btn" onClick={(e) => { e.stopPropagation(); setActivePage({ type: 'banner' }); }}>
+                    <button className="banner-btn" onClick={(e) => { e.stopPropagation(); navigateToPage({ type: 'banner' }); }}>
                       <span className="btn-icon">⊕</span>
                       <span>{t('banner.action')}</span>
                     </button>
@@ -532,7 +598,7 @@ const Home: React.FC = () => {
                 <div className="banner-overlay">
                   <h1 className="banner-title">{t('banner.title')}</h1>
                   <p className="banner-subtitle">{t('banner.subtitle')}</p>
-                  <button className="banner-btn" onClick={() => setActivePage({ type: 'banner' })}>
+                  <button className="banner-btn" onClick={() => navigateToPage({ type: 'banner' })}>
                     <span className="btn-icon">⊕</span>
                     <span>{t('banner.action')}</span>
                   </button>
@@ -550,7 +616,7 @@ const Home: React.FC = () => {
               <p className="promo-desc">{t('promo.description')}</p>
               <p className="promo-subtitle">{t('promo.subtitle')}</p>
             </div>
-            <button className="promo-btn" onClick={() => setActivePage({ type: 'promo' })}>
+            <button className="promo-btn" onClick={() => navigateToPage({ type: 'promo' })}>
               <span className="btn-icon">👑</span>
               <span>{t('promo.action')}</span>
             </button>
@@ -565,7 +631,7 @@ const Home: React.FC = () => {
                 key={type.id}
                 className="group-type-item"
                 style={{ backgroundColor: `${type.color}15` }}
-                onClick={() => setActivePage({ type: 'groupType', payload: type })}
+                onClick={() => navigateToPage({ type: 'groupType', payload: type })}
               >
                 <div className="group-icon" style={{ backgroundColor: `${type.color}25` }}>
                   <span style={{ color: type.color }}>{type.icon}</span>
@@ -594,7 +660,7 @@ const Home: React.FC = () => {
                   <div
                     key={product.id}
                     className="product-card"
-                    onClick={() => setActivePage({ type: 'hotProduct', payload: product })}
+                    onClick={() => navigateToPage({ type: 'hotProduct', payload: product })}
                   >
                 <div
                   className="product-image"
@@ -618,7 +684,7 @@ const Home: React.FC = () => {
                     {product.status}
                   </div>
                   <div className="product-footer">
-                    <span className="product-price">¥{product.price.toFixed(2)}</span>
+                    <span className="product-price">{formatPrice(product.price, i18n.language)}</span>
                   </div>
                   <button
                     className="join-btn"
@@ -635,7 +701,7 @@ const Home: React.FC = () => {
               </div>
             ) : (
               <div style={{ padding: '40px', textAlign: 'center', color: '#8c8c8c' }}>
-                {t('common.noData') || '暂无热门商品'}
+                {t('home.noHotProducts') || t('common.noData') || 'No hot products'}
               </div>
             )}
           </section>
@@ -669,7 +735,7 @@ const Home: React.FC = () => {
                   <div
                     key={product.id}
                     className="ai-product-card"
-                    onClick={() => setActivePage({ type: 'aiProduct', payload: product })}
+                    onClick={() => navigateToPage({ type: 'aiProduct', payload: product })}
                   >
                 <div
                   className="ai-product-image"
@@ -693,7 +759,7 @@ const Home: React.FC = () => {
                     {product.status}
                   </div>
                   <div className="ai-product-footer">
-                    <span className="ai-product-price">¥{product.price.toFixed(2)}</span>
+                    <span className="ai-product-price">{formatPrice(product.price, i18n.language)}</span>
                     <button
                       className="ai-join-btn"
                       onClick={(event) => {
@@ -710,7 +776,7 @@ const Home: React.FC = () => {
               </div>
             ) : (
               <div style={{ padding: '40px', textAlign: 'center', color: '#8c8c8c' }}>
-                {t('common.noData') || '暂无推荐商品'}
+                {t('home.noRecommendProducts') || t('common.noData') || 'No recommended products'}
               </div>
             )}
           </section>

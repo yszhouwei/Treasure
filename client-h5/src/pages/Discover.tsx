@@ -46,6 +46,26 @@ const Discover: React.FC = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activePage, setActivePage] = useState<PageState>(null);
+  const [pageHistory, setPageHistory] = useState<PageState[]>([]); // 页面历史记录
+
+  // 导航到新页面（带历史记录）
+  const navigateToPage = (page: PageState) => {
+    if (activePage) {
+      setPageHistory(prev => [...prev, activePage]);
+    }
+    setActivePage(page);
+  };
+
+  // 返回上一页
+  const goBack = () => {
+    if (pageHistory.length > 0) {
+      const previousPage = pageHistory[pageHistory.length - 1];
+      setPageHistory(prev => prev.slice(0, -1));
+      setActivePage(previousPage);
+    } else {
+      setActivePage(null);
+    }
+  };
 
   // 处理子页面之间的导航
   const handleSubPageItemClick = (item: any, type: 'trending' | 'insight' | 'story') => {
@@ -55,7 +75,7 @@ const Discover: React.FC = () => {
       ? insights.findIndex(i => i.title === item.title)
       : stories.findIndex(s => s.title === item.title);
 
-    setActivePage({ type, payload: item, index });
+    navigateToPage({ type, payload: item, index });
   };
 
   // 渲染子页面
@@ -65,39 +85,52 @@ const Discover: React.FC = () => {
         return (
           <TrendingDetail
             trending={activePage.payload}
-            onBack={() => setActivePage(null)}
-            onSubscribe={() => alert(t('discover.sheet.trending.cta'))}
+            onBack={goBack}
+            onSubscribe={() => {
+              // TODO: 实现订阅功能，对接后端API
+              alert(t('discover.sheet.trending.cta') || '订阅成功');
+            }}
           />
         );
       case 'insight':
         return (
           <InsightDetail
             insight={activePage.payload}
-            onBack={() => setActivePage(null)}
-            onSave={() => alert(t('discover.sheet.insight.cta'))}
+            onBack={goBack}
+            onSave={() => {
+              // TODO: 实现收藏功能，对接后端API
+              alert(t('discover.sheet.insight.cta') || '已保存到收藏');
+            }}
           />
         );
       case 'story':
         return (
           <StoryDetail
             story={activePage.payload}
-            onBack={() => setActivePage(null)}
-            onComment={() => alert(t('discover.sheet.story.cta'))}
+            onBack={goBack}
+            onComment={() => {
+              // TODO: 实现评论功能，对接后端API
+              alert(t('discover.sheet.story.cta') || '评论功能开发中');
+            }}
           />
         );
       case 'tag':
         return (
           <TagListPage
             tag={activePage.payload}
-            onBack={() => setActivePage(null)}
+            onBack={goBack}
             onItemClick={handleSubPageItemClick}
+            onTagClick={(tag) => {
+              // 点击相关标签，跳转到该标签页
+              navigateToPage({ type: 'tag', payload: tag });
+            }}
           />
         );
       case 'search':
         return (
           <SearchPage
             initialQuery={activePage.query}
-            onBack={() => setActivePage(null)}
+            onBack={goBack}
             onItemClick={handleSubPageItemClick}
           />
         );
@@ -122,17 +155,17 @@ const Discover: React.FC = () => {
                 onChange={(event) => setSearchQuery(event.target.value)}
                 onKeyDown={(event) => {
                   if (event.key === 'Enter') {
-                    setActivePage({ type: 'search', query: searchQuery });
+                    navigateToPage({ type: 'search', query: searchQuery });
                   }
                 }}
               />
-              <button className="discover-search-btn" onClick={() => setActivePage({ type: 'search', query: searchQuery })}>
+              <button className="discover-search-btn" onClick={() => navigateToPage({ type: 'search', query: searchQuery })}>
                 {t('common.search')}
               </button>
             </div>
             <div className="discover-tags">
               {tags.map((tag) => (
-                <button key={tag} className="discover-tag" onClick={() => setActivePage({ type: 'tag', payload: tag })}>
+                <button key={tag} className="discover-tag" onClick={() => navigateToPage({ type: 'tag', payload: tag })}>
                   #{tag}
                 </button>
               ))}
@@ -150,7 +183,7 @@ const Discover: React.FC = () => {
               <article
                 key={item.title}
                 className="discover-trending-card"
-                onClick={() => setActivePage({ type: 'trending', payload: item, index })}
+                onClick={() => navigateToPage({ type: 'trending', payload: item, index })}
               >
                 <div className="discover-trending-header">
                   <span className="discover-trending-tag">{item.category}</span>
@@ -163,7 +196,7 @@ const Discover: React.FC = () => {
                   <button
                     onClick={(event) => {
                       event.stopPropagation();
-                      setActivePage({ type: 'trending', payload: item, index });
+                      navigateToPage({ type: 'trending', payload: item, index });
                     }}
                   >
                     {t('common.more')}
@@ -184,7 +217,7 @@ const Discover: React.FC = () => {
               <article
                 key={insight.title}
                 className="discover-insight-card"
-                onClick={() => setActivePage({ type: 'insight', payload: insight, index })}
+                onClick={() => navigateToPage({ type: 'insight', payload: insight, index })}
               >
                 <div className="discover-insight-header">
                   <div className="discover-insight-icon">💡</div>
@@ -202,7 +235,7 @@ const Discover: React.FC = () => {
                   className="discover-link-btn"
                   onClick={(event) => {
                     event.stopPropagation();
-                    setActivePage({ type: 'insight', payload: insight, index });
+                    navigateToPage({ type: 'insight', payload: insight, index });
                   }}
                 >
                   {t('common.more')}
@@ -222,7 +255,7 @@ const Discover: React.FC = () => {
               <article
                 key={story.title}
                 className="discover-story-card"
-                onClick={() => setActivePage({ type: 'story', payload: story, index })}
+                onClick={() => navigateToPage({ type: 'story', payload: story, index })}
               >
                 <header>
                   <span className="discover-story-author">{story.author}</span>
@@ -233,7 +266,7 @@ const Discover: React.FC = () => {
                   className="discover-link-btn"
                   onClick={(event) => {
                     event.stopPropagation();
-                    setActivePage({ type: 'story', payload: story, index });
+                    navigateToPage({ type: 'story', payload: story, index });
                   }}
                 >
                   {t('common.more')}

@@ -6,9 +6,10 @@ interface TagListPageProps {
   tag: string;
   onBack: () => void;
   onItemClick?: (item: any, type: 'trending' | 'insight' | 'story') => void;
+  onTagClick?: (tag: string) => void;
 }
 
-const TagListPage: React.FC<TagListPageProps> = ({ tag, onBack, onItemClick }) => {
+const TagListPage: React.FC<TagListPageProps> = ({ tag, onBack, onItemClick, onTagClick }) => {
   const { t } = useTranslation();
 
   // 根据标签模拟相关内容
@@ -69,7 +70,13 @@ const TagListPage: React.FC<TagListPageProps> = ({ tag, onBack, onItemClick }) =
         <div className="tag-hero">
           <h1>#{tag}</h1>
           <p className="tag-description">{t('discover.sheet.tag.desc', { tag })}</p>
-          <button className="follow-tag-btn">
+          <button 
+            className="follow-tag-btn"
+            onClick={() => {
+              // TODO: 实现关注标签功能，对接后端API
+              alert(t('discover.sheet.tag.cta') || '已关注标签');
+            }}
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
             </svg>
@@ -179,11 +186,19 @@ const TagListPage: React.FC<TagListPageProps> = ({ tag, onBack, onItemClick }) =
             <h2>相关标签</h2>
           </div>
           <div className="related-tags">
-            <button className="related-tag-btn">#国际好物</button>
-            <button className="related-tag-btn">#古董文玩</button>
-            <button className="related-tag-btn">#科技数码</button>
-            <button className="related-tag-btn">#艺术收藏</button>
-            <button className="related-tag-btn">#限时活动</button>
+            {['国际好物', '古董文玩', '科技数码', '艺术收藏', '限时活动'].map((relatedTag) => (
+              <button 
+                key={relatedTag}
+                className="related-tag-btn"
+                onClick={() => {
+                  if (onTagClick && relatedTag !== tag) {
+                    onTagClick(relatedTag);
+                  }
+                }}
+              >
+                #{relatedTag}
+              </button>
+            ))}
           </div>
         </section>
       </div>

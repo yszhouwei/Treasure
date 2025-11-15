@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Order } from '../../entities/order.entity';
 import { Product } from '../../entities/product.entity';
+import { User } from '../../entities/user.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
@@ -12,6 +13,8 @@ export class OrdersService {
     private ordersRepository: Repository<Order>,
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
   ) {}
 
   async findAll(userId: number, status?: number) {
@@ -168,7 +171,29 @@ export class OrdersService {
     }
 
     if (order.status !== 0) {
-      throw new Error('订单状态不正确，无法支付');
+      throw new BadRequestException('订单状态不正确，无法支付');
+    }
+
+    // 如果是余额支付，检查余额是否充足
+    if (paymentMethod === 'balance') {
+      const user = await this.usersRepository.findOne({
+        where: { id: userId }
+      });
+
+      if (!user) {
+        throw new NotFoundException('用户不存在');
+      }
+
+      const userBalance = parseFloat(String(user.balance || 0));
+      const orderAmount = parseFloat(String(order.actual_amount));
+
+      if (userBalance < orderAmount) {
+        throw new BadRequestException(`余额不足，当前余额：¥${userBalance.toFixed(2)}，需要支付：¥${orderAmount.toFixed(2)}`);
+      }
+
+      // 扣除余额
+      user.balance = parseFloat((userBalance - orderAmount).toFixed(2));
+      await this.usersRepository.save(user);
     }
 
     // 更新订单状态为已支付

@@ -9,7 +9,14 @@
     "openGroup": "Start Group",
     "loading": "Loading...",
     "noData": "No Data",
-    "required": "Required"
+    "required": "Required",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "home": {
+    "noHotProducts": "No hot products",
+    "noRecommendProducts": "No recommended products"
   },
   "header": {
     "logo": "TreasureX",
@@ -1137,6 +1144,7 @@
     "stillNeed": "{count} more needed",
     "groupComplete": "Group Complete!",
     "estimatedTime": "Est. Ship Time",
+    "estimatedTimeValue": "Within 48 hours",
     "inviteTitle": "Invite Friends",
     "inviteDesc": "Share to complete group faster",
     "shareWithFriends": "Share with Friends",
@@ -1147,6 +1155,26 @@
     "viewOrder": "View Order",
     "backHome": "Back Home",
     "shareMessage": "Join my group buy!"
+  },
+  "addressEdit": {
+    "addTitle": "Add Address",
+    "editTitle": "Edit Address",
+    "recipientName": "Recipient Name",
+    "phone": "Phone Number",
+    "detailAddress": "Detail Address",
+    "nameRequired": "Please enter recipient name",
+    "phoneRequired": "Please enter phone number",
+    "phoneInvalid": "Please enter a valid phone number",
+    "addressRequired": "Please enter detail address",
+    "namePlaceholder": "Enter recipient name",
+    "phonePlaceholder": "Enter phone number",
+    "addressPlaceholder": "Enter detail address, such as street, house number, etc.",
+    "setAsDefault": "Set as default address",
+    "default": "Default",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this address?",
+    "noAddress": "No shipping address"
   }
 }
 

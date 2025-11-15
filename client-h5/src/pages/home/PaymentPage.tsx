@@ -12,6 +12,8 @@ interface PaymentPageProps {
     amount: number;
     groupType: string;
     orderId?: number;
+    groupSize?: number;
+    currentMembers?: number;
   };
   onBack: () => void;
   onSuccess: () => void;
@@ -45,6 +47,14 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ order, onBack, onSuccess }) =
       return;
     }
 
+    // 检查余额支付时余额是否充足
+    if (selectedMethod === 'balance') {
+      if (userBalance < order.amount) {
+        setError(t('payment.insufficientBalance') || `余额不足，当前余额：¥${userBalance.toFixed(2)}，需要支付：¥${order.amount.toFixed(2)}`);
+        return;
+      }
+    }
+
     setIsPaying(true);
     setError(null);
 
@@ -67,7 +77,9 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ order, onBack, onSuccess }) =
       onSuccess();
     } catch (err: any) {
       console.error('支付失败:', err);
-      setError(err.message || err.data?.message || '支付失败，请重试');
+      // 提供更详细的错误信息
+      const errorMessage = err.message || err.data?.message || '支付失败，请重试';
+      setError(errorMessage);
       setIsPaying(false);
     }
   };

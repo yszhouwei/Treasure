@@ -2,6 +2,20 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import './CampaignPage.css';
 
+interface HotProduct {
+  id: number;
+  name: string;
+  price: number;
+  imageUrl?: string;
+}
+
+interface AiProduct {
+  id: number;
+  name: string;
+  price: number;
+  imageUrl?: string;
+}
+
 interface CampaignPageProps {
   campaign: {
     type: 'banner' | 'promo';
@@ -11,10 +25,23 @@ interface CampaignPageProps {
   };
   onBack: () => void;
   onAction?: () => void;
+  onProductClick?: (productId: number) => void;
+  hotProducts?: HotProduct[];
+  aiProducts?: AiProduct[];
 }
 
-const CampaignPage: React.FC<CampaignPageProps> = ({ campaign, onBack, onAction }) => {
+const CampaignPage: React.FC<CampaignPageProps> = ({ 
+  campaign, 
+  onBack, 
+  onAction,
+  onProductClick,
+  hotProducts = [],
+  aiProducts = []
+}) => {
   const { t } = useTranslation();
+  
+  // 合并热门商品和推荐商品，用于推荐商品展示
+  const allProducts = [...hotProducts, ...aiProducts].slice(0, 3);
 
   return (
     <div className="campaign-page">
@@ -109,31 +136,46 @@ const CampaignPage: React.FC<CampaignPageProps> = ({ campaign, onBack, onAction 
         </section>
 
         {/* 推荐商品 */}
-        <section className="campaign-card">
-          <h2>{t('campaign.recommendedTitle')}</h2>
-          <div className="recommended-products">
-            {[
-              { id: 1, key: 'antiqueWatch', image: 'watch', price: 188 },
-              { id: 2, key: 'rareStamps', image: 'stamps', price: 99 },
-              { id: 3, key: 'vintageCamera', image: 'camera', price: 850 }
-            ].map((product) => (
-              <div key={product.id} className="product-mini-card">
-                <div className="product-mini-image" style={{
-                  backgroundImage: `url(/images/product-${product.image}.svg)`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
-                }}>
-                  <span className="product-mini-tag">{t('campaign.hot')}</span>
+        {allProducts.length > 0 && (
+          <section className="campaign-card">
+            <h2>{t('campaign.recommendedTitle')}</h2>
+            <div className="recommended-products">
+              {allProducts.map((product) => (
+                <div 
+                  key={product.id} 
+                  className="product-mini-card"
+                  onClick={() => onProductClick?.(product.id)}
+                >
+                  <div 
+                    className="product-mini-image" 
+                    style={{
+                      backgroundImage: product.imageUrl 
+                        ? `url(${product.imageUrl})` 
+                        : 'url(/images/product-watch.svg)',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center'
+                    }}
+                  >
+                    <span className="product-mini-tag">{t('campaign.hot')}</span>
+                  </div>
+                  <h4 className="product-mini-title">{product.name}</h4>
+                  <div className="product-mini-footer">
+                    <span className="product-mini-price">¥{product.price.toFixed(2)}</span>
+                    <button 
+                      className="product-mini-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onProductClick?.(product.id);
+                      }}
+                    >
+                      {t('campaign.view')}
+                    </button>
+                  </div>
                 </div>
-                <h4 className="product-mini-title">{t(`products.${product.key}`)}</h4>
-                <div className="product-mini-footer">
-                  <span className="product-mini-price">¥{product.price.toFixed(2)}</span>
-                  <button className="product-mini-btn">{t('campaign.view')}</button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* 注意事项 */}
         <section className="campaign-card">
