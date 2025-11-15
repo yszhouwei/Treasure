@@ -19,8 +19,11 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true,
+      forbidNonWhitelisted: false, // 改为 false，允许未定义的字段
       transform: true,
+      transformOptions: {
+        enableImplicitConversion: true, // 启用隐式类型转换
+      },
     }),
   );
 

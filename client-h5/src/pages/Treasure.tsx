@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
+import { useAuth } from '../context/AuthContext';
 import BalanceDetail from './treasure/BalanceDetail';
 import StatDetail from './treasure/StatDetail';
 import MissionDetail from './treasure/MissionDetail';
@@ -37,12 +38,28 @@ type PageState =
 
 const Treasure: React.FC = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
 
   const stats = t('treasure.stats', { returnObjects: true }) as StatItem[];
   const missions = t('treasure.missions', { returnObjects: true }) as MissionItem[];
   const orders = t('treasure.orders', { returnObjects: true }) as OrderItem[];
 
   const [activePage, setActivePage] = useState<PageState>(null);
+
+  // 构建完整的头像URL
+  const getAvatarUrl = (url: string | null | undefined) => {
+    if (!url) return null;
+    if (url.startsWith('http')) return url;
+    // 确保URL以 / 开头
+    const path = url.startsWith('/') ? url : `/${url}`;
+    return `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}${path}`;
+  };
+
+  const avatarUrl = user?.avatar ? getAvatarUrl(user.avatar) : null;
+  const avatarInitial = useMemo(() => {
+    if (!user?.name) return 'TX';
+    return user.name.trim().substring(0, 2).toUpperCase();
+  }, [user?.name]);
 
   // 渲染子页面
   if (activePage) {
@@ -90,7 +107,31 @@ const Treasure: React.FC = () => {
         <section className="treasure-hero">
           <div className="treasure-hero-overlay">
             <div className="treasure-hero-top">
-              <div className="treasure-avatar">TX</div>
+              <div className={`treasure-avatar ${avatarUrl ? 'has-avatar' : ''}`}>
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt="Avatar"
+                    className="treasure-avatar-image"
+                    onError={(e) => {
+                      // 如果图片加载失败，隐藏图片，显示占位符
+                      const target = e.target as HTMLImageElement;
+                      if (target) {
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          parent.classList.remove('has-avatar');
+                          const placeholder = document.createElement('span');
+                          placeholder.textContent = avatarInitial;
+                          parent.appendChild(placeholder);
+                        }
+                      }
+                    }}
+                  />
+                ) : (
+                  <span>{avatarInitial}</span>
+                )}
+              </div>
               <div className="treasure-hero-info">
                 <h1>{t('treasure.hero.title')}</h1>
                 <p>{t('treasure.hero.subtitle')}</p>

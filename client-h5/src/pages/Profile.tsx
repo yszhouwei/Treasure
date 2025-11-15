@@ -152,9 +152,19 @@ const Profile: React.FC = () => {
 
   // 构建完整的头像URL
   const getAvatarUrl = (url: string | null | undefined) => {
-    if (!url) return null;
-    if (url.startsWith('http')) return url;
-    return `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}${url}`;
+    if (!url) {
+      console.log('🔍 getAvatarUrl: url为空');
+      return null;
+    }
+    if (url.startsWith('http')) {
+      console.log('🔍 getAvatarUrl: 已经是完整URL:', url);
+      return url;
+    }
+    // 确保URL以 / 开头
+    const path = url.startsWith('/') ? url : `/${url}`;
+    const fullUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}${path}`;
+    console.log('🔍 getAvatarUrl: 构建完整URL:', { 原始: url, 路径: path, 完整: fullUrl });
+    return fullUrl;
   };
 
   const heroTranslation = useMemo(
@@ -190,6 +200,13 @@ const Profile: React.FC = () => {
   }, []);
 
   const buildProfileDataset = useCallback((): ProfileDataset => {
+    // 调试：输出用户数据
+    console.log('Profile页面 - 用户数据:', user);
+    console.log('Profile页面 - 用户头像:', user?.avatar);
+    if (user?.avatar) {
+      console.log('Profile页面 - 构建后的头像URL:', getAvatarUrl(user.avatar));
+    }
+    
     // 使用真实用户数据更新统计信息
     const stats = heroTranslation.stats?.map((stat) => {
       if (stat.label === '账户资产' || stat.label === 'Account Assets') {
@@ -230,6 +247,29 @@ const Profile: React.FC = () => {
     return { hero, actions, sections };
   }, [heroTranslation, actionsTranslation, sectionsTranslation, user, cloneSections]);
 
+  // 只在组件挂载时刷新一次用户数据（使用 ref 确保只执行一次）
+  const hasRefreshedRef = useRef(false);
+  
+  useEffect(() => {
+    if (!isAuthenticated) {
+      hasRefreshedRef.current = false;
+      return;
+    }
+
+    // 只在第一次进入页面时刷新一次
+    if (hasRefreshedRef.current) {
+      return;
+    }
+
+    hasRefreshedRef.current = true;
+
+    // 刷新 AuthContext 中的用户数据（refreshUser 内部已经使用 UsersService.getProfile()）
+    if (refreshUser) {
+      refreshUser().catch(err => console.error('Profile页面 - 刷新用户数据失败:', err));
+    }
+  }, [isAuthenticated, refreshUser]);
+
+  // 构建和更新页面数据
   useEffect(() => {
     if (!isAuthenticated) {
       setProfileData(null);
@@ -305,6 +345,9 @@ const Profile: React.FC = () => {
 
   const handleItemClick = (itemId: string, item?: ProfileSectionItem) => {
     switch (itemId) {
+      case 'profileEdit':
+        setActivePage({ type: 'profileEdit' });
+        break;
       case 'orderList':
         setActivePage({ type: 'orderList' });
         break;
@@ -346,6 +389,10 @@ const Profile: React.FC = () => {
       case 'invite':
         return <InvitePage onBack={onBack} />;
       case 'profileEdit':
+        // 进入编辑页面时，先刷新用户信息
+        if (refreshUser) {
+          refreshUser();
+        }
         return <ProfileEditPage onBack={onBack} user={user} />;
       case 'security':
         return <SecurityPage onBack={onBack} />;
@@ -495,15 +542,42 @@ const Profile: React.FC = () => {
               <div className="profile-hero-overlay">
                 <div className="profile-hero-top">
                   <div className="profile-hero-header">
-                    <div 
-                      className="profile-avatar"
-                      style={user?.avatar ? {
-                        backgroundImage: `url(${getAvatarUrl(user.avatar)})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      } : {}}
+                    <div
+                      className={`profile-avatar ${user?.avatar ? 'has-avatar' : ''}`}
                     >
-                      {!user?.avatar && (profileData.hero.name?.[0] || 'U')}
+                      {(() => {
+                        console.log('🎨 渲染头像区域 - user对象:', user);
+                        console.log('🎨 渲染头像区域 - user?.avatar:', user?.avatar);
+                        const avatarUrl = user?.avatar ? getAvatarUrl(user.avatar) : null;
+                        console.log('🎨 渲染头像区域 - avatarUrl:', avatarUrl);
+                        
+                        if (avatarUrl) {
+                          return (
+                            <img
+                              key={avatarUrl}
+                              src={avatarUrl}
+                              alt="Avatar"
+                              onLoad={() => {
+                                console.log('✅ 头像图片加载成功:', avatarUrl);
+                              }}
+                              onError={(e) => {
+                                console.error('❌ 头像图片加载失败');
+                                console.error('原始路径:', user?.avatar);
+                                console.error('构建后的URL:', avatarUrl);
+                                console.error('错误事件:', e);
+                                // 隐藏图片，显示占位符
+                                const target = e.target as HTMLImageElement;
+                                if (target) {
+                                  target.style.display = 'none';
+                                }
+                              }}
+                            />
+                          );
+                        } else {
+                          console.log('🎨 渲染头像区域 - 使用占位符，原因: user?.avatar =', user?.avatar);
+                          return <span>{profileData.hero.name?.[0]?.toUpperCase() || 'U'}</span>;
+                        }
+                      })()}
                     </div>
                     <div className="profile-hero-info">
                       <span className="profile-hero-greeting">{profileData.hero.greeting}</span>

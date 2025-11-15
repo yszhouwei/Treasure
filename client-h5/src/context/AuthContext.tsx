@@ -1,6 +1,7 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AuthService } from '../services/auth.service';
 import type { User as ApiUser } from '../services/auth.service';
+import type { User as UsersServiceUser } from '../services/users.service';
 
 type AuthMode = 'login' | 'register';
 
@@ -40,7 +41,7 @@ const randomColor = () => {
   return palette[Math.floor(Math.random() * palette.length)];
 };
 
-const convertApiUserToAuthUser = (apiUser: ApiUser): AuthUser => {
+const convertApiUserToAuthUser = (apiUser: ApiUser | UsersServiceUser): AuthUser => {
   return {
     id: apiUser.id,
     name: apiUser.nickname || apiUser.username,
@@ -48,9 +49,9 @@ const convertApiUserToAuthUser = (apiUser: ApiUser): AuthUser => {
     phone: apiUser.phone,
     avatar: apiUser.avatar,
     avatarColor: randomColor(),
-    balance: apiUser.balance,
-    points: apiUser.points,
-    level: apiUser.level,
+    balance: apiUser.balance ?? 0, // 处理可选字段
+    points: apiUser.points ?? 0, // 处理可选字段
+    level: apiUser.level ?? 1, // 处理可选字段
   };
 };
 
@@ -137,16 +138,63 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setShowAuth(false);
   }, []);
 
+  // 使用 ref 防止重复调用
+  const isRefreshingRef = useRef(false);
+  
   const refreshUser = useCallback(async () => {
-    if (AuthService.isAuthenticated()) {
+    if (!AuthService.isAuthenticated()) {
+      return;
+    }
+    
+    // 如果正在刷新，直接返回
+    if (isRefreshingRef.current) {
+      return;
+    }
+    
+    isRefreshingRef.current = true;
+    
+    try {
+      // 使用 UsersService.getProfile() 获取完整的用户数据（包括 avatar）
+      // 而不是 AuthService.getProfile()，因为 /auth/profile 可能不返回完整数据
+      const { UsersService } = await import('../services/users.service');
+      const profile = await UsersService.getProfile();
+      const authUser = convertApiUserToAuthUser(profile);
+      
+      // 只在数据真正变化时才更新状态，避免无限循环
+      setUser(prevUser => {
+        if (prevUser && 
+            prevUser.id === authUser.id && 
+            prevUser.avatar === authUser.avatar &&
+            prevUser.name === authUser.name &&
+            prevUser.email === authUser.email) {
+          return prevUser; // 数据没有变化，返回原对象
+        }
+        return authUser; // 数据有变化，更新
+      });
+      
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser));
+    } catch (error) {
+      console.error('Failed to refresh user', error);
+      // 如果 UsersService 失败，回退到 AuthService
       try {
         const profile = await AuthService.getProfile();
         const authUser = convertApiUserToAuthUser(profile);
-        setUser(authUser);
+        setUser(prevUser => {
+          if (prevUser && 
+              prevUser.id === authUser.id && 
+              prevUser.avatar === authUser.avatar &&
+              prevUser.name === authUser.name &&
+              prevUser.email === authUser.email) {
+            return prevUser;
+          }
+          return authUser;
+        });
         localStorage.setItem(STORAGE_KEY, JSON.stringify(authUser));
-      } catch (error) {
-        console.error('Failed to refresh user', error);
+      } catch (fallbackError) {
+        console.error('Fallback to AuthService also failed', fallbackError);
       }
+    } finally {
+      isRefreshingRef.current = false;
     }
   }, []);
 

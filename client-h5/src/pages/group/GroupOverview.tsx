@@ -5,9 +5,10 @@ import './GroupOverview.css';
 
 interface GroupOverviewProps {
   onBack: () => void;
+  onNavigate?: (page: 'members' | 'statistics' | 'settings') => void;
 }
 
-const GroupOverview: React.FC<GroupOverviewProps> = ({ onBack }) => {
+const GroupOverview: React.FC<GroupOverviewProps> = ({ onBack, onNavigate }) => {
   const { t } = useTranslation();
 
   return (
@@ -23,19 +24,19 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({ onBack }) => {
 
         {/* Team Information */}
         <section className="overview-section">
-          <h2>{t('group.sheet.hero.teamInfo')}</h2>
+          <h2>{t('group.sheet.hero.teamInfo') || t('group.hero.teamInfo') || '团队信息'}</h2>
           <div className="overview-info-grid">
-            <div className="overview-info-card">
-              <span className="info-label">{t('group.hero.leader')}</span>
-              <strong>{t('group.hero.leaderName')}</strong>
+            <div className="overview-info-card" onClick={() => onNavigate?.('members')} style={{ cursor: 'pointer' }}>
+              <span className="info-label">{t('group.hero.leader') || '团长'}</span>
+              <strong>{t('group.hero.leaderName') || 'Crystal · 团长'}</strong>
             </div>
-            <div className="overview-info-card">
-              <span className="info-label">{t('group.hero.schedule')}</span>
-              <strong>{t('group.hero.scheduleValue')}</strong>
+            <div className="overview-info-card" onClick={() => onNavigate?.('statistics')} style={{ cursor: 'pointer' }}>
+              <span className="info-label">{t('group.hero.schedule') || '今日排期'}</span>
+              <strong>{t('group.hero.scheduleValue') || '4场正在进行'}</strong>
             </div>
-            <div className="overview-info-card">
-              <span className="info-label">{t('group.hero.region')}</span>
-              <strong>{t('group.hero.regionValue')}</strong>
+            <div className="overview-info-card" onClick={() => onNavigate?.('settings')} style={{ cursor: 'pointer' }}>
+              <span className="info-label">{t('group.hero.region') || '覆盖区域'}</span>
+              <strong>{t('group.hero.regionValue') || '中国 · 东南亚'}</strong>
             </div>
           </div>
         </section>
@@ -76,9 +77,28 @@ const GroupOverview: React.FC<GroupOverviewProps> = ({ onBack }) => {
           </div>
         </section>
 
-        {/* Action Button */}
+        {/* Action Buttons */}
         <div className="overview-actions">
-          <button className="overview-primary-btn">{t('group.sheet.hero.cta')}</button>
+          <button 
+            className="overview-primary-btn"
+            onClick={() => onNavigate?.('members')}
+          >
+            {t('group.management.members.title') || '成员管理'}
+          </button>
+          <div className="overview-secondary-actions">
+            <button 
+              className="overview-secondary-btn"
+              onClick={() => onNavigate?.('statistics')}
+            >
+              {t('group.management.stats.title') || '数据统计'}
+            </button>
+            <button 
+              className="overview-secondary-btn"
+              onClick={() => onNavigate?.('settings')}
+            >
+              {t('group.management.settings.title') || '团队设置'}
+            </button>
+          </div>
         </div>
       </div>
     </div>

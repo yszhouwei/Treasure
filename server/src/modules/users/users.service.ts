@@ -27,15 +27,46 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.usersRepository.findOne({ where: { id } });
-    if (!user) {
-      throw new NotFoundException('用户不存在');
-    }
+    try {
+      const user = await this.usersRepository.findOne({ where: { id } });
+      if (!user) {
+        throw new NotFoundException('用户不存在');
+      }
 
-    Object.assign(user, updateUserDto);
-    const updated = await this.usersRepository.save(user);
-    const { password, ...result } = updated;
-    return result as any;
+      console.log('更新用户信息 - 用户ID:', id);
+      console.log('更新数据:', updateUserDto);
+
+      // 只更新提供的字段
+      if (updateUserDto.nickname !== undefined) {
+        user.nickname = updateUserDto.nickname;
+      }
+      if (updateUserDto.email !== undefined) {
+        user.email = updateUserDto.email;
+      }
+      if (updateUserDto.phone !== undefined) {
+        user.phone = updateUserDto.phone;
+      }
+      if (updateUserDto.avatar !== undefined) {
+        user.avatar = updateUserDto.avatar;
+      }
+      if (updateUserDto.bio !== undefined) {
+        user.bio = updateUserDto.bio;
+      }
+      if (updateUserDto.gender !== undefined) {
+        user.gender = updateUserDto.gender;
+      }
+      if (updateUserDto.birthday !== undefined) {
+        user.birthday = new Date(updateUserDto.birthday);
+      }
+
+      const updated = await this.usersRepository.save(user);
+      console.log('更新成功:', updated);
+      const { password, ...result } = updated;
+      return result as any;
+    } catch (error) {
+      console.error('更新用户信息失败:', error);
+      throw error;
+    }
   }
 }
 

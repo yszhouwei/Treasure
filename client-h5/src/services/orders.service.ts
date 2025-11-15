@@ -34,6 +34,16 @@ export interface CreateOrderDto {
   shipping_address?: any;
 }
 
+export interface GroupOrder {
+  product_id: number;
+  product_name: string;
+  product_image?: string;
+  orders: Order[];
+  total_participants: number;
+  total_amount: number;
+  status: 'active' | 'completed' | 'cancelled';
+}
+
 export class OrdersService {
   // 获取订单列表
   static async getOrders(status?: number): Promise<Order[]> {
@@ -63,5 +73,34 @@ export class OrdersService {
   static async cancelOrder(orderId: number): Promise<Order> {
     return ApiClient.post<Order>(`${API_ENDPOINTS.ORDERS.GET_BY_ID(orderId)}/cancel`, {});
   }
-}
 
+  // 获取用户参与的团购列表（已支付的订单，按商品分组）
+  static async getMyGroupOrders(): Promise<GroupOrder[]> {
+    const orders = await this.getOrders(1); // 获取已支付的订单
+    // 按 product_id 分组
+    const groupMap = new Map<number, GroupOrder>();
+    
+    orders.forEach(order => {
+      if (!order.product_id) return;
+      
+      if (!groupMap.has(order.product_id)) {
+        groupMap.set(order.product_id, {
+          product_id: order.product_id,
+          product_name: order.product_name,
+          product_image: order.product_image,
+          orders: [],
+          total_participants: 0,
+          total_amount: 0,
+          status: 'active', // 默认进行中
+        });
+      }
+      
+      const group = groupMap.get(order.product_id)!;
+      group.orders.push(order);
+      group.total_participants += order.quantity;
+      group.total_amount += parseFloat(String(order.actual_amount || 0));
+    });
+    
+    return Array.from(groupMap.values());
+  }
+}

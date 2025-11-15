@@ -17,7 +17,7 @@ export interface User {
   email?: string;
   phone?: string;
   bio?: string;
-  gender?: string;
+  gender?: number | string; // 后端返回数字，前端可能使用字符串
   avatar?: string;
   balance?: number;
   points?: number;

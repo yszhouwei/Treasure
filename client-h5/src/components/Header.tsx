@@ -241,6 +241,17 @@ const Header: React.FC<HeaderProps> = ({ onBack, title }) => {
     return user.name.trim().charAt(0).toUpperCase();
   }, [user?.name]);
 
+  // 构建完整的头像URL
+  const getAvatarUrl = (url: string | null | undefined) => {
+    if (!url) return null;
+    if (url.startsWith('http')) return url;
+    // 确保URL以 / 开头
+    const path = url.startsWith('/') ? url : `/${url}`;
+    return `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000'}${path}`;
+  };
+
+  const avatarUrl = user?.avatar ? getAvatarUrl(user.avatar) : null;
+
   return (
     <>
       <header className="app-header">
@@ -318,12 +329,35 @@ const Header: React.FC<HeaderProps> = ({ onBack, title }) => {
             aria-label={t('header.user')}
           >
             {isAuthenticated ? (
-              <span
-                className="user-avatar-initial"
-                style={{ background: user?.avatarColor || '#3d8361' }}
-              >
-                {avatarInitial}
-              </span>
+              avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt="Avatar"
+                  className="user-avatar-image"
+                  onError={(e) => {
+                    // 如果图片加载失败，隐藏图片，显示占位符
+                    const target = e.target as HTMLImageElement;
+                    if (target) {
+                      target.style.display = 'none';
+                      const parent = target.parentElement;
+                      if (parent) {
+                        const placeholder = document.createElement('span');
+                        placeholder.className = 'user-avatar-initial';
+                        placeholder.style.background = user?.avatarColor || '#3d8361';
+                        placeholder.textContent = avatarInitial;
+                        parent.appendChild(placeholder);
+                      }
+                    }
+                  }}
+                />
+              ) : (
+                <span
+                  className="user-avatar-initial"
+                  style={{ background: user?.avatarColor || '#3d8361' }}
+                >
+                  {avatarInitial}
+                </span>
+              )
             ) : (
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -429,14 +463,43 @@ const Header: React.FC<HeaderProps> = ({ onBack, title }) => {
           {isAuthenticated ? (
             <div className="auth-account-pane">
               <div className="auth-account-header">
-                <span
-                  className="auth-account-avatar"
-                  style={{ background: user?.avatarColor || '#3d8361' }}
-                >
-                  {avatarInitial}
-                </span>
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt="Avatar"
+                    className="auth-account-avatar-image"
+                    onError={(e) => {
+                      // 如果图片加载失败，隐藏图片，显示占位符
+                      const target = e.target as HTMLImageElement;
+                      if (target) {
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          const placeholder = document.createElement('span');
+                          placeholder.className = 'auth-account-avatar';
+                          placeholder.style.background = user?.avatarColor || '#3d8361';
+                          placeholder.textContent = avatarInitial;
+                          parent.appendChild(placeholder);
+                        }
+                      }
+                    }}
+                  />
+                ) : (
+                  <span
+                    className="auth-account-avatar"
+                    style={{ background: user?.avatarColor || '#3d8361' }}
+                  >
+                    {avatarInitial}
+                  </span>
+                )}
                 <div className="auth-account-meta">
-                  <h2>{t('auth.loggedInTitle', { name: user?.name || 'Explorer' })}</h2>
+                  <h2>
+                    {(() => {
+                      // 确保显示真实的用户名称
+                      const displayName = user?.name?.trim() || user?.email?.split('@')[0] || 'Explorer';
+                      return t('auth.loggedInTitle', { name: displayName });
+                    })()}
+                  </h2>
                   <p>{user?.email}</p>
                   {authContent.loggedInSubtitle && <span>{authContent.loggedInSubtitle}</span>}
                 </div>

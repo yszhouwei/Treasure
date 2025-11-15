@@ -5,7 +5,8 @@
 
 .group-overview-content {
   padding-top: 56px;
-  padding-bottom: 80px;
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px) + 100px);
+  /* 80px 是底部导航栏高度，100px 是底部按钮区域高度 */
 }
 
 /* Hero Section */
@@ -133,11 +134,13 @@
 /* Actions */
 .overview-actions {
   position: fixed;
-  bottom: 0;
+  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  /* 80px 是底部导航栏高度 */
   left: 0;
   right: 0;
   background: white;
   padding: 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
   z-index: 10;
 }
@@ -158,4 +161,29 @@
 
 .overview-primary-btn:active {
   transform: scale(0.98);
+}
+
+.overview-secondary-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.overview-secondary-btn {
+  width: 100%;
+  background: white;
+  color: #1b4d3e;
+  border: 1px solid #1b4d3e;
+  border-radius: 24px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.overview-secondary-btn:active {
+  transform: scale(0.98);
+  background: #f0f0f0;
 }
