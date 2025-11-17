@@ -5,6 +5,10 @@ import { User } from '../../entities/user.entity';
 import { Team } from '../../entities/team.entity';
 import { Product } from '../../entities/product.entity';
 import { Order } from '../../entities/order.entity';
+import { Payment } from '../../entities/payment.entity';
+import { ProductCategory } from '../../entities/product-category.entity';
+import { LotteryRecord } from '../../entities/lottery-record.entity';
+import { GroupBuying } from '../../entities/group-buying.entity';
 
 @Injectable()
 export class AdminService {
@@ -17,6 +21,14 @@ export class AdminService {
     private productsRepository: Repository<Product>,
     @InjectRepository(Order)
     private ordersRepository: Repository<Order>,
+    @InjectRepository(Payment)
+    private paymentsRepository: Repository<Payment>,
+    @InjectRepository(ProductCategory)
+    private categoriesRepository: Repository<ProductCategory>,
+    @InjectRepository(LotteryRecord)
+    private lotteryRepository: Repository<LotteryRecord>,
+    @InjectRepository(GroupBuying)
+    private groupBuyingRepository: Repository<GroupBuying>,
   ) {}
 
   async getDashboardStats() {
@@ -65,6 +77,22 @@ export class AdminService {
       // 获取订单状态统计
       const orderStatus = await this.getOrderStatusData();
       console.log('📦 订单状态数据:', orderStatus.length, '条');
+      
+      // 获取支付方式统计
+      const paymentMethods = await this.getPaymentMethodData();
+      console.log('💳 支付方式数据:', paymentMethods.length, '条');
+      
+      // 获取团队规模分布
+      const teamSizeDistribution = await this.getTeamSizeDistribution();
+      console.log('👥 团队规模分布数据:', teamSizeDistribution.length, '条');
+      
+      // 获取商品分类销售统计
+      const categorySales = await this.getCategorySalesData();
+      console.log('📊 分类销售数据:', categorySales.length, '条');
+      
+      // 获取开奖统计
+      const lotteryStats = await this.getLotteryStats();
+      console.log('🎲 开奖统计数据:', lotteryStats);
 
       return {
         totalUsers,
@@ -75,6 +103,10 @@ export class AdminService {
         revenueTrend,
         productSales,
         orderStatus,
+        paymentMethods,
+        teamSizeDistribution,
+        categorySales,
+        lotteryStats,
       };
     } catch (error) {
       console.error('❌ 获取仪表盘统计数据失败:', error);
@@ -202,6 +234,117 @@ export class AdminService {
     } catch (error) {
       console.error('❌ 获取订单状态数据失败:', error);
       return [];
+    }
+  }
+
+  private async getPaymentMethodData() {
+    try {
+      const methods = await this.paymentsRepository
+        .createQueryBuilder('payment')
+        .select('payment.payment_method', 'method')
+        .addSelect('COUNT(*)', 'count')
+        .addSelect('SUM(payment.amount)', 'amount')
+        .where('payment.status = :status', { status: 1 })
+        .groupBy('payment.payment_method')
+        .getRawMany();
+
+      const methodMap: Record<string, string> = {
+        wechat: '微信支付',
+        alipay: '支付宝',
+        bank: '银行转账',
+      };
+
+      return methods.map(m => ({
+        method: methodMap[m.method] || m.method,
+        count: parseInt(m.count),
+        amount: parseFloat(m.amount || '0'),
+      }));
+    } catch (error) {
+      console.error('❌ 获取支付方式数据失败:', error);
+      return [];
+    }
+  }
+
+  private async getTeamSizeDistribution() {
+    try {
+      const distribution = await this.teamsRepository
+        .createQueryBuilder('team')
+        .select('team.group_size', 'size')
+        .addSelect('COUNT(*)', 'count')
+        .where('team.status = :status', { status: 1 })
+        .groupBy('team.group_size')
+        .getRawMany();
+
+      return distribution.map(d => ({
+        size: `${d.size}人团`,
+        count: parseInt(d.count),
+      }));
+    } catch (error) {
+      console.error('❌ 获取团队规模分布失败:', error);
+      return [];
+    }
+  }
+
+  private async getCategorySalesData() {
+    try {
+      const categorySales = await this.productsRepository
+        .createQueryBuilder('product')
+        .leftJoin('product.category', 'category')
+        .select('COALESCE(category.name, "未分类")', 'category')
+        .addSelect('SUM(product.sales_count)', 'sales')
+        .addSelect('COUNT(product.id)', 'count')
+        .where('product.status = :status', { status: 1 })
+        .groupBy('category.id')
+        .orderBy('SUM(product.sales_count)', 'DESC')
+        .limit(10)
+        .getRawMany();
+
+      return categorySales.map(c => ({
+        category: c.category,
+        sales: parseInt(c.sales || '0'),
+        count: parseInt(c.count),
+      }));
+    } catch (error) {
+      console.error('❌ 获取分类销售数据失败:', error);
+      return [];
+    }
+  }
+
+  private async getLotteryStats() {
+    try {
+      const totalLotteries = await this.lotteryRepository.count();
+      const totalGroups = await this.groupBuyingRepository.count({ where: { status: 2 } }); // 已成团
+      
+      // 获取最近30天的开奖趋势
+      const endDate = new Date();
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - 30);
+
+      const lotteryTrend = await this.lotteryRepository
+        .createQueryBuilder('lottery')
+        .select('DATE_FORMAT(lottery.lottery_time, "%Y-%m-%d")', 'date')
+        .addSelect('COUNT(*)', 'count')
+        .where('lottery.lottery_time >= :startDate', { startDate })
+        .andWhere('lottery.lottery_time <= :endDate', { endDate })
+        .groupBy('DATE_FORMAT(lottery.lottery_time, "%Y-%m-%d")')
+        .orderBy('DATE_FORMAT(lottery.lottery_time, "%Y-%m-%d")', 'ASC')
+        .getRawMany();
+
+      return {
+        totalLotteries,
+        totalGroups,
+        lotteryTrend: lotteryTrend.map(l => ({
+          date: l.date,
+          count: parseInt(l.count),
+        })),
+      };
+    } catch (error) {
+      console.error('❌ 获取开奖统计失败:', error);
+      return {
+        totalLotteries: 0,
+        totalGroups: 0,
+        lotteryTrend: [],
+      };
     }
   }
 }

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Order } from '../../entities/order.entity';
 import { Product } from '../../entities/product.entity';
 import { User } from '../../entities/user.entity';
+import { Payment } from '../../entities/payment.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
@@ -15,6 +16,8 @@ export class OrdersService {
     private productsRepository: Repository<Product>,
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(Payment)
+    private paymentsRepository: Repository<Payment>,
   ) {}
 
   async findAll(userId: number, status?: number) {
@@ -161,7 +164,7 @@ export class OrdersService {
     }
   }
 
-  async payOrder(userId: number, orderId: number, paymentMethod: string): Promise<Order> {
+  async payOrder(userId: number, orderId: number, paymentMethod: string): Promise<any> {
     const order = await this.ordersRepository.findOne({ 
       where: { id: orderId, user_id: userId } 
     });
@@ -174,7 +177,9 @@ export class OrdersService {
       throw new BadRequestException('订单状态不正确，无法支付');
     }
 
-    // 如果是余额支付，检查余额是否充足
+    const orderAmount = parseFloat(String(order.actual_amount));
+
+    // 如果是余额支付，直接处理
     if (paymentMethod === 'balance') {
       const user = await this.usersRepository.findOne({
         where: { id: userId }
@@ -185,7 +190,6 @@ export class OrdersService {
       }
 
       const userBalance = parseFloat(String(user.balance || 0));
-      const orderAmount = parseFloat(String(order.actual_amount));
 
       if (userBalance < orderAmount) {
         throw new BadRequestException(`余额不足，当前余额：¥${userBalance.toFixed(2)}，需要支付：¥${orderAmount.toFixed(2)}`);
@@ -194,14 +198,82 @@ export class OrdersService {
       // 扣除余额
       user.balance = parseFloat((userBalance - orderAmount).toFixed(2));
       await this.usersRepository.save(user);
+
+      // 更新订单状态为已支付
+      order.status = 1; // 已支付
+      order.payment_method = paymentMethod;
+      order.payment_time = new Date();
+      await this.ordersRepository.save(order);
+
+      return {
+        success: true,
+        message: '支付成功',
+        order,
+        payment_type: 'balance',
+      };
     }
 
-    // 更新订单状态为已支付
-    order.status = 1; // 已支付
-    order.payment_method = paymentMethod;
-    order.payment_time = new Date();
+    // 对于第三方支付（微信、支付宝、PayPal、Stripe等），需要调用支付接口
+    // 这里返回支付信息，让前端跳转到支付页面或显示支付二维码
+    // 实际项目中应该调用对应的支付SDK
+    
+    // 先创建支付记录（待支付状态）
+    const payment = this.paymentsRepository.create({
+      payment_no: `PAY${Date.now()}${Math.random().toString(36).substr(2, 9)}`,
+      order_id: order.id,
+      order_no: order.order_no,
+      user_id: userId,
+      amount: orderAmount,
+      payment_method: paymentMethod,
+      payment_channel: paymentMethod,
+      status: 0, // 待支付
+    });
+    await this.paymentsRepository.save(payment);
 
-    return this.ordersRepository.save(order);
+    // 根据不同的支付方式返回不同的支付信息
+    let paymentData: any = {
+      success: true,
+      message: '请完成支付',
+      payment_id: payment.id,
+      payment_no: payment.payment_no,
+      amount: orderAmount,
+      payment_method: paymentMethod,
+      order_id: order.id,
+    };
+
+    // 根据支付方式返回不同的支付信息
+    if (paymentMethod === 'wechat_pay') {
+      // 微信支付：返回支付参数或二维码
+      paymentData.payment_type = 'wechat';
+      paymentData.message = '请使用微信扫码支付';
+      // 实际应该调用微信支付API获取支付参数
+      // paymentData.pay_params = await this.wechatPayService.createPayment(...);
+    } else if (paymentMethod === 'alipay') {
+      // 支付宝：返回支付链接或表单
+      paymentData.payment_type = 'alipay';
+      paymentData.message = '请使用支付宝支付';
+      // 实际应该调用支付宝API获取支付链接
+      // paymentData.pay_url = await this.alipayService.createPayment(...);
+    } else if (paymentMethod.startsWith('usdt_')) {
+      // USDT支付：返回支付地址和金额
+      paymentData.payment_type = 'crypto';
+      paymentData.message = '请向以下地址转账USDT';
+      paymentData.crypto_address = 'TYourUSDTAddressHere'; // 实际应该从配置中获取
+      paymentData.crypto_amount = orderAmount; // 实际应该根据汇率计算
+      paymentData.network = paymentMethod.replace('usdt_', '').toUpperCase(); // TRC20, ERC20, BEP20
+    } else if (paymentMethod === 'paypal' || paymentMethod === 'stripe') {
+      // PayPal/Stripe：返回支付链接
+      paymentData.payment_type = 'online';
+      paymentData.message = `请使用${paymentMethod === 'paypal' ? 'PayPal' : 'Stripe'}完成支付`;
+      // 实际应该调用对应的支付API
+      // paymentData.pay_url = await this.paypalService.createPayment(...);
+    } else {
+      // 其他支付方式：返回待支付状态
+      paymentData.payment_type = 'other';
+      paymentData.message = '支付处理中，请稍候...';
+    }
+
+    return paymentData;
   }
 
   private async generateOrderNo(): Promise<string> {

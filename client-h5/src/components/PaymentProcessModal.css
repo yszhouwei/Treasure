@@ -1,0 +1,182 @@
+.payment-process-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 20px;
+}
+
+.payment-process-modal-content {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.payment-process-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f5f5f5;
+  border-radius: 50%;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  z-index: 10;
+}
+
+.payment-process-modal-close:hover {
+  background: #e0e0e0;
+}
+
+.payment-process-content {
+  text-align: center;
+  padding: 20px;
+}
+
+.payment-process-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.payment-process-content h3 {
+  margin: 16px 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.payment-process-content p {
+  margin: 8px 0;
+  color: #666;
+}
+
+.payment-qr-code {
+  margin: 20px 0;
+}
+
+.payment-qr-code img {
+  width: 200px;
+  height: 200px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 10px;
+  background: #fff;
+}
+
+.payment-placeholder {
+  padding: 40px 20px;
+  color: #999;
+}
+
+.payment-action {
+  margin: 20px 0;
+}
+
+.payment-jump-btn {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.payment-jump-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.payment-crypto-info {
+  text-align: left;
+  margin: 20px 0;
+}
+
+.crypto-address-section,
+.crypto-amount-section {
+  margin: 16px 0;
+}
+
+.crypto-address-section label,
+.crypto-amount-section label {
+  display: block;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.crypto-address-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+.crypto-address-box code {
+  flex: 1;
+  font-size: 12px;
+  word-break: break-all;
+  color: #333;
+}
+
+.copy-btn {
+  padding: 6px 12px;
+  background: #1890ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.copy-btn:hover {
+  background: #40a9ff;
+}
+
+.crypto-amount-box {
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.crypto-amount-box strong {
+  font-size: 20px;
+  color: #1890ff;
+}
+
+.crypto-warning {
+  margin-top: 20px;
+  padding: 12px;
+  background: #fff7e6;
+  border: 1px solid #ffd591;
+  border-radius: 8px;
+}
+
+.crypto-warning p {
+  margin: 4px 0;
+  font-size: 12px;
+  color: #d46b08;
+}
+

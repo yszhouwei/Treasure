@@ -43,6 +43,10 @@ export const API_ENDPOINTS = {
     RECHARGE: '/payments/recharge',
     WITHDRAW: '/payments/withdraw',
   },
+  // 支付插件相关
+  PAYMENT_PLUGINS: {
+    ENABLED: '/admin/payment-plugins/enabled',
+  },
   // 内容相关
   CONTENTS: {
     TRENDING: '/contents/trending',
