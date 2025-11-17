@@ -22,6 +22,12 @@ import { AdminMessagesController } from './messages.controller';
 import { AdminMessagesService } from './messages.service';
 import { AdminPaymentPluginsController } from './payment-plugins.controller';
 import { AdminPaymentPluginsService } from './payment-plugins.service';
+import { SystemController } from './system.controller';
+import { SystemService } from './system.service';
+import { RolesController } from './roles.controller';
+import { RolesService } from './roles.service';
+import { PermissionsController } from './permissions.controller';
+import { PermissionsService } from './permissions.service';
 import { TestDbConnectionController } from './test-db-connection.controller';
 import { User } from '../../entities/user.entity';
 import { Team } from '../../entities/team.entity';
@@ -37,6 +43,10 @@ import { GroupBuying } from '../../entities/group-buying.entity';
 import { Payment } from '../../entities/payment.entity';
 import { Notification } from '../../entities/notification.entity';
 import { PaymentPlugin } from '../../entities/payment-plugin.entity';
+import { SystemConfig } from '../../entities/system-config.entity';
+import { OperationLog } from '../../entities/operation-log.entity';
+import { Role } from '../../entities/role.entity';
+import { Permission } from '../../entities/permission.entity';
 import { UsersModule } from '../users/users.module';
 
 @Module({
@@ -56,6 +66,10 @@ import { UsersModule } from '../users/users.module';
       Payment,
       Notification,
       PaymentPlugin,
+      SystemConfig,
+      OperationLog,
+      Role,
+      Permission,
     ]),
     UsersModule,
   ],
@@ -71,6 +85,9 @@ import { UsersModule } from '../users/users.module';
     AdminPaymentsController,
     AdminMessagesController,
     AdminPaymentPluginsController,
+    SystemController,
+    RolesController,
+    PermissionsController,
     TestDbConnectionController,
   ],
   providers: [
@@ -85,6 +102,9 @@ import { UsersModule } from '../users/users.module';
     AdminPaymentsService,
     AdminMessagesService,
     AdminPaymentPluginsService,
+    SystemService,
+    RolesService,
+    PermissionsService,
   ],
   exports: [
     AdminService,
@@ -98,7 +118,8 @@ import { UsersModule } from '../users/users.module';
     AdminPaymentsService,
     AdminMessagesService,
     AdminPaymentPluginsService,
+    SystemService,
   ],
-})
+}) 
 export class AdminModule {}
 
